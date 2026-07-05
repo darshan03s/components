@@ -1,6 +1,6 @@
 'use client'
 
-import { Info, Pause, Play, Volume2, VolumeX } from 'lucide-react'
+import { Info, Maximize, Pause, Play, Volume2, VolumeX } from 'lucide-react'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/card'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from './ui/hover-card'
 import { getFileData, InputFileData } from '@/lib/mediabunny'
@@ -128,6 +128,11 @@ const Player = ({ file, showOverlayControls }: PlayerProps) => {
     setIsMuted(videoRef.current.muted)
   }
 
+  function handleMaximize() {
+    if (!videoRef.current) return
+    videoRef.current.requestFullscreen()
+  }
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
@@ -165,7 +170,7 @@ const Player = ({ file, showOverlayControls }: PlayerProps) => {
       </CardContent>
       <CardFooter className="flex flex-col gap-2">
         <div className="text-xs font-sans w-full grid grid-cols-3">
-          <span>
+          <span className="flex items-center">
             {formatDuration(currentTime)} / {formatDuration(duration)}
           </span>
           <span className="flex items-center justify-center">
@@ -173,9 +178,12 @@ const Player = ({ file, showOverlayControls }: PlayerProps) => {
               {isPlaying ? <Pause className="size-3" /> : <Play className="size-3" />}
             </Button>
           </span>
-          <div className="flex items-center justify-end">
+          <div className="flex items-center justify-end gap-2">
             <Button variant="outline" size="icon-xs" onClick={handleMute}>
               {isMuted ? <VolumeX className="size-3" /> : <Volume2 className="size-3" />}
+            </Button>
+            <Button variant="outline" size="icon-xs" onClick={handleMaximize}>
+              <Maximize className="size-3" />
             </Button>
           </div>
         </div>
