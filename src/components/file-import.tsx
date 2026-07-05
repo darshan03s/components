@@ -41,7 +41,7 @@ const FileImport = ({ setFile }: { setFile: (file: File) => void }) => {
 
   return (
     <div>
-      <Empty className="border border-dashed w-100">
+      <Empty className="border border-primary/30 border-dashed w-120 aspect-video">
         <EmptyHeader>
           <EmptyMedia variant="icon">
             <File />
