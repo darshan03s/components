@@ -1,6 +1,6 @@
 'use client'
 
-import { Info, Pause, Play } from 'lucide-react'
+import { Info, Pause, Play, Volume2, VolumeX } from 'lucide-react'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/card'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from './ui/hover-card'
 import { getFileData, InputFileData } from '@/lib/mediabunny'
@@ -49,6 +49,7 @@ const Player = ({ file, showOverlayControls }: PlayerProps) => {
   const [duration, setDuration] = useState(0)
   const [currentTime, setCurrentTime] = useState(0)
   const [isPlaying, setIsPlaying] = useState(false)
+  const [isMuted, setIsMuted] = useState(false)
 
   useEffect(() => {
     getFileData(file).then(setFileData)
@@ -121,6 +122,12 @@ const Player = ({ file, showOverlayControls }: PlayerProps) => {
     }
   }
 
+  function handleMute() {
+    if (!videoRef.current) return
+    videoRef.current.muted = !videoRef.current.muted
+    setIsMuted(videoRef.current.muted)
+  }
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
@@ -166,6 +173,11 @@ const Player = ({ file, showOverlayControls }: PlayerProps) => {
               {isPlaying ? <Pause className="size-3" /> : <Play className="size-3" />}
             </Button>
           </span>
+          <div className="flex items-center justify-end">
+            <Button variant="outline" size="icon-xs" onClick={handleMute}>
+              {isMuted ? <VolumeX className="size-3" /> : <Volume2 className="size-3" />}
+            </Button>
+          </div>
         </div>
         <Slider
           value={[progress]}
