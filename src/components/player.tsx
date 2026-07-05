@@ -170,7 +170,7 @@ const Player = ({ file, showHTMLControls }: PlayerProps) => {
           onEnded={() => setIsPlaying(false)}
         />
       </CardContent>
-      <CardFooter className="flex min-w-0 w-full flex-col gap-2 overflow-hidden border-none relative bg-background/10 backdrop-blur-md">
+      <CardFooter className="flex min-w-0 w-full flex-col gap-2 overflow-hidden border-none relative bg-background/10 backdrop-blur-xl">
         <div className="text-xs font-sans w-full grid grid-cols-3">
           <span className="flex items-center">
             {formatDuration(currentTime)} / {formatDuration(duration)}
