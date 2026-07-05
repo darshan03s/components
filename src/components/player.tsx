@@ -189,7 +189,7 @@ const Player = ({ file, showHTMLControls }: PlayerProps) => {
             {formatDuration(currentTime)} / {formatDuration(duration)}
           </span>
           <span className="flex items-center justify-center">
-            <Button variant="outline" size="icon-xs" onClick={playPause}>
+            <Button variant="default" size="icon-xs" onClick={playPause}>
               {isPlaying ? <Pause className="size-3" /> : <Play className="size-3" />}
             </Button>
           </span>
