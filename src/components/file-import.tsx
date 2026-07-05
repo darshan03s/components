@@ -25,6 +25,8 @@ const VIDEO_EXTENSIONS = [
   '.3gp'
 ]
 
+const AUDIO_EXTENSIONS = ['.mp3', '.wav', '.ogg', '.m4a', '.aac', '.flac']
+
 const FileImport = ({ setFile }: { setFile: (file: File) => void }) => {
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -60,7 +62,7 @@ const FileImport = ({ setFile }: { setFile: (file: File) => void }) => {
           className="hidden"
           onChange={handleFileChange}
           ref={fileInputRef}
-          accept={VIDEO_EXTENSIONS.join(',')}
+          accept={`${VIDEO_EXTENSIONS.join(',')},${AUDIO_EXTENSIONS.join(',')}`}
         />
       </Empty>
     </div>
