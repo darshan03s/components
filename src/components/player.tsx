@@ -150,11 +150,11 @@ const Player = ({ file, showHTMLControls }: PlayerProps) => {
 
   return (
     <Card className="gap-0 p-0">
-      <CardHeader className="flex flex-row items-center justify-between bg-muted/50 h-10">
+      <CardHeader className="flex flex-row items-center justify-between bg-muted/50 min-h-10 h-10">
         <div></div>
         <CardTitle className="text-center line-clamp-2">{file.name}</CardTitle>
         <HoverCard>
-          <HoverCardTrigger className="cursor-pointer hover:opacity-80 transition-opacity duration-200">
+          <HoverCardTrigger className="cursor-pointer opacity-50 hover:opacity-80 transition-opacity duration-200">
             <Info className="size-4" />
           </HoverCardTrigger>
           <HoverCardContent side="bottom" className="w-48">
