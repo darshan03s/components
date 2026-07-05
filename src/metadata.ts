@@ -1,9 +1,9 @@
 import { env } from './env'
 import { Metadata } from 'next'
 
-export const APP_NAME = 'App'
+export const APP_NAME = 'Player'
 
-const APP_DESCRIPTION = 'Next.js app'
+const APP_DESCRIPTION = 'Player component built with shadcn/ui'
 
 const APP_KEYWORDS: string[] = []
 
