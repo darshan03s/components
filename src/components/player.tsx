@@ -1,11 +1,12 @@
 'use client'
 
-import { Info } from 'lucide-react'
+import { Info, Pause, Play } from 'lucide-react'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/card'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from './ui/hover-card'
 import { getFileData, InputFileData } from '@/lib/mediabunny'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Slider } from './ui/slider'
+import { Button } from './ui/button'
 
 function formatBytes(bytes: number) {
   const sizes = ['B', 'KB', 'MB', 'GB']
@@ -47,6 +48,7 @@ const Player = ({ file, showOverlayControls }: PlayerProps) => {
   const [progress, setProgress] = useState(0)
   const [duration, setDuration] = useState(0)
   const [currentTime, setCurrentTime] = useState(0)
+  const [isPlaying, setIsPlaying] = useState(false)
 
   useEffect(() => {
     getFileData(file).then(setFileData)
@@ -108,6 +110,17 @@ const Player = ({ file, showOverlayControls }: PlayerProps) => {
     videoRef.current?.play()
   }
 
+  function playPause() {
+    if (!videoRef.current) return
+    if (isPlaying) {
+      videoRef.current.pause()
+      setIsPlaying(false)
+    } else {
+      videoRef.current.play()
+      setIsPlaying(true)
+    }
+  }
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
@@ -138,12 +151,20 @@ const Player = ({ file, showOverlayControls }: PlayerProps) => {
           poster={posterUrl}
           src={videoUrl}
           className="aspect-video min-w-100 w-100 rounded-md bg-transparent outline"
+          onPlay={() => setIsPlaying(true)}
+          onPause={() => setIsPlaying(false)}
+          onEnded={() => setIsPlaying(false)}
         />
       </CardContent>
       <CardFooter className="flex flex-col gap-2">
-        <div className="text-xs font-sans flex-1 w-full flex items-center justify-between">
+        <div className="text-xs font-sans w-full grid grid-cols-3">
           <span>
             {formatDuration(currentTime)} / {formatDuration(duration)}
+          </span>
+          <span className="flex items-center justify-center">
+            <Button variant="outline" size="icon-xs" onClick={playPause}>
+              {isPlaying ? <Pause className="size-3" /> : <Play className="size-3" />}
+            </Button>
           </span>
         </div>
         <Slider
