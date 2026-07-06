@@ -1,6 +1,15 @@
 'use client'
 
-import { Image as ImageIcon, Info, Maximize, Pause, Play, Volume2, VolumeX } from 'lucide-react'
+import {
+  Image as ImageIcon,
+  Info,
+  Maximize,
+  Music,
+  Pause,
+  Play,
+  Volume2,
+  VolumeX
+} from 'lucide-react'
 import { Card, CardContent, CardFooter } from './ui/card'
 import { getFileData, InputFileData } from '@/lib/mediabunny'
 import {
@@ -52,6 +61,32 @@ function formatDuration(duration: number): string {
   return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
 }
 
+const VIDEO_EXTENSIONS = [
+  '.mp4',
+  '.mov',
+  '.avi',
+  '.mkv',
+  '.webm',
+  '.flv',
+  '.wmv',
+  '.mpeg',
+  '.mpg',
+  '.3gp'
+]
+
+const AUDIO_EXTENSIONS = ['.mp3', '.wav', '.ogg', '.m4a', '.aac', '.flac', 'm4a']
+
+function getType(file: File) {
+  const extension = file.name.split('.').pop()
+  if (extension && VIDEO_EXTENSIONS.includes(extension)) {
+    return 'video'
+  }
+  if (extension && AUDIO_EXTENSIONS.includes(extension)) {
+    return 'audio'
+  }
+  return 'unknown'
+}
+
 type PlayerProps = {
   file: File
   showHTMLControls?: boolean
@@ -79,6 +114,7 @@ type PlayerStaticContextType = {
   handleMute: () => void
   handleMaximize: () => void
   handleCapture: () => void
+  type: 'video' | 'audio' | 'unknown'
 }
 
 const PlayerStaticContext = createContext<PlayerStaticContextType | undefined>(undefined)
@@ -105,6 +141,7 @@ const PlayerProvider = ({
   })
   const [videoUrl, setVideoUrl] = useState<string>()
   const [posterUrl, setPosterUrl] = useState<string>()
+  const type = getType(file)
 
   useEffect(() => {
     const url = URL.createObjectURL(file)
@@ -231,7 +268,8 @@ const PlayerProvider = ({
       playPause,
       handleMute,
       handleMaximize,
-      handleCapture
+      handleCapture,
+      type
     }
   }, [
     file,
@@ -303,10 +341,16 @@ const Poster = memo(function Poster() {
 })
 
 const Video = memo(function Video() {
-  const { videoRef, showHTMLControls, posterUrl, videoUrl, setIsPlaying } = usePlayerStaticContext()
+  const { videoRef, showHTMLControls, posterUrl, videoUrl, setIsPlaying, type } =
+    usePlayerStaticContext()
 
   return (
     <CardContent className="p-0 relative aspect-video min-w-120 w-120">
+      {type === 'audio' && !posterUrl && (
+        <div className="absolute inset-0 flex items-center justify-center bg-linear-to-b from-primary/10 to-transparent">
+          <Music className="size-14" />
+        </div>
+      )}
       <video
         data-video
         ref={videoRef}
