@@ -1,5 +1,5 @@
 'use client'
-import Player from '@/components/player'
+import { Player } from '@/components/media-player'
 
 import Main from '@/components/main'
 import FileImport from '@/components/file-import'
