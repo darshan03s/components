@@ -1,0 +1,8 @@
+button,
+a {
+  cursor: pointer;
+}
+
+:root {
+  --header-height: 3rem;
+}
