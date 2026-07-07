@@ -1,16 +1,18 @@
-'use client'
-import { Player } from '@/components/media-player'
-
 import Main from '@/components/main'
-import FileImport from '@/components/file-import'
-import { useState } from 'react'
+import Link from 'next/link'
+import './globals.css'
 
 const Page = () => {
-  const [file, setFile] = useState<File | null>(null)
-
   return (
     <Main className="flex items-center justify-center ">
-      <div>{!file ? <FileImport setFile={setFile} /> : <Player file={file} />}</div>
+      <div className="flex flex-col gap-4">
+        <h1 className="text-2xl font-bold">Components</h1>
+        <div className="flex flex-col gap-2 items-center">
+          <Link href="/media-player" className="underline">
+            Media Player
+          </Link>
+        </div>
+      </div>
     </Main>
   )
 }

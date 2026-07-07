@@ -1,9 +1,9 @@
 import { env } from './env'
 import { Metadata } from 'next'
 
-export const APP_NAME = 'Player'
+export const APP_NAME = 'Components'
 
-const APP_DESCRIPTION = 'Player component built with shadcn/ui'
+const APP_DESCRIPTION = 'Components built with shadcn/ui and tailwindcss'
 
 const APP_KEYWORDS: string[] = []
 
