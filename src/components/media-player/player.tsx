@@ -34,12 +34,26 @@ type PlayerProps = {
 
 const Player = ({ file, showHTMLControls }: PlayerProps) => {
   return (
-    <Card className="w-86 md:w-120 max-w-full gap-0 relative overflow-hidden">
-      <PlayerProvider file={file} showHTMLControls={showHTMLControls}>
-        <Poster />
-        <Video />
-        <PlayerFooter />
-      </PlayerProvider>
+    <PlayerProvider file={file} showHTMLControls={showHTMLControls}>
+      <PlayerMain />
+    </PlayerProvider>
+  )
+}
+
+const PlayerMain = () => {
+  const { fileData } = usePlayerStaticContext()
+
+  return (
+    <Card className="w-86 md:w-120 h-71 md:h-90 max-w-full gap-0 p-0 relative overflow-hidden">
+      {!fileData ? (
+        <div className="absolute inset-0 bg-muted animate-pulse" />
+      ) : (
+        <>
+          <Poster />
+          <Video />
+          <PlayerFooter />
+        </>
+      )}
     </Card>
   )
 }
@@ -229,7 +243,7 @@ const ProgressBar = () => {
 const FileName = memo(function FileName() {
   const { fileData, file } = usePlayerStaticContext()
 
-  const fileName = fileData.metadataTags.title || file.name
+  const fileName = fileData?.metadataTags.title || file.name
 
   return (
     <span data-filename className="min-w-0 w-full truncate text-xs text-center" title={fileName}>

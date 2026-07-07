@@ -76,13 +76,13 @@ export const InfoModal = memo(function InfoModal({ children, open, onOpenChange 
   const hoverCardContentMap = {
     'Last modified': new Date(file.lastModified).toLocaleDateString(),
     Size: formatBytes(file.size),
-    Format: fileData.format.name,
-    'MIME Type': fileData.format.mimeType,
-    Duration: formatDuration(fileData.duration),
-    Artist: fileData.metadataTags.artist,
-    Album: fileData.metadataTags.album,
-    'Total tracks': fileData.metadataTags.tracksTotal,
-    Genre: fileData.metadataTags.genre
+    Format: fileData?.format.name,
+    'MIME Type': fileData?.format.mimeType,
+    Duration: fileData?.duration ? formatDuration(fileData.duration) : 'N/A',
+    Artist: fileData?.metadataTags.artist,
+    Album: fileData?.metadataTags.album,
+    'Total tracks': fileData?.metadataTags.tracksTotal,
+    Genre: fileData?.metadataTags.genre
   }
 
   return (

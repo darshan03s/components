@@ -12,7 +12,7 @@ type PlaybackState = {
 
 type PlayerStaticContextType = {
   file: File
-  fileData: InputFileData
+  fileData: InputFileData | null
   videoRef: React.RefObject<HTMLVideoElement | null>
   posterUrl: string | undefined
   videoUrl: string | undefined
@@ -164,8 +164,7 @@ export const PlayerProvider = ({
     link.remove()
   }, [file.name])
 
-  const staticValue = useMemo<PlayerStaticContextType | null>(() => {
-    if (!fileData) return null
+  const staticValue = useMemo<PlayerStaticContextType>(() => {
     return {
       file,
       fileData,
@@ -197,8 +196,6 @@ export const PlayerProvider = ({
     handleCapture,
     type
   ])
-
-  if (!staticValue) return null
 
   return (
     <PlayerStaticContext.Provider value={staticValue}>
