@@ -4,6 +4,7 @@ import { MediaPlayer } from '@/components/media-player'
 import Main from '@/components/main'
 import FileImport from '@/components/file-import'
 import { useState } from 'react'
+import './styles.css'
 
 const Page = () => {
   const [file, setFile] = useState<File | null>(null)
