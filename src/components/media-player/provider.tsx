@@ -17,6 +17,7 @@ type PlayerStaticContextType = {
   posterUrl: string | undefined
   videoUrl: string | undefined
   showHTMLControls: boolean | undefined
+  showFileName: boolean | undefined
   setIsPlaying: (isPlaying: boolean) => void
   setIsMuted: (isMuted: boolean) => void
   sliderOnValueChange: (value: number[]) => void
@@ -36,11 +37,13 @@ const PlayerPlaybackContext = createContext<PlaybackState | undefined>(undefined
 export const PlayerProvider = ({
   children,
   file,
-  showHTMLControls
+  showHTMLControls,
+  showFileName
 }: {
   children: React.ReactNode
   file: File
   showHTMLControls: boolean | undefined
+  showFileName: boolean | undefined
 }) => {
   const [fileData, setFileData] = useState<InputFileData | null>(null)
   const videoRef = useRef<HTMLVideoElement | null>(null)
@@ -184,6 +187,7 @@ export const PlayerProvider = ({
       fileData,
       videoRef,
       showHTMLControls,
+      showFileName,
       posterUrl,
       videoUrl,
       setIsPlaying,
@@ -201,6 +205,7 @@ export const PlayerProvider = ({
     file,
     fileData,
     showHTMLControls,
+    showFileName,
     posterUrl,
     videoUrl,
     setIsPlaying,

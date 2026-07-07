@@ -32,21 +32,33 @@ import {
 type MediaPlayerProps = {
   file: File
   showHTMLControls?: boolean
+  showFileName?: boolean
+  className?: string
 }
 
-export const MediaPlayer = ({ file, showHTMLControls }: MediaPlayerProps) => {
+export const MediaPlayer = ({
+  file,
+  showHTMLControls,
+  showFileName,
+  className
+}: MediaPlayerProps) => {
   return (
-    <PlayerProvider file={file} showHTMLControls={showHTMLControls}>
-      <PlayerMain />
+    <PlayerProvider file={file} showHTMLControls={showHTMLControls} showFileName={showFileName}>
+      <PlayerMain className={className} />
     </PlayerProvider>
   )
 }
 
-const PlayerMain = () => {
+const PlayerMain = ({ className }: { className?: string }) => {
   const { fileData } = usePlayerStaticContext()
 
   return (
-    <Card className="w-86 md:w-120 h-71 md:h-90 max-w-full gap-0 p-0 relative overflow-hidden">
+    <Card
+      className={cn(
+        'w-86 md:w-120 h-71 md:h-90 max-w-full gap-0 p-0 relative overflow-hidden',
+        className
+      )}
+    >
       {!fileData ? (
         <div className="absolute inset-0 bg-muted animate-pulse" />
       ) : (
@@ -104,7 +116,7 @@ const Video = memo(function Video() {
 })
 
 const PlayerFooter = memo(function PlayerFooter() {
-  const { posterUrl } = usePlayerStaticContext()
+  const { posterUrl, showFileName } = usePlayerStaticContext()
 
   return (
     <CardFooter
@@ -124,7 +136,7 @@ const PlayerFooter = memo(function PlayerFooter() {
     >
       <Controls />
       <ProgressBar />
-      <FileName />
+      {showFileName && <FileName />}
     </CardFooter>
   )
 })
