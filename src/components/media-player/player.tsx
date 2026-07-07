@@ -34,7 +34,7 @@ type PlayerProps = {
 
 const Player = ({ file, showHTMLControls }: PlayerProps) => {
   return (
-    <Card className="w-120 max-w-full gap-0 p-0 relative overflow-hidden">
+    <Card className="w-86 md:w-120 max-w-full gap-0 relative overflow-hidden">
       <PlayerProvider file={file} showHTMLControls={showHTMLControls}>
         <Poster />
         <Video />
@@ -66,7 +66,7 @@ const Video = memo(function Video() {
     usePlayerStaticContext()
 
   return (
-    <CardContent className="p-0 relative aspect-video min-w-120 w-120" onClick={playPause}>
+    <CardContent className="p-0 relative aspect-video" onClick={playPause}>
       {type === 'audio' && !posterUrl && (
         <div className="absolute inset-0 flex items-center justify-center bg-linear-to-b from-primary/10 to-transparent">
           <Music className="size-14 text-primary" />
