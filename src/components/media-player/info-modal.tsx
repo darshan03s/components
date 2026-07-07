@@ -57,7 +57,13 @@ function getTrackInfoFields(track: TrackData) {
   return fields
 }
 
-export const InfoModal = memo(function InfoModal({ children }: { children: React.ReactNode }) {
+type InfoModalProps = {
+  children?: React.ReactNode
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+}
+
+export const InfoModal = memo(function InfoModal({ children, open, onOpenChange }: InfoModalProps) {
   const { file, fileData } = usePlayerStaticContext()
   const [tracksData, setTracksData] = useState<TrackData[]>([])
 
@@ -80,8 +86,8 @@ export const InfoModal = memo(function InfoModal({ children }: { children: React
   }
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>{children}</DialogTrigger>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      {children ? <DialogTrigger asChild>{children}</DialogTrigger> : null}
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Info</DialogTitle>

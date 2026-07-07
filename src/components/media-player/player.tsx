@@ -1,6 +1,7 @@
 'use client'
 
 import {
+  EllipsisVertical,
   Image as ImageIcon,
   Info,
   Maximize,
@@ -11,13 +12,20 @@ import {
   VolumeX
 } from 'lucide-react'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
-import { memo } from 'react'
+import { memo, useState } from 'react'
 import { Slider } from '@/components/ui/slider'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { formatDuration } from './utils'
 import { PlayerProvider, usePlayerStaticContext, usePlayerPlaybackContext } from './provider'
 import { InfoModal } from './info-modal'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
 
 type PlayerProps = {
   file: File
@@ -103,7 +111,7 @@ const PlayerFooter = memo(function PlayerFooter() {
 })
 
 const Controls = () => {
-  const { playPause, handleMute, handleMaximize, handleCapture, type } = usePlayerStaticContext()
+  const { playPause, handleMute, handleCapture, type } = usePlayerStaticContext()
   const { currentTime, duration, isPlaying, isMuted } = usePlayerPlaybackContext()
 
   const rightControls = [
@@ -113,18 +121,9 @@ const Controls = () => {
       onClick: handleMute
     },
     {
-      id: 'maximize',
-      icon: <Maximize className="size-3" />,
-      onClick: handleMaximize
-    },
-    {
       id: 'capture',
       icon: <ImageIcon className="size-3" />,
       onClick: handleCapture
-    },
-    {
-      id: 'info',
-      icon: <Info className="size-3" />
     }
   ]
 
@@ -140,15 +139,6 @@ const Controls = () => {
       </span>
       <div className="flex items-center justify-end gap-2">
         {rightControls.map((control) => {
-          if (control.id === 'info') {
-            return (
-              <InfoModal key={control.id}>
-                <Button data-controls-right size="icon-xs">
-                  <Info className="size-3" />
-                </Button>
-              </InfoModal>
-            )
-          }
           if (type === 'audio' && control.id === 'capture') {
             return null
           }
@@ -158,8 +148,67 @@ const Controls = () => {
             </Button>
           )
         })}
+        <MoreControls>
+          <Button data-controls-right size="icon-xs">
+            <EllipsisVertical className="size-3" />
+          </Button>
+        </MoreControls>
       </div>
     </div>
+  )
+}
+
+const MoreControls = ({ children }: { children: React.ReactNode }) => {
+  const { handleMaximize } = usePlayerStaticContext()
+  const [infoOpen, setInfoOpen] = useState(false)
+
+  const moreControls = [
+    {
+      id: 'info',
+      icon: <Info className="size-3" />,
+      label: 'Info'
+    },
+    {
+      id: 'maximize',
+      icon: <Maximize className="size-3" />,
+      onClick: handleMaximize,
+      label: 'Maximize'
+    }
+  ]
+
+  return (
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
+        <DropdownMenuContent side="top" align="end" className="p-2">
+          <DropdownMenuGroup className="space-y-1">
+            {moreControls.map((control) => {
+              if (control.id === 'info') {
+                return (
+                  <DropdownMenuItem
+                    key={control.id}
+                    className="text-xs cursor-pointer"
+                    onSelect={() => setInfoOpen(true)}
+                  >
+                    {control.icon} {control.label}
+                  </DropdownMenuItem>
+                )
+              }
+              return (
+                <DropdownMenuItem
+                  key={control.id}
+                  className="text-xs cursor-pointer"
+                  onClick={control.onClick}
+                >
+                  {control.icon} {control.label}
+                </DropdownMenuItem>
+              )
+            })}
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <InfoModal open={infoOpen} onOpenChange={setInfoOpen} />
+    </>
   )
 }
 
