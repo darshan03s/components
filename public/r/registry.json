@@ -1,0 +1,47 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "registry",
+  "homepage": "https://ui.shadcn.com",
+  "items": [
+    {
+      "name": "media-player",
+      "type": "registry:block",
+      "title": "Media Player",
+      "description": "A media player component for audio and video files",
+      "registryDependencies": ["button", "dialog", "item", "card", "dropdown-menu", "slider"],
+      "dependencies": ["mediabunny"],
+      "files": [
+        {
+          "path": "src/components/media-player/index.ts",
+          "type": "registry:file",
+          "target": "@components/media-player/index.ts"
+        },
+        {
+          "path": "src/components/media-player/info-modal.tsx",
+          "type": "registry:component",
+          "target": "@components/media-player/info-modal.tsx"
+        },
+        {
+          "path": "src/components/media-player/mediabunny.ts",
+          "type": "registry:file",
+          "target": "@components/media-player/mediabunny.ts"
+        },
+        {
+          "path": "src/components/media-player/player.tsx",
+          "type": "registry:component",
+          "target": "@components/media-player/player.tsx"
+        },
+        {
+          "path": "src/components/media-player/provider.tsx",
+          "type": "registry:component",
+          "target": "@components/media-player/provider.tsx"
+        },
+        {
+          "path": "src/components/media-player/utils.ts",
+          "type": "registry:file",
+          "target": "@components/media-player/utils.ts"
+        }
+      ]
+    }
+  ]
+}
