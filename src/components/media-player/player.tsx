@@ -157,7 +157,13 @@ const Controls = () => {
             return null
           }
           return (
-            <Button key={control.id} data-controls-right size="icon-xs" onClick={control.onClick}>
+            <Button
+              key={control.id}
+              data-controls-right
+              size="icon-xs"
+              onClick={control.onClick}
+              className={`${control.id === 'capture' && 'hidden md:inline-flex'}`}
+            >
               {control.icon}
             </Button>
           )
@@ -173,7 +179,7 @@ const Controls = () => {
 }
 
 const MoreControls = ({ children }: { children: React.ReactNode }) => {
-  const { handleMaximize } = usePlayerStaticContext()
+  const { handleMaximize, handleCapture } = usePlayerStaticContext()
   const [infoOpen, setInfoOpen] = useState(false)
 
   const moreControls = [
@@ -181,6 +187,12 @@ const MoreControls = ({ children }: { children: React.ReactNode }) => {
       id: 'info',
       icon: <Info className="size-3" />,
       label: 'Info'
+    },
+    {
+      id: 'capture',
+      icon: <ImageIcon className="size-3" />,
+      onClick: handleCapture,
+      label: 'Capture'
     },
     {
       id: 'maximize',
@@ -211,7 +223,7 @@ const MoreControls = ({ children }: { children: React.ReactNode }) => {
               return (
                 <DropdownMenuItem
                   key={control.id}
-                  className="text-xs cursor-pointer"
+                  className={`text-xs cursor-pointer ${control.id === 'capture' && 'inline-flex md:hidden'}`}
                   onClick={control.onClick}
                 >
                   {control.icon} {control.label}
