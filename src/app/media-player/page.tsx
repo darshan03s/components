@@ -1,4 +1,3 @@
-import './styles.css'
 import PageClient from './page-client'
 
 const Page = () => {
