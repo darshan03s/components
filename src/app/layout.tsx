@@ -4,7 +4,6 @@ import Header from '@/components/header'
 import { siteMetadata } from '@/metadata'
 import { Analytics } from '@vercel/analytics/next'
 import Providers from '@/components/providers'
-import { ReactScan } from '@/components/react-scan'
 
 const fontSans = Geist({
   variable: '--font-sans',
@@ -31,7 +30,6 @@ export default function RootLayout({
           {children}
         </Providers>
         <Analytics />
-        <ReactScan />
       </body>
     </html>
   )
