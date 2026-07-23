@@ -12,9 +12,12 @@ import { json } from '@codemirror/lang-json'
 import { html } from '@codemirror/lang-html'
 import { sass } from '@codemirror/lang-sass'
 import { css } from '@codemirror/lang-css'
+import { vscodeDark, vscodeLight } from '@uiw/codemirror-theme-vscode'
+import { useTheme } from 'next-themes'
 
 const EditorComp = () => {
   const { activeFile } = useWebcontainer()
+  const { resolvedTheme } = useTheme()
 
   const extensions = [
     javascript({ jsx: true }),
@@ -28,12 +31,15 @@ const EditorComp = () => {
     css()
   ]
 
+  const theme = resolvedTheme === 'dark' ? vscodeDark : vscodeLight
+
   return (
     <div className="flex-1 overflow-scroll no-scrollbar">
       <CodeMirror
         value={activeFile.content}
         extensions={extensions}
-        className="h-full [&_.cm-activeLine]:bg-transparent! [&_.cm-activeLineGutter]:bg-transparent! [&_.cm-editor]:h-full! [&_.cm-scroller]:no-scrollbar"
+        theme={theme}
+        className="h-full [&_.cm-activeLine]:bg-transparent! [&_.cm-activeLineGutter]:bg-transparent! [&_.cm-editor]:h-full! [&_.cm-scroller]:no-scrollbar text-sm"
       />
     </div>
   )
