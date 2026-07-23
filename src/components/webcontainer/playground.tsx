@@ -8,11 +8,12 @@ import { useEffect } from 'react'
 
 type PlaygroundProps = {
   loadFromSnapshot?: string
+  rootDir?: string
 }
 
 export const Playground = ({ ...props }: PlaygroundProps) => {
   return (
-    <WebcontainerProvider>
+    <WebcontainerProvider rootDir={props.rootDir}>
       <Comp {...props} />
     </WebcontainerProvider>
   )

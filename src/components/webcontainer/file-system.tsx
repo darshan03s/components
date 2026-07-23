@@ -10,20 +10,20 @@ import { ReadDirEntry } from './types'
 
 export const FileSystem = () => {
   const { fileSystemOpen, toggleFileSystem } = useFileSystemContext()
-  const { wc, readDir } = useWebcontainerContext()
+  const { mounted, readDir, rootDir } = useWebcontainerContext()
   const [fsItems, setFsItems] = useState<ReadDirEntry[]>([])
 
   async function loadItems() {
-    const items = await readDir('/', {
+    const items = await readDir(rootDir, {
       withFileTypes: true
     })
     setFsItems(items)
   }
 
   useEffect(() => {
-    if (!wc) return
+    if (!mounted) return
     loadItems()
-  }, [wc])
+  }, [mounted])
 
   return (
     <div
@@ -40,7 +40,7 @@ export const FileSystem = () => {
           >
             <PanelLeft />
           </Button>
-          <span className="font-semibold">Workspace</span>
+          <span className="font-semibold">{rootDir}</span>
         </div>
         <div className="flex items-center gap-1">
           <Button variant={'ghost'} size={'icon-xs'} title="Add file">

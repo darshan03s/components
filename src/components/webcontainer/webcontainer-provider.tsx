@@ -9,6 +9,7 @@ import {
   WebContainerProcess
 } from '@webcontainer/api'
 import { ReadDirEntry } from './types'
+import { DEFAULT_ROOT_DIR } from './constants'
 
 type Boot = () => Promise<WebContainer>
 
@@ -57,11 +58,18 @@ type WebcontainerContextType = {
   loadSnapshot: LoadSnapshot
   mounted: boolean
   init: Init
+  rootDir: string
 }
 
 const WebcontainerContext = createContext<WebcontainerContextType | undefined>(undefined)
 
-export const WebcontainerProvider = ({ children }: { children: React.ReactNode }) => {
+export const WebcontainerProvider = ({
+  children,
+  rootDir = DEFAULT_ROOT_DIR
+}: {
+  children: React.ReactNode
+  rootDir?: string
+}) => {
   const [wc, setWc] = useState<WebContainer | null>(null)
   const [mounted, setMounted] = useState<boolean>(false)
 
@@ -82,6 +90,7 @@ export const WebcontainerProvider = ({ children }: { children: React.ReactNode }
 
   const mount: Mount = async (projectFiles, options) => {
     const wc = requireWc()
+    await wc.fs.mkdir(rootDir)
     await wc.mount(projectFiles, options)
     setMounted(true)
   }
@@ -156,6 +165,7 @@ export const WebcontainerProvider = ({ children }: { children: React.ReactNode }
     const snapshotResponse = await fetch(snapshotUrl)
     const snapshot = await snapshotResponse.arrayBuffer()
 
+    await wc.fs.mkdir(rootDir)
     await wc.mount(snapshot)
     setMounted(true)
   }
@@ -166,7 +176,8 @@ export const WebcontainerProvider = ({ children }: { children: React.ReactNode }
     if (loadFromSnapshot) {
       const response = await fetch(loadFromSnapshot)
       const snapshot = await response.arrayBuffer()
-      await wc.mount(snapshot)
+      await wc.fs.mkdir(rootDir)
+      await wc.mount(snapshot, { mountPoint: rootDir })
       setMounted(true)
     }
   }
@@ -186,7 +197,8 @@ export const WebcontainerProvider = ({ children }: { children: React.ReactNode }
         rename,
         loadSnapshot,
         mounted,
-        init
+        init,
+        rootDir
       }}
     >
       {children}
