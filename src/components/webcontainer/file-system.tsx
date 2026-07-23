@@ -7,6 +7,7 @@ import { useWebcontainerContext } from './webcontainer-provider'
 import { useEffect, useState } from 'react'
 import { Item, ItemContent, ItemMedia, ItemTitle } from '@/components/ui/item'
 import { ReadDirEntry } from './types'
+import { cn } from '@/lib/utils'
 
 export const FileSystem = () => {
   const { fileSystemOpen, toggleFileSystem } = useFileSystemContext()
@@ -63,7 +64,7 @@ export const FileSystem = () => {
 }
 
 const FsItem = ({ item }: { item: ReadDirEntry }) => {
-  const { readDir, activePath } = useWebcontainerContext()
+  const { readDir, activePath, activeFile } = useWebcontainerContext()
   const [children, setChildren] = useState<ReadDirEntry[]>([])
 
   async function handleFsItemClick() {
@@ -89,8 +90,10 @@ const FsItem = ({ item }: { item: ReadDirEntry }) => {
     <>
       <Item
         size={'xs'}
-        variant={'default'}
-        className="cursor-pointer p-0 m-0 select-none"
+        className={cn(
+          'cursor-pointer p-1 px-1.5 m-0 select-none',
+          activeFile.path === item.path && 'bg-muted'
+        )}
         onClick={handleFsItemClick}
       >
         <ItemMedia>

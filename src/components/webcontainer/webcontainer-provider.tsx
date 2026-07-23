@@ -203,6 +203,23 @@ export const WebcontainerProvider = ({
   }
 
   const activePath = async (path: string) => {
+    const NOT_ALLOWED = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'mp4', 'mov', 'mkv', 'mp3', 'pdf']
+
+    const getExtension = (path: string) => {
+      const fileName = path.split('/').pop() ?? ''
+      return fileName.includes('.') ? (fileName.split('.').pop()?.toLowerCase() ?? '') : ''
+    }
+
+    const ext = getExtension(path)
+
+    if (NOT_ALLOWED.includes(ext)) {
+      setActiveFile({
+        path,
+        content: `Content cannot be displayed for .${ext}`
+      })
+      return
+    }
+
     const content = await readFile(path, 'utf-8')
     setActiveFile({
       path,
