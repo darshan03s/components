@@ -14,7 +14,7 @@ const Main = () => {
     <div className="flex-1">
       <div
         className={cn(
-          'main-tree sticky top-0 left-0 h-8 px-2 border-b flex items-center',
+          'main-tree sticky top-0 left-0 h-8 border-b flex items-center',
           fileSystemOpen ? 'justify-end' : 'justify-between'
         )}
       >

@@ -30,7 +30,7 @@ export const FileSystem = () => {
       className="w-64 border-r overflow-scroll no-scrollbar text-xs relative"
       hidden={!fileSystemOpen}
     >
-      <div className="filesystem-header sticky top-0 left-0 h-8 px-2 border-b bg-background z-10 flex items-center justify-between">
+      <div className="filesystem-header sticky top-0 left-0 h-8 pr-1 border-b bg-background z-10 flex items-center justify-between">
         <div className="flex items-center">
           <Button
             variant={'ghost'}
@@ -42,7 +42,7 @@ export const FileSystem = () => {
           </Button>
           <span className="font-semibold">{rootDir}</span>
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center">
           <Button variant={'ghost'} size={'icon-xs'} title="Add file">
             <FilePlus />
           </Button>
