@@ -7,14 +7,32 @@ import { cn } from '@/lib/utils'
 import { useWebcontainer } from './webcontainer-provider'
 import { Spinner } from '@/components/ui/spinner'
 import CodeMirror from '@uiw/react-codemirror'
+import { javascript } from '@codemirror/lang-javascript'
+import { json } from '@codemirror/lang-json'
+import { html } from '@codemirror/lang-html'
+import { sass } from '@codemirror/lang-sass'
+import { css } from '@codemirror/lang-css'
 
 const EditorComp = () => {
   const { activeFile } = useWebcontainer()
+
+  const extensions = [
+    javascript({ jsx: true }),
+    json(),
+    html({
+      autoCloseTags: true,
+      matchClosingTags: true,
+      selfClosingTags: true
+    }),
+    sass(),
+    css()
+  ]
 
   return (
     <div className="flex-1 overflow-scroll no-scrollbar">
       <CodeMirror
         value={activeFile.content}
+        extensions={extensions}
         className="h-full [&_.cm-activeLine]:bg-transparent! [&_.cm-activeLineGutter]:bg-transparent! [&_.cm-editor]:h-full! [&_.cm-scroller]:no-scrollbar"
       />
     </div>
