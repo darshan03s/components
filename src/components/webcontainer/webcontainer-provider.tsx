@@ -1,3 +1,5 @@
+'use client'
+
 import { createContext, useContext, useState } from 'react'
 import {
   FileSystemAPI,
@@ -6,8 +8,9 @@ import {
   WebContainer,
   WebContainerProcess
 } from '@webcontainer/api'
+import { ReadDirEntry } from './types'
 
-type Boot = () => Promise<void>
+type Boot = () => Promise<WebContainer>
 
 type Mount = (projectFiles: FileSystemTree, options?: LoadFilesOptions) => Promise<void>
 
@@ -30,15 +33,15 @@ type WriteFile = (
 
 type MkDir = (...args: Parameters<FileSystemAPI['mkdir']>) => ReturnType<FileSystemAPI['mkdir']>
 
-type ReadDir = (
-  ...args: Parameters<FileSystemAPI['readdir']>
-) => ReturnType<FileSystemAPI['readdir']>
+type ReadDir = (...args: Parameters<FileSystemAPI['readdir']>) => Promise<ReadDirEntry[]>
 
 type Rm = (...args: Parameters<FileSystemAPI['rm']>) => ReturnType<FileSystemAPI['rm']>
 
 type Rename = (...args: Parameters<FileSystemAPI['rename']>) => ReturnType<FileSystemAPI['rename']>
 
 type LoadSnapshot = (snapshotUrl: string) => Promise<void>
+
+type Init = (loadFromSnapshot?: string) => Promise<void>
 
 type WebcontainerContextType = {
   wc: WebContainer | null
@@ -52,12 +55,15 @@ type WebcontainerContextType = {
   rm: Rm
   rename: Rename
   loadSnapshot: LoadSnapshot
+  mounted: boolean
+  init: Init
 }
 
 const WebcontainerContext = createContext<WebcontainerContextType | undefined>(undefined)
 
 export const WebcontainerProvider = ({ children }: { children: React.ReactNode }) => {
   const [wc, setWc] = useState<WebContainer | null>(null)
+  const [mounted, setMounted] = useState<boolean>(false)
 
   function requireWc(): WebContainer {
     if (!wc) {
@@ -68,14 +74,16 @@ export const WebcontainerProvider = ({ children }: { children: React.ReactNode }
   }
 
   const boot: Boot = async () => {
-    if (wc) return
+    if (wc) return wc
     const webcontainerInstance = await WebContainer.boot()
     setWc(webcontainerInstance)
+    return webcontainerInstance
   }
 
   const mount: Mount = async (projectFiles, options) => {
     const wc = requireWc()
     await wc.mount(projectFiles, options)
+    setMounted(true)
   }
 
   const spawn: Spawn = async (baseCommand, args, output) => {
@@ -122,7 +130,14 @@ export const WebcontainerProvider = ({ children }: { children: React.ReactNode }
 
   const readDir: ReadDir = async (path, options) => {
     const wc = requireWc()
-    return await wc.fs.readdir(path, options)
+    const items = await wc.fs.readdir(path, options)
+    const itemsWithPath = items.map((item) => ({
+      path: `${path}/${item.name}`,
+      name: item.name,
+      isFile: () => item.isFile(),
+      isDirectory: () => item.isDirectory()
+    }))
+    return itemsWithPath
   }
 
   const rm: Rm = async (path, options) => {
@@ -142,6 +157,18 @@ export const WebcontainerProvider = ({ children }: { children: React.ReactNode }
     const snapshot = await snapshotResponse.arrayBuffer()
 
     await wc.mount(snapshot)
+    setMounted(true)
+  }
+
+  const init: Init = async (loadFromSnapshot) => {
+    const wc = await boot()
+
+    if (loadFromSnapshot) {
+      const response = await fetch(loadFromSnapshot)
+      const snapshot = await response.arrayBuffer()
+      await wc.mount(snapshot)
+      setMounted(true)
+    }
   }
 
   return (
@@ -157,7 +184,9 @@ export const WebcontainerProvider = ({ children }: { children: React.ReactNode }
         readDir,
         rm,
         rename,
-        loadSnapshot
+        loadSnapshot,
+        mounted,
+        init
       }}
     >
       {children}
