@@ -23,10 +23,10 @@ export const FileSystemProvider = ({ children }: { children: React.ReactNode }) 
   )
 }
 
-export const useFileSystemContext = () => {
+export const useFileSystem = () => {
   const context = useContext(FileSystemContext)
   if (!context) {
-    throw new Error('useFileSystemContext must be used within a FileSystemContext')
+    throw new Error('useFileSystem must be used within a FileSystemContext')
   }
 
   return context

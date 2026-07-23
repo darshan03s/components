@@ -1,9 +1,9 @@
 'use client'
 
-import { useWebcontainerContext, WebcontainerProvider } from './webcontainer-provider'
+import { useWebcontainer, WebcontainerProvider } from './webcontainer-provider'
 import { FileSystem } from './file-system'
 import { FileSystemProvider } from './filesystem-provider'
-import Main from './main'
+import { Editor } from './editor'
 import { useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Terminal } from 'lucide-react'
@@ -22,7 +22,7 @@ export const Playground = ({ ...props }: PlaygroundProps) => {
 }
 
 const Comp = ({ loadFromSnapshot }: PlaygroundProps) => {
-  const { init } = useWebcontainerContext()
+  const { init } = useWebcontainer()
 
   useEffect(() => {
     init(loadFromSnapshot)
@@ -39,7 +39,7 @@ const Comp = ({ loadFromSnapshot }: PlaygroundProps) => {
       <FileSystemProvider>
         <div className="flex flex-1 min-h-0 [--inner-header-height:--spacing(8)] [--fs-width:--spacing(64)]">
           <FileSystem />
-          <Main />
+          <Editor />
         </div>
       </FileSystemProvider>
     </div>

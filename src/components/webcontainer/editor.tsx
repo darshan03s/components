@@ -2,20 +2,20 @@
 
 import { Button } from '@/components/ui/button'
 import { File, PanelRight } from 'lucide-react'
-import { useFileSystemContext } from './filesystem-provider'
+import { useFileSystem } from './filesystem-provider'
 import { cn } from '@/lib/utils'
-import { useWebcontainerContext } from './webcontainer-provider'
+import { useWebcontainer } from './webcontainer-provider'
 import { Spinner } from '@/components/ui/spinner'
 
-const Editor = () => {
-  const { activeFile } = useWebcontainerContext()
+const EditorComp = () => {
+  const { activeFile } = useWebcontainer()
 
   return <div className="flex-1 overflow-scroll no-scrollbar">{activeFile.content}</div>
 }
 
-const Main = () => {
-  const { fileSystemOpen, toggleFileSystem } = useFileSystemContext()
-  const { activeFile, mounted } = useWebcontainerContext()
+export const Editor = () => {
+  const { fileSystemOpen, toggleFileSystem } = useFileSystem()
+  const { activeFile, mounted } = useWebcontainer()
 
   return (
     <div className="flex-1 flex flex-col">
@@ -44,7 +44,7 @@ const Main = () => {
             </span>
           </div>
         ) : (
-          <Editor />
+          <EditorComp />
         )
       ) : (
         <div className="flex-1 flex items-center justify-center">
@@ -54,5 +54,3 @@ const Main = () => {
     </div>
   )
 }
-
-export default Main

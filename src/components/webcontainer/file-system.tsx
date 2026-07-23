@@ -2,8 +2,8 @@
 
 import { ChevronDown, ChevronRight, File, FilePlus, FolderPlus, PanelLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useFileSystemContext } from './filesystem-provider'
-import { useWebcontainerContext } from './webcontainer-provider'
+import { useFileSystem } from './filesystem-provider'
+import { useWebcontainer } from './webcontainer-provider'
 import { useEffect, useState } from 'react'
 import { Item, ItemContent, ItemMedia, ItemTitle } from '@/components/ui/item'
 import { ReadDirEntry } from './types'
@@ -11,8 +11,8 @@ import { cn } from '@/lib/utils'
 import { Spinner } from '@/components/ui/spinner'
 
 export const FileSystem = () => {
-  const { fileSystemOpen, toggleFileSystem } = useFileSystemContext()
-  const { mounted, readDir, rootDir } = useWebcontainerContext()
+  const { fileSystemOpen, toggleFileSystem } = useFileSystem()
+  const { mounted, readDir, rootDir } = useWebcontainer()
   const [fsItems, setFsItems] = useState<ReadDirEntry[]>([])
 
   async function loadItems() {
@@ -71,7 +71,7 @@ export const FileSystem = () => {
 }
 
 const FsItem = ({ item }: { item: ReadDirEntry }) => {
-  const { readDir, activePath, activeFile } = useWebcontainerContext()
+  const { readDir, activePath, activeFile } = useWebcontainer()
   const [children, setChildren] = useState<ReadDirEntry[]>([])
 
   async function handleFsItemClick() {

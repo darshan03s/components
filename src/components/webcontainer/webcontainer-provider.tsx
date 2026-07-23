@@ -253,7 +253,7 @@ export const WebcontainerProvider = ({
   )
 }
 
-export const useWebcontainerContext = () => {
+export const useWebcontainer = () => {
   const context = useContext(WebcontainerContext)
   if (!context) {
     throw new Error('useWebcontainerContext must be used within a WebcontainerProvider')
