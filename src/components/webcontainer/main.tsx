@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { PanelRight, Terminal } from 'lucide-react'
+import { PanelRight } from 'lucide-react'
 import { useFileSystemContext } from './filesystem-provider'
 import { cn } from '@/lib/utils'
 import { useWebcontainerContext } from './webcontainer-provider'
@@ -29,9 +29,6 @@ const Main = () => {
           </Button>
           <span className="text-xs font-semibold">{rootDir}</span>
         </div>
-        <Button variant={'ghost'} size={'icon-xs'}>
-          <Terminal />
-        </Button>
       </div>
       <div>Main</div>
     </div>
