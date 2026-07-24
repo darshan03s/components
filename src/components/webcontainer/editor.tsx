@@ -13,7 +13,7 @@ import { sass } from '@codemirror/lang-sass'
 import { css } from '@codemirror/lang-css'
 import { vscodeDark, vscodeLight } from '@uiw/codemirror-theme-vscode'
 import { useTheme } from 'next-themes'
-import { Cli } from './cli'
+import { Terminal } from './terminal'
 
 const EditorComp = () => {
   const { activeFile } = useWebcontainer()
@@ -53,7 +53,7 @@ export const Editor = () => {
     <div className="flex-1 min-w-0 min-h-0 flex flex-col relative">
       <div
         className={cn(
-          'main-tree sticky top-0 left-0 h-(--inner-header-height) min-h-(--inner-header-height) border-b flex items-center px-1 bg-background z-10'
+          'main-header sticky top-0 left-0 h-(--inner-header-height) min-h-(--inner-header-height) border-b flex items-center px-1 bg-background z-10'
         )}
       >
         <div hidden={fileSystemOpen} className="flex items-center">
@@ -83,8 +83,7 @@ export const Editor = () => {
           <Spinner />
         </div>
       )}
-
-      <Cli />
+      <Terminal />
     </div>
   )
 }

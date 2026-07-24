@@ -1,22 +1,22 @@
 'use client'
 
-import { Terminal } from '@xterm/xterm'
+import { Terminal as XtermTerminal } from '@xterm/xterm'
 import { FitAddon } from '@xterm/addon-fit'
 import { useEffect, useRef } from 'react'
 import '@xterm/xterm/css/xterm.css'
 import { useWebcontainer } from './hooks'
 import { WebContainerProcess } from '@webcontainer/api'
 
-export const Cli = () => {
+export const Terminal = () => {
   const { startShell, mounted } = useWebcontainer()
-  const terminalRef = useRef<Terminal | null>(null)
+  const terminalRef = useRef<XtermTerminal | null>(null)
   const terminalEleRef = useRef<HTMLDivElement | null>(null)
   const fitAddonRef = useRef<FitAddon | null>(null)
   const shellProcessRef = useRef<WebContainerProcess | null>(null)
 
   useEffect(() => {
     const fitAddon = new FitAddon()
-    const terminal = new Terminal({
+    const terminal = new XtermTerminal({
       cursorStyle: 'bar',
       cursorBlink: true,
       convertEol: true
