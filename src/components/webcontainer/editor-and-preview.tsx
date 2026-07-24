@@ -1,8 +1,7 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
-import { File, Globe, PanelRight } from 'lucide-react'
-import { useFileSystem, useWebcontainer } from './hooks'
+import { File, Globe } from 'lucide-react'
+import { useWebcontainer } from './hooks'
 import { cn } from '@/lib/utils'
 import { Spinner } from '@/components/ui/spinner'
 import CodeMirror from '@uiw/react-codemirror'
@@ -54,7 +53,6 @@ const Loading = () => {
 }
 
 const Editor = () => {
-  const { fileSystemOpen, toggleFileSystem } = useFileSystem()
   const { activeFile, view } = useWebcontainer()
 
   return (
@@ -62,19 +60,9 @@ const Editor = () => {
       <div
         hidden={view === 'preview'}
         className={cn(
-          'editor-header sticky top-0 left-0 h-(--inner-header-height) min-h-(--inner-header-height) border-b flex items-center px-1 bg-background z-10'
+          'editor-header sticky top-0 left-0 h-(--inner-header-height) min-h-(--inner-header-height) border-b flex items-center px-2 bg-background z-10'
         )}
       >
-        <div hidden={fileSystemOpen} className="flex items-center">
-          <Button
-            variant={'ghost'}
-            size={'icon-xs'}
-            title="Toggle sidebar"
-            onClick={toggleFileSystem}
-          >
-            <PanelRight />
-          </Button>
-        </div>
         <span className="text-xs font-semibold">{activeFile.path}</span>
       </div>
       {activeFile.path.length === 0 ? (
@@ -93,26 +81,9 @@ const Editor = () => {
 
 const Preview = () => {
   const { view, serverUrl } = useWebcontainer()
-  const { fileSystemOpen, toggleFileSystem } = useFileSystem()
 
   return (
     <div hidden={view === 'editor'} className="h-full rounded-br-lg flex flex-col">
-      <div
-        className={cn(
-          'preview-header sticky top-0 left-0 h-(--inner-header-height) min-h-(--inner-header-height) border-b flex items-center px-1 bg-background z-10'
-        )}
-      >
-        <div hidden={fileSystemOpen} className="flex items-center">
-          <Button
-            variant={'ghost'}
-            size={'icon-xs'}
-            title="Toggle sidebar"
-            onClick={toggleFileSystem}
-          >
-            <PanelRight />
-          </Button>
-        </div>
-      </div>
       <div className="flex-1">
         {serverUrl.length > 0 ? (
           <iframe src={serverUrl} className="h-full w-full" />

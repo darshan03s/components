@@ -6,7 +6,7 @@ import { FileSystemProvider } from './providers/filesystem-provider'
 import { EditorAndPreview } from './editor-and-preview'
 import { useEffect } from 'react'
 import { Button } from '@/components/ui/button'
-import { ArrowRight, Code, Eye, Terminal } from 'lucide-react'
+import { Code, Eye, PanelLeft, PanelRight, Terminal } from 'lucide-react'
 import { useFileSystem, useWebcontainer } from './hooks'
 import { ButtonGroup } from '@/components/ui/button-group'
 
@@ -27,7 +27,7 @@ export const Playground = ({ ...props }: PlaygroundProps) => {
 
 const Comp = ({ loadFromSnapshot }: PlaygroundProps) => {
   const { init, view, toggleView } = useWebcontainer()
-  const { setFileSystemOpen, fileSystemOpen } = useFileSystem()
+  const { toggleFileSystem, fileSystemOpen } = useFileSystem()
 
   useEffect(() => {
     init(loadFromSnapshot)
@@ -40,7 +40,15 @@ const Comp = ({ loadFromSnapshot }: PlaygroundProps) => {
   return (
     <div className="[--playground-width:--spacing(240)] [--playground-height:--spacing(140)] w-(--playground-width) h-(--playground-height) border rounded-lg flex flex-col relative">
       <div className="bg-background rounded-tl-lg rounded-tr-lg min-h-10 h-10 px-2 flex items-center justify-between border-b">
-        <div className="flex items-center">
+        <div className="flex items-center gap-4">
+          <Button
+            size={'icon-xs'}
+            variant={'ghost'}
+            onClick={toggleFileSystem}
+            title="Toggle files"
+          >
+            {fileSystemOpen ? <PanelLeft /> : <PanelRight />}
+          </Button>
           <ButtonGroup>
             <Button
               size={'icon-xs'}
@@ -62,20 +70,9 @@ const Comp = ({ loadFromSnapshot }: PlaygroundProps) => {
           <Terminal />
         </Button>
       </div>
-      <div className="flex flex-1 min-h-0 [--inner-header-height:--spacing(8)] [--fs-width:--spacing(64)]">
+      <div className="flex flex-1 min-h-0 [--inner-header-height:--spacing(8)] [--fs-width:--spacing(64)] relative">
         <FileSystem />
         <EditorAndPreview />
-      </div>
-      <div className="absolute top-0 left-0 h-full w-10 group">
-        <Button
-          variant={'default'}
-          hidden={fileSystemOpen}
-          onClick={() => setFileSystemOpen(true)}
-          className="[--indicator-size:--spacing(5)] size-(--indicator-size) rounded-full absolute top-[50%] -left-[calc(var(--indicator-size)/2)] flex items-center justify-center cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-          title="Open files"
-        >
-          <ArrowRight className="size-3" />
-        </Button>
       </div>
     </div>
   )

@@ -1,6 +1,6 @@
 'use client'
 
-import { ChevronDown, ChevronRight, File, FilePlus, FolderPlus, PanelLeft } from 'lucide-react'
+import { ChevronDown, ChevronRight, File, FilePlus, FolderPlus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useEffect, useState } from 'react'
 import { Item, ItemContent, ItemMedia, ItemTitle } from '@/components/ui/item'
@@ -10,7 +10,7 @@ import { Spinner } from '@/components/ui/spinner'
 import { useFileSystem, useWebcontainer } from './hooks'
 
 export const FileSystem = () => {
-  const { fileSystemOpen, toggleFileSystem } = useFileSystem()
+  const { fileSystemOpen } = useFileSystem()
   const { mounted, readDir, rootDir } = useWebcontainer()
   const [fsItems, setFsItems] = useState<ReadDirEntry[]>([])
 
@@ -35,23 +35,15 @@ export const FileSystem = () => {
       className="w-(--fs-width) min-w-(--fs-width) border-r text-xs relative flex flex-col"
       hidden={!fileSystemOpen}
     >
-      <div className="filesystem-header h-(--inner-header-height) min-h-(--inner-header-height) px-1 border-b bg-background z-10 flex items-center justify-between">
+      <div className="filesystem-header h-(--inner-header-height) min-h-(--inner-header-height) px-2 border-b bg-background z-10 flex items-center justify-between">
         <div className="flex items-center gap-1">
-          <Button
-            variant={'ghost'}
-            size={'icon-xs'}
-            title="Toggle sidebar"
-            onClick={toggleFileSystem}
-          >
-            <PanelLeft />
-          </Button>
           <span className="font-semibold">{rootDir}</span>
         </div>
         <div className="flex items-center">
           <Button variant={'ghost'} size={'icon-xs'} title="Add file">
             <FilePlus />
           </Button>
-          <Button variant={'ghost'} size={'icon-xs'} title="Add file">
+          <Button variant={'ghost'} size={'icon-xs'} title="Add folder">
             <FolderPlus />
           </Button>
         </div>
