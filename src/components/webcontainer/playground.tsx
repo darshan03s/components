@@ -1,12 +1,13 @@
 'use client'
 
-import { useWebcontainer, WebcontainerProvider } from './webcontainer-provider'
+import { WebcontainerProvider } from './webcontainer-provider'
 import { FileSystem } from './file-system'
 import { FileSystemProvider } from './filesystem-provider'
 import { Editor } from './editor'
 import { useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Terminal } from 'lucide-react'
+import { useWebcontainer } from './hooks'
 
 type PlaygroundProps = {
   loadFromSnapshot?: string

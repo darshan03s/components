@@ -2,9 +2,8 @@
 
 import { Button } from '@/components/ui/button'
 import { File, PanelRight } from 'lucide-react'
-import { useFileSystem } from './filesystem-provider'
+import { useFileSystem, useWebcontainer } from './hooks'
 import { cn } from '@/lib/utils'
-import { useWebcontainer } from './webcontainer-provider'
 import { Spinner } from '@/components/ui/spinner'
 import CodeMirror from '@uiw/react-codemirror'
 import { javascript } from '@codemirror/lang-javascript'

@@ -2,13 +2,12 @@
 
 import { ChevronDown, ChevronRight, File, FilePlus, FolderPlus, PanelLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useFileSystem } from './filesystem-provider'
-import { useWebcontainer } from './webcontainer-provider'
 import { useEffect, useState } from 'react'
 import { Item, ItemContent, ItemMedia, ItemTitle } from '@/components/ui/item'
 import { ReadDirEntry } from './types'
 import { cn } from '@/lib/utils'
 import { Spinner } from '@/components/ui/spinner'
+import { useFileSystem, useWebcontainer } from './hooks'
 
 export const FileSystem = () => {
   const { fileSystemOpen, toggleFileSystem } = useFileSystem()

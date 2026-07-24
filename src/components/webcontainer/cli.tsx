@@ -4,7 +4,7 @@ import { Terminal } from '@xterm/xterm'
 import { FitAddon } from '@xterm/addon-fit'
 import { useEffect, useRef } from 'react'
 import '@xterm/xterm/css/xterm.css'
-import { useWebcontainer } from './webcontainer-provider'
+import { useWebcontainer } from './hooks'
 import { WebContainerProcess } from '@webcontainer/api'
 
 export const Cli = () => {

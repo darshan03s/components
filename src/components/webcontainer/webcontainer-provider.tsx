@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useState } from 'react'
+import { createContext, useState } from 'react'
 import {
   FileSystemAPI,
   FileSystemTree,
@@ -74,7 +74,7 @@ type WebcontainerContextType = {
   startShell: (terminal: Terminal) => Promise<WebContainerProcess>
 }
 
-const WebcontainerContext = createContext<WebcontainerContextType | undefined>(undefined)
+export const WebcontainerContext = createContext<WebcontainerContextType | undefined>(undefined)
 
 export const WebcontainerProvider = ({
   children,
@@ -279,12 +279,4 @@ export const WebcontainerProvider = ({
       {children}
     </WebcontainerContext.Provider>
   )
-}
-
-export const useWebcontainer = () => {
-  const context = useContext(WebcontainerContext)
-  if (!context) {
-    throw new Error('useWebcontainerContext must be used within a WebcontainerProvider')
-  }
-  return context
 }
