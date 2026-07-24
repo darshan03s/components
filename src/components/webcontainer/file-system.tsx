@@ -70,7 +70,7 @@ export const FileSystem = () => {
 }
 
 const FsItem = ({ item }: { item: ReadDirEntry }) => {
-  const { readDir, activePath, activeFile } = useWebcontainer()
+  const { readDir, activePath, activeFile, setView } = useWebcontainer()
   const [children, setChildren] = useState<ReadDirEntry[]>([])
 
   async function handleFsItemClick() {
@@ -89,6 +89,7 @@ const FsItem = ({ item }: { item: ReadDirEntry }) => {
       }
     } else if (item.isFile()) {
       activePath(item.path)
+      setView('editor')
     }
   }
 

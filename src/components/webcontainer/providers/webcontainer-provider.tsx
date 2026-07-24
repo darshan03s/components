@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useEffect, useState } from 'react'
+import { createContext, Dispatch, SetStateAction, useEffect, useState } from 'react'
 import {
   FileSystemAPI,
   FileSystemTree,
@@ -75,6 +75,7 @@ type WebcontainerContextType = {
   activeFile: ActiveFile
   startShell: (terminal: Terminal) => Promise<WebContainerProcess>
   view: View
+  setView: Dispatch<SetStateAction<View>>
   toggleView: () => void
   serverUrl: string
 }
@@ -304,6 +305,7 @@ export const WebcontainerProvider = ({
         activeFile,
         startShell,
         view,
+        setView,
         toggleView,
         serverUrl
       }}
