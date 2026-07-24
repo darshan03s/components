@@ -3,7 +3,7 @@
 import { WebcontainerProvider } from './providers/webcontainer-provider'
 import { FileSystem } from './file-system'
 import { FileSystemProvider } from './providers/filesystem-provider'
-import { Editor } from './editor'
+import { EditorAndPreview } from './editor-and-preview'
 import { useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Code, Eye, Terminal } from 'lucide-react'
@@ -63,7 +63,7 @@ const Comp = ({ loadFromSnapshot }: PlaygroundProps) => {
       </div>
       <div className="flex flex-1 min-h-0 [--inner-header-height:--spacing(8)] [--fs-width:--spacing(64)]">
         <FileSystem />
-        <Editor />
+        <EditorAndPreview />
       </div>
     </div>
   )

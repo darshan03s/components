@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useState } from 'react'
+import { createContext, useEffect, useState } from 'react'
 import {
   FileSystemAPI,
   FileSystemTree,
@@ -76,6 +76,7 @@ type WebcontainerContextType = {
   startShell: (terminal: Terminal) => Promise<WebContainerProcess>
   view: View
   toggleView: () => void
+  serverUrl: string
 }
 
 export const WebcontainerContext = createContext<WebcontainerContextType | undefined>(undefined)
@@ -94,6 +95,21 @@ export const WebcontainerProvider = ({
     content: ''
   })
   const [view, setView] = useState<View>('editor')
+  const [serverUrl, setServerUrl] = useState<string>('')
+
+  useEffect(() => {
+    if (!wc) return
+
+    function serverReady(_port: number, url: string) {
+      setServerUrl(url)
+    }
+
+    const unSubscribeServerReady = wc.on('server-ready', serverReady)
+
+    return () => {
+      unSubscribeServerReady()
+    }
+  }, [wc])
 
   function requireWc(): WebContainer {
     if (!wc) {
@@ -288,7 +304,8 @@ export const WebcontainerProvider = ({
         activeFile,
         startShell,
         view,
-        toggleView
+        toggleView,
+        serverUrl
       }}
     >
       {children}
