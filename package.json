@@ -34,6 +34,8 @@
     "@vercel/analytics": "^2.0.1",
     "@webcontainer/api": "^1.6.4",
     "@webcontainer/snapshot": "^0.1.0",
+    "@xterm/addon-fit": "^0.11.0",
+    "@xterm/xterm": "^6.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^1.14.0",

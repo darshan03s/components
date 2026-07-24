@@ -10,6 +10,7 @@ import {
 } from '@webcontainer/api'
 import { ReadDirEntry } from './types'
 import { DEFAULT_ROOT_DIR } from './constants'
+import { Terminal } from '@xterm/xterm'
 
 type Boot = () => Promise<WebContainer>
 
@@ -70,6 +71,7 @@ type WebcontainerContextType = {
   rootDir: string
   activePath: (path: string) => void
   activeFile: ActiveFile
+  startShell: (terminal: Terminal) => Promise<WebContainerProcess>
 }
 
 const WebcontainerContext = createContext<WebcontainerContextType | undefined>(undefined)
@@ -227,6 +229,31 @@ export const WebcontainerProvider = ({
     })
   }
 
+  async function startShell(terminal: Terminal) {
+    const wc = requireWc()
+    const shellProcess = await wc.spawn(`jsh`, {
+      cwd: rootDir,
+      terminal: {
+        cols: terminal.cols,
+        rows: terminal.rows
+      }
+    })
+    shellProcess.output.pipeTo(
+      new WritableStream({
+        write(data) {
+          terminal.write(data)
+        }
+      })
+    )
+
+    const input = shellProcess.input.getWriter()
+    terminal.onData((data) => {
+      input.write(data)
+    })
+
+    return shellProcess
+  }
+
   return (
     <WebcontainerContext.Provider
       value={{
@@ -245,7 +272,8 @@ export const WebcontainerProvider = ({
         init,
         rootDir,
         activePath,
-        activeFile
+        activeFile,
+        startShell
       }}
     >
       {children}
