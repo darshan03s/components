@@ -15,7 +15,7 @@ import { useTheme } from 'next-themes'
 import { Terminal } from './terminal'
 
 const EditorComp = ({ className }: { className?: string }) => {
-  const { activeFile } = useWebcontainer()
+  const { activeFile, writeFile } = useWebcontainer()
   const { resolvedTheme } = useTheme()
 
   const extensions = [
@@ -32,9 +32,14 @@ const EditorComp = ({ className }: { className?: string }) => {
 
   const theme = resolvedTheme === 'dark' ? vscodeDark : vscodeLight
 
+  const onChange = (val: string) => {
+    writeFile(activeFile.path, val)
+  }
+
   return (
     <div className={cn('flex-1 overflow-scroll no-scrollbar', className)}>
       <CodeMirror
+        onChange={onChange}
         value={activeFile.content}
         extensions={extensions}
         theme={theme}
