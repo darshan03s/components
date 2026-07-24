@@ -54,6 +54,8 @@ type ActiveFile = {
   content: string
 }
 
+type View = 'editor' | 'preview'
+
 type WebcontainerContextType = {
   wc: WebContainer | null
   boot: Boot
@@ -72,6 +74,8 @@ type WebcontainerContextType = {
   activePath: (path: string) => void
   activeFile: ActiveFile
   startShell: (terminal: Terminal) => Promise<WebContainerProcess>
+  view: View
+  toggleView: () => void
 }
 
 export const WebcontainerContext = createContext<WebcontainerContextType | undefined>(undefined)
@@ -89,6 +93,7 @@ export const WebcontainerProvider = ({
     path: '',
     content: ''
   })
+  const [view, setView] = useState<View>('editor')
 
   function requireWc(): WebContainer {
     if (!wc) {
@@ -254,6 +259,14 @@ export const WebcontainerProvider = ({
     return shellProcess
   }
 
+  function toggleView() {
+    setView((prev) => {
+      if (prev === 'editor') return 'preview'
+      else if (prev === 'preview') return 'editor'
+      return 'editor'
+    })
+  }
+
   return (
     <WebcontainerContext.Provider
       value={{
@@ -273,7 +286,9 @@ export const WebcontainerProvider = ({
         rootDir,
         activePath,
         activeFile,
-        startShell
+        startShell,
+        view,
+        toggleView
       }}
     >
       {children}
