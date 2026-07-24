@@ -14,7 +14,7 @@ export const FileSystem = () => {
   const { mounted, readDir, rootDir } = useWebcontainer()
   const [fsItems, setFsItems] = useState<ReadDirEntry[]>([])
 
-  async function loadItems() {
+  async function loadRootFsItems() {
     const items = await readDir(
       rootDir,
       {
@@ -27,7 +27,7 @@ export const FileSystem = () => {
 
   useEffect(() => {
     if (!mounted) return
-    loadItems()
+    loadRootFsItems()
   }, [mounted])
 
   return (
@@ -65,19 +65,23 @@ const FsItem = ({ item }: { item: ReadDirEntry }) => {
   const { readDir, activePath, activeFile, setView } = useWebcontainer()
   const [children, setChildren] = useState<ReadDirEntry[]>([])
 
+  async function loadPathFsItems() {
+    const items = await readDir(
+      item.path,
+      {
+        withFileTypes: true
+      },
+      true
+    )
+    setChildren(items)
+  }
+
   async function handleFsItemClick() {
     if (item.isDirectory()) {
       if (children.length > 0) {
         setChildren([])
       } else {
-        const items = await readDir(
-          item.path,
-          {
-            withFileTypes: true
-          },
-          true
-        )
-        setChildren(items)
+        await loadPathFsItems()
       }
     } else if (item.isFile()) {
       activePath(item.path)
