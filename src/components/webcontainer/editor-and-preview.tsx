@@ -58,7 +58,7 @@ const Editor = () => {
   return (
     <>
       <div
-        hidden={view === 'preview'}
+        hidden={view === 'preview' || activeFile.path.length === 0}
         className={cn(
           'editor-header sticky top-0 left-0 h-(--inner-header-height) min-h-(--inner-header-height) border-b flex items-center px-2 bg-background z-10'
         )}
