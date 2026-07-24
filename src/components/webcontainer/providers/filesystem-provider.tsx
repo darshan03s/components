@@ -1,9 +1,10 @@
 'use client'
 
-import { createContext, useState } from 'react'
+import { createContext, Dispatch, SetStateAction, useState } from 'react'
 
 type FileSystemContextType = {
   fileSystemOpen: boolean
+  setFileSystemOpen: Dispatch<SetStateAction<boolean>>
   toggleFileSystem: () => void
 }
 
@@ -17,7 +18,7 @@ export const FileSystemProvider = ({ children }: { children: React.ReactNode }) 
   }
 
   return (
-    <FileSystemContext.Provider value={{ fileSystemOpen, toggleFileSystem }}>
+    <FileSystemContext.Provider value={{ fileSystemOpen, setFileSystemOpen, toggleFileSystem }}>
       {children}
     </FileSystemContext.Provider>
   )
