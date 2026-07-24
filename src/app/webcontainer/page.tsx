@@ -4,7 +4,7 @@ import { Playground } from '@/components/webcontainer/playground'
 const Page = () => {
   return (
     <Main className="flex items-center justify-center">
-      <Playground rootDir="project" loadFromSnapshot="/api/snapshot/vite" />
+      <Playground rootDir="dev" loadFromSnapshot="/api/snapshot/templates" />
     </Main>
   )
 }
