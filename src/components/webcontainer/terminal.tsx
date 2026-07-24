@@ -77,7 +77,7 @@ export const Terminal = () => {
     <div
       ref={terminalEleRef}
       className={cn(
-        'absolute bottom-0 right-0 h-50 max-h-50 bg-background border-t w-full [&_.terminal]:h-full [&_.terminal]:p-2 [&_.terminal]:max-h-50 [&_.xterm-screen]:h-50! [&_.xterm-scrollable-element]:bg-transparent! [&_.xterm-viewport]:no-scrollbar! [&_.xterm-rows]:text-xs! [&_.xterm-rows>div:first-child:empty]:hidden [&_.xterm-rows]:font-mono! [&_.xterm-rows]:h-full! [&_.xterm-viewport]:rounded-br-lg',
+        'absolute bottom-0 right-0 h-50 max-h-50 bg-background border-t w-full [&_.terminal]:h-full [&_.terminal]:p-2 [&_.terminal]:max-h-50 [&_.xterm-screen]:h-50! [&_.xterm-scrollable-element]:bg-transparent! [&_.xterm-viewport]:no-scrollbar! [&_.xterm-rows]:text-xs! [&_.xterm-rows>div:first-child:empty]:hidden [&_.xterm-rows]:font-mono! [&_.xterm-rows]:h-full! [&_.xterm-viewport]:rounded-br-lg [&_.terminal:nth-of-type(2)]:hidden!',
         isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
       )}
     ></div>
