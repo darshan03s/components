@@ -1,6 +1,6 @@
 import { useContext } from 'react'
-import { FileSystemContext } from './filesystem-provider'
-import { WebcontainerContext } from './webcontainer-provider'
+import { FileSystemContext } from './providers/filesystem-provider'
+import { WebcontainerContext } from './providers/webcontainer-provider'
 
 export const useFileSystem = () => {
   const context = useContext(FileSystemContext)

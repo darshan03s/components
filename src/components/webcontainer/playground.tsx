@@ -1,8 +1,8 @@
 'use client'
 
-import { WebcontainerProvider } from './webcontainer-provider'
+import { WebcontainerProvider } from './providers/webcontainer-provider'
 import { FileSystem } from './file-system'
-import { FileSystemProvider } from './filesystem-provider'
+import { FileSystemProvider } from './providers/filesystem-provider'
 import { Editor } from './editor'
 import { useEffect } from 'react'
 import { Button } from '@/components/ui/button'

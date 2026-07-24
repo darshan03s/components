@@ -8,8 +8,8 @@ import {
   WebContainer,
   WebContainerProcess
 } from '@webcontainer/api'
-import { ReadDirEntry } from './types'
-import { DEFAULT_ROOT_DIR } from './constants'
+import { ReadDirEntry } from '../types'
+import { DEFAULT_ROOT_DIR } from '../constants'
 import { Terminal } from '@xterm/xterm'
 
 type Boot = () => Promise<WebContainer>
