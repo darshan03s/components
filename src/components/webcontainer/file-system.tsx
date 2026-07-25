@@ -68,7 +68,7 @@ const FsItem = ({ item }: { item: ReadDirEntry }) => {
       <Item
         size={'xs'}
         className={cn(
-          'cursor-pointer p-1 px-1.5 m-0 select-none',
+          'cursor-pointer p-0 m-0 h-6 px-1 select-none hover:bg-muted',
           activeFile.path === item.path && 'bg-muted'
         )}
         onClick={() => handleFsItemClick(item)}
