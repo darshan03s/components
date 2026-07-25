@@ -31,8 +31,34 @@ const FileSystemHeader = () => {
 
 export const FileSystem = () => {
   const { fileSystemOpen, fs, loadFolderItems } = useFileSystem()
-  const { mounted, rootDir } = useWebcontainer()
+  const { mounted, rootDir, wc } = useWebcontainer()
   const folderPath = `/${rootDir}`
+
+  function getParentFolder(path: string): string {
+    const normalized = path.replace(/\/+$/, '')
+
+    const lastSlash = normalized.lastIndexOf('/')
+
+    if (lastSlash <= 0) {
+      return '/'
+    }
+
+    return normalized.slice(0, lastSlash)
+  }
+
+  useEffect(() => {
+    if (!wc || !mounted) return
+
+    const watcher = wc.fs.watch(folderPath, { recursive: true }, (event, fsItem) => {
+      if (event === 'rename') {
+        const path = `${folderPath}/${String(fsItem)}`
+        const parentFolder = getParentFolder(path)
+        loadFolderItems(parentFolder)
+      }
+    })
+
+    return () => watcher.close()
+  }, [wc, mounted, folderPath])
 
   useEffect(() => {
     if (!mounted) return
