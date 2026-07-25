@@ -9,9 +9,7 @@ import { cn } from '@/lib/utils'
 import { Spinner } from '@/components/ui/spinner'
 import { useFileSystem, useWebcontainer } from './hooks'
 
-const FileSystemHeader = () => {
-  const { rootDir } = useWebcontainer()
-
+const FileSystemHeader = ({ rootDir }: { rootDir: string }) => {
   return (
     <div className="filesystem-header h-(--inner-header-height) min-h-(--inner-header-height) px-2 border-b bg-background z-10 flex items-center justify-between">
       <div className="flex items-center gap-1">
@@ -70,7 +68,7 @@ export const FileSystem = () => {
       className="w-(--fs-width) min-w-(--fs-width) border-r text-xs relative flex flex-col"
       hidden={!fileSystemOpen}
     >
-      <FileSystemHeader />
+      <FileSystemHeader rootDir={rootDir} />
       {!mounted ? (
         <div className="flex-1 flex items-center justify-center">
           <Spinner />
