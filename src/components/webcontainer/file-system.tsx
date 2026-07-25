@@ -2,14 +2,21 @@
 
 import { ChevronDown, ChevronRight, File, FilePlus, FolderPlus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { Item, ItemContent, ItemMedia, ItemTitle } from '@/components/ui/item'
 import { ReadDirEntry } from './types'
 import { cn } from '@/lib/utils'
 import { Spinner } from '@/components/ui/spinner'
+import { Input } from '@/components/ui/input'
 import { useFileSystem, useWebcontainer } from './hooks'
 
-const FileSystemHeader = ({ rootDir }: { rootDir: string }) => {
+const FileSystemHeader = ({
+  rootDir,
+  handleNewFolder
+}: {
+  rootDir: string
+  handleNewFolder: () => void
+}) => {
   return (
     <div className="filesystem-header h-(--inner-header-height) min-h-(--inner-header-height) px-2 border-b bg-background z-10 flex items-center justify-between">
       <div className="flex items-center gap-1">
@@ -19,7 +26,7 @@ const FileSystemHeader = ({ rootDir }: { rootDir: string }) => {
         <Button variant={'ghost'} size={'icon-xs'} title="Add file">
           <FilePlus />
         </Button>
-        <Button variant={'ghost'} size={'icon-xs'} title="Add folder">
+        <Button variant={'ghost'} size={'icon-xs'} title="Add folder" onClick={handleNewFolder}>
           <FolderPlus />
         </Button>
       </div>
@@ -27,8 +34,53 @@ const FileSystemHeader = ({ rootDir }: { rootDir: string }) => {
   )
 }
 
+const NewFolder = () => {
+  const inputRef = useRef<HTMLInputElement | null>(null)
+  const { mkDir } = useWebcontainer()
+  const { setNewFolderParent, newFolderParent } = useFileSystem()
+
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      inputRef.current?.focus()
+    })
+  }, [])
+
+  async function onSubmit(form: HTMLFormElement) {
+    const formData = new FormData(form)
+    const folderName = formData.get('folder-name')
+    const path = `${newFolderParent}/${folderName}`
+    await mkDir(path, { recursive: true })
+    setNewFolderParent('')
+  }
+
+  return (
+    <Item size={'xs'} className={cn('cursor-pointer p-0 m-0 min-h-6 h-6 px-1 select-none ')}>
+      <ItemMedia>
+        <ChevronRight className="size-3" />
+      </ItemMedia>
+      <ItemContent>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault()
+            onSubmit(e.currentTarget)
+          }}
+        >
+          <Input
+            ref={inputRef}
+            onBlur={() => setNewFolderParent('')}
+            name="folder-name"
+            className="h-5 text-[10px]! placeholder:text-[10px] focus-visible:ring-0"
+            placeholder="Enter folder name"
+          />
+        </form>
+      </ItemContent>
+    </Item>
+  )
+}
+
 export const FileSystem = () => {
-  const { fileSystemOpen, fs, loadFolderItems } = useFileSystem()
+  const { fileSystemOpen, fs, loadFolderItems, newFolderParent, setNewFolderParent } =
+    useFileSystem()
   const { mounted, rootDir, wc } = useWebcontainer()
   const folderPath = `/${rootDir}`
 
@@ -68,13 +120,19 @@ export const FileSystem = () => {
       className="w-(--fs-width) min-w-(--fs-width) border-r text-xs relative flex flex-col"
       hidden={!fileSystemOpen}
     >
-      <FileSystemHeader rootDir={rootDir} />
+      <FileSystemHeader
+        rootDir={rootDir}
+        handleNewFolder={() => {
+          setNewFolderParent(folderPath)
+        }}
+      />
       {!mounted ? (
         <div className="flex-1 flex items-center justify-center">
           <Spinner />
         </div>
       ) : (
         <div className="flex-1 flex flex-col gap-2 p-1 overflow-scroll no-scrollbar">
+          {newFolderParent === folderPath && <NewFolder />}
           {fs[folderPath] && <FsTree fsItems={fs[folderPath]} />}
         </div>
       )}
