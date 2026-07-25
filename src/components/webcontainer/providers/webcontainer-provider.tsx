@@ -33,7 +33,7 @@ type WriteFile = (
   ...args: Parameters<FileSystemAPI['writeFile']>
 ) => ReturnType<FileSystemAPI['writeFile']>
 
-type MkDir = (...args: Parameters<FileSystemAPI['mkdir']>) => ReturnType<FileSystemAPI['mkdir']>
+type MkDir = (path: string, options?: { recursive: boolean }) => void
 
 type ReadDir = (
   path: Parameters<FileSystemAPI['readdir']>['0'],
@@ -171,9 +171,17 @@ export const WebcontainerProvider = ({
     return await wc.fs.writeFile(path, data, options)
   }
 
-  const mkDir: MkDir = async (folderPath, options) => {
+  const mkDir: MkDir = async (folderPath, options?) => {
     const wc = requireWc()
-    return await wc.fs.mkdir(folderPath, options)
+    if (options) {
+      if (options.recursive) {
+        await wc.fs.mkdir(folderPath, {
+          recursive: true
+        })
+      } else {
+        await wc.fs.mkdir(folderPath)
+      }
+    }
   }
 
   const readDir: ReadDir = async (path, options, foldersFirst = false) => {
