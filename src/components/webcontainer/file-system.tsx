@@ -1,14 +1,27 @@
 'use client'
 
-import { ChevronDown, ChevronRight, File, FilePlus, FolderPlus } from 'lucide-react'
+import {
+  ChevronDown,
+  ChevronRight,
+  EllipsisVertical,
+  File,
+  FilePlus,
+  FolderPlus
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useEffect, useRef } from 'react'
-import { Item, ItemContent, ItemMedia, ItemTitle } from '@/components/ui/item'
+import { Item, ItemActions, ItemContent, ItemMedia, ItemTitle } from '@/components/ui/item'
 import { ReadDirEntry } from './types'
 import { cn } from '@/lib/utils'
 import { Spinner } from '@/components/ui/spinner'
 import { Input } from '@/components/ui/input'
 import { useFileSystem, useWebcontainer } from './hooks'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
 
 const FileSystemHeader = ({
   rootDir,
@@ -140,10 +153,38 @@ export const FileSystem = () => {
   )
 }
 
+const FolderOptions = ({ createFolder }: { createFolder: () => void }) => {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger>
+        <Button variant={'ghost'} size={'icon-xs'}>
+          <EllipsisVertical />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        onCloseAutoFocus={(e) => e.preventDefault()}
+        onClick={(e) => e.stopPropagation()}
+        side="left"
+        className="[&_div]:cursor-pointer [&_div]:text-[10px] [&_svg]:size-3!"
+      >
+        <DropdownMenuItem onClick={createFolder}>
+          <FolderPlus /> Create folder
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}
+
 const FsItem = ({ item }: { item: ReadDirEntry }) => {
   const { activeFile } = useWebcontainer()
-  const { fs, handleFsItemClick, isFolderOpen } = useFileSystem()
+  const { fs, handleFsItemClick, isFolderOpen, setNewFolderParent, newFolderParent } =
+    useFileSystem()
   const folderPath = item.path
+
+  function createFolder() {
+    handleFsItemClick(item, true)
+    setNewFolderParent(folderPath)
+  }
 
   return (
     <>
@@ -169,7 +210,15 @@ const FsItem = ({ item }: { item: ReadDirEntry }) => {
         <ItemContent>
           <ItemTitle className="text-xs">{item.name}</ItemTitle>
         </ItemContent>
+        <ItemActions>
+          {item.isDirectory() ? <FolderOptions createFolder={createFolder} /> : <></>}
+        </ItemActions>
       </Item>
+      {newFolderParent === folderPath && (
+        <div className="flex flex-col gap-2 ml-2 pl-2 border-l">
+          <NewFolder />
+        </div>
+      )}
       {isFolderOpen(folderPath) && fs[folderPath] && fs[folderPath].length > 0 && (
         <div className="flex flex-col gap-2 ml-2 pl-2 border-l">
           <FsTree fsItems={fs[folderPath]} />

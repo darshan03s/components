@@ -13,7 +13,7 @@ type FileSystemContextType = {
   fs: Fs
   loadFolderItems: (path: string) => Promise<void>
   resetFolderItems: (path: string) => void
-  handleFsItemClick: (item: ReadDirEntry) => Promise<void>
+  handleFsItemClick: (item: ReadDirEntry, open?: true) => Promise<void>
   isFolderOpen: (path: string) => boolean
   newFolderParent: string
   setNewFolderParent: Dispatch<SetStateAction<string>>
@@ -71,13 +71,21 @@ export const FileSystemProvider = ({ children }: { children: React.ReactNode }) 
     }))
   }
 
-  async function handleFsItemClick(item: ReadDirEntry) {
+  async function handleFsItemClick(item: ReadDirEntry, open?: true) {
     const folderPath = item.path
     if (item.isDirectory()) {
       if (!fs[folderPath] || fs[folderPath].length === 0) {
         await loadFolderItems(folderPath)
       }
-      toggleFolderOpen(folderPath)
+      if (open) {
+        setOpenFolders((prev) => {
+          const next = new Set(prev)
+          next.add(folderPath)
+          return next
+        })
+      } else {
+        toggleFolderOpen(folderPath)
+      }
     } else if (item.isFile()) {
       activePath(item.path)
       setView('editor')
