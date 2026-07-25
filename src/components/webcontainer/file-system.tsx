@@ -60,7 +60,8 @@ const NewFolder = () => {
 
   async function onSubmit(form: HTMLFormElement) {
     const formData = new FormData(form)
-    const folderName = formData.get('folder-name')
+    const folderName = String(formData.get('folder-name'))
+    if (folderName.trim().length === 0) return
     const path = `${newFolderParent}/${folderName}`
     await mkDir(path, { recursive: true })
     setNewFolderParent('')
