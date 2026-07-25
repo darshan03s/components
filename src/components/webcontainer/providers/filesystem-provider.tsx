@@ -14,6 +14,7 @@ type FileSystemContextType = {
   loadFolderItems: (path: string) => Promise<void>
   resetFolderItems: (path: string) => void
   handleFsItemClick: (item: ReadDirEntry) => Promise<void>
+  isFolderOpen: (path: string) => boolean
 }
 
 export const FileSystemContext = createContext<FileSystemContextType | undefined>(undefined)
@@ -22,9 +23,28 @@ export const FileSystemProvider = ({ children }: { children: React.ReactNode }) 
   const [fileSystemOpen, setFileSystemOpen] = useState(true)
   const [fs, setFs] = useState<Fs>({})
   const { readDir, activePath, setView } = useWebcontainer()
+  const [openFolders, setOpenFolders] = useState(new Set<string>())
 
   function toggleFileSystem() {
     setFileSystemOpen(!fileSystemOpen)
+  }
+
+  function toggleFolderOpen(folderPath: string) {
+    setOpenFolders((prev) => {
+      const next = new Set(prev)
+
+      if (next.has(folderPath)) {
+        next.delete(folderPath)
+      } else {
+        next.add(folderPath)
+      }
+
+      return next
+    })
+  }
+
+  function isFolderOpen(path: string) {
+    return openFolders.has(path)
   }
 
   async function loadFolderItems(path: string) {
@@ -51,11 +71,10 @@ export const FileSystemProvider = ({ children }: { children: React.ReactNode }) 
   async function handleFsItemClick(item: ReadDirEntry) {
     const folderPath = item.path
     if (item.isDirectory()) {
-      if (fs[folderPath] && fs[folderPath].length > 0) {
-        resetFolderItems(folderPath)
-      } else {
+      if (!fs[folderPath] || fs[folderPath].length === 0) {
         await loadFolderItems(folderPath)
       }
+      toggleFolderOpen(folderPath)
     } else if (item.isFile()) {
       activePath(item.path)
       setView('editor')
@@ -71,7 +90,8 @@ export const FileSystemProvider = ({ children }: { children: React.ReactNode }) 
         fs,
         loadFolderItems,
         resetFolderItems,
-        handleFsItemClick
+        handleFsItemClick,
+        isFolderOpen
       }}
     >
       {children}

@@ -84,7 +84,7 @@ export const FileSystem = () => {
 
 const FsItem = ({ item }: { item: ReadDirEntry }) => {
   const { activeFile } = useWebcontainer()
-  const { fs, handleFsItemClick } = useFileSystem()
+  const { fs, handleFsItemClick, isFolderOpen } = useFileSystem()
   const folderPath = item.path
 
   return (
@@ -99,7 +99,7 @@ const FsItem = ({ item }: { item: ReadDirEntry }) => {
       >
         <ItemMedia>
           {item.isDirectory() ? (
-            fs[folderPath] && fs[folderPath].length > 0 ? (
+            isFolderOpen(folderPath) ? (
               <ChevronDown className="size-3" />
             ) : (
               <ChevronRight className="size-3" />
@@ -112,7 +112,7 @@ const FsItem = ({ item }: { item: ReadDirEntry }) => {
           <ItemTitle className="text-xs">{item.name}</ItemTitle>
         </ItemContent>
       </Item>
-      {fs[folderPath] && fs[folderPath].length > 0 && (
+      {isFolderOpen(folderPath) && fs[folderPath] && fs[folderPath].length > 0 && (
         <div className="flex flex-col gap-2 ml-2 pl-2 border-l">
           <FsTree fsItems={fs[folderPath]} />
         </div>
