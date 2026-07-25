@@ -33,7 +33,7 @@ type WriteFile = (
   ...args: Parameters<FileSystemAPI['writeFile']>
 ) => ReturnType<FileSystemAPI['writeFile']>
 
-type MkDir = (path: string, options?: { recursive: boolean }) => void
+type MkDir = (path: string, options?: { recursive: boolean }) => Promise<void>
 
 type ReadDir = (
   path: Parameters<FileSystemAPI['readdir']>['0'],
