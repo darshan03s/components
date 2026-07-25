@@ -2,32 +2,41 @@
 
 import { ChevronDown, ChevronRight, File, FilePlus, FolderPlus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Item, ItemContent, ItemMedia, ItemTitle } from '@/components/ui/item'
 import { ReadDirEntry } from './types'
 import { cn } from '@/lib/utils'
 import { Spinner } from '@/components/ui/spinner'
 import { useFileSystem, useWebcontainer } from './hooks'
 
-export const FileSystem = () => {
-  const { fileSystemOpen } = useFileSystem()
-  const { mounted, readDir, rootDir } = useWebcontainer()
-  const [fsItems, setFsItems] = useState<ReadDirEntry[]>([])
+const FileSystemHeader = () => {
+  const { rootDir } = useWebcontainer()
 
-  async function loadRootFsItems() {
-    const items = await readDir(
-      rootDir,
-      {
-        withFileTypes: true
-      },
-      true
-    )
-    setFsItems(items)
-  }
+  return (
+    <div className="filesystem-header h-(--inner-header-height) min-h-(--inner-header-height) px-2 border-b bg-background z-10 flex items-center justify-between">
+      <div className="flex items-center gap-1">
+        <span className="font-semibold">{rootDir}</span>
+      </div>
+      <div className="flex items-center">
+        <Button variant={'ghost'} size={'icon-xs'} title="Add file">
+          <FilePlus />
+        </Button>
+        <Button variant={'ghost'} size={'icon-xs'} title="Add folder">
+          <FolderPlus />
+        </Button>
+      </div>
+    </div>
+  )
+}
+
+export const FileSystem = () => {
+  const { fileSystemOpen, fs, loadFolderItems } = useFileSystem()
+  const { mounted, rootDir } = useWebcontainer()
+  const folderPath = `/${rootDir}`
 
   useEffect(() => {
     if (!mounted) return
-    loadRootFsItems()
+    loadFolderItems(folderPath)
   }, [mounted])
 
   return (
@@ -35,26 +44,14 @@ export const FileSystem = () => {
       className="w-(--fs-width) min-w-(--fs-width) border-r text-xs relative flex flex-col"
       hidden={!fileSystemOpen}
     >
-      <div className="filesystem-header h-(--inner-header-height) min-h-(--inner-header-height) px-2 border-b bg-background z-10 flex items-center justify-between">
-        <div className="flex items-center gap-1">
-          <span className="font-semibold">{rootDir}</span>
-        </div>
-        <div className="flex items-center">
-          <Button variant={'ghost'} size={'icon-xs'} title="Add file">
-            <FilePlus />
-          </Button>
-          <Button variant={'ghost'} size={'icon-xs'} title="Add folder">
-            <FolderPlus />
-          </Button>
-        </div>
-      </div>
+      <FileSystemHeader />
       {!mounted ? (
         <div className="flex-1 flex items-center justify-center">
           <Spinner />
         </div>
       ) : (
         <div className="flex-1 flex flex-col gap-2 p-1 overflow-scroll no-scrollbar">
-          <FsTree fsItems={fsItems} />
+          {fs[folderPath] && <FsTree fsItems={fs[folderPath]} />}
         </div>
       )}
     </div>
@@ -62,32 +59,9 @@ export const FileSystem = () => {
 }
 
 const FsItem = ({ item }: { item: ReadDirEntry }) => {
-  const { readDir, activePath, activeFile, setView } = useWebcontainer()
-  const [children, setChildren] = useState<ReadDirEntry[]>([])
-
-  async function loadPathFsItems() {
-    const items = await readDir(
-      item.path,
-      {
-        withFileTypes: true
-      },
-      true
-    )
-    setChildren(items)
-  }
-
-  async function handleFsItemClick() {
-    if (item.isDirectory()) {
-      if (children.length > 0) {
-        setChildren([])
-      } else {
-        await loadPathFsItems()
-      }
-    } else if (item.isFile()) {
-      activePath(item.path)
-      setView('editor')
-    }
-  }
+  const { activeFile } = useWebcontainer()
+  const { fs, handleFsItemClick } = useFileSystem()
+  const folderPath = item.path
 
   return (
     <>
@@ -97,11 +71,11 @@ const FsItem = ({ item }: { item: ReadDirEntry }) => {
           'cursor-pointer p-1 px-1.5 m-0 select-none',
           activeFile.path === item.path && 'bg-muted'
         )}
-        onClick={handleFsItemClick}
+        onClick={() => handleFsItemClick(item)}
       >
         <ItemMedia>
           {item.isDirectory() ? (
-            children.length > 0 ? (
+            fs[folderPath] && fs[folderPath].length > 0 ? (
               <ChevronDown className="size-3" />
             ) : (
               <ChevronRight className="size-3" />
@@ -114,9 +88,9 @@ const FsItem = ({ item }: { item: ReadDirEntry }) => {
           <ItemTitle className="text-xs">{item.name}</ItemTitle>
         </ItemContent>
       </Item>
-      {children.length > 0 && (
+      {fs[folderPath] && fs[folderPath].length > 0 && (
         <div className="flex flex-col gap-2 ml-2 pl-2 border-l">
-          <FsTree fsItems={children} />
+          <FsTree fsItems={fs[folderPath]} />
         </div>
       )}
     </>
