@@ -224,8 +224,7 @@ function ItemIcon({ item, folderPath }: { item: ReadDirEntry; folderPath: string
 
 const FsItem = ({ item }: { item: ReadDirEntry }) => {
   const { activeFile } = useWebcontainer()
-  const { fs, handleFsItemClick, isFolderOpen, setNewFsItem, newFsItem, isIgnoredPath } =
-    useFileSystem()
+  const { fs, handleFsItemClick, isFolderOpen, setNewFsItem, newFsItem } = useFileSystem()
   const folderPath = item.path
 
   function createFolder() {
