@@ -7,6 +7,8 @@ import '@xterm/xterm/css/xterm.css'
 import { useWebcontainer } from './hooks'
 import { WebContainerProcess } from '@webcontainer/api'
 import { cn } from '@/lib/utils'
+import { X, TerminalIcon } from 'lucide-react'
+import { Button } from '../ui/button'
 
 export const Terminal = () => {
   const { startShell, mounted } = useWebcontainer()
@@ -75,11 +77,30 @@ export const Terminal = () => {
 
   return (
     <div
-      ref={terminalEleRef}
       className={cn(
-        'absolute bottom-0 right-0 h-50 max-h-50 bg-background border-t w-full [&_.terminal]:h-full [&_.terminal]:p-2 [&_.terminal]:max-h-50 [&_.xterm-screen]:h-50! [&_.xterm-scrollable-element]:bg-transparent! [&_.xterm-viewport]:no-scrollbar! [&_.xterm-rows]:text-xs! [&_.xterm-rows>div:first-child:empty]:hidden [&_.xterm-rows]:font-mono! [&_.xterm-rows]:h-full! [&_.xterm-viewport]:rounded-br-lg [&_.terminal:nth-of-type(2)]:hidden!',
+        'absolute bottom-0 right-0 w-full',
+        '[--terminal-height:--spacing(46)]',
         isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
       )}
-    ></div>
+    >
+      <div className="terminal-header bg-background h-8 border flex items-center justify-between px-2 select-none">
+        <span className="font-mono text-xs text-foreground flex items-center gap-2 [&_svg]:text-foreground [&_svg]:size-3">
+          <TerminalIcon /> Terminal
+        </span>
+        <Button variant={'ghost'} size={'icon-xs'} onClick={() => setIsOpen(false)} title="Close">
+          <X />
+        </Button>
+      </div>
+      <div
+        ref={terminalEleRef}
+        className={cn(
+          '[&_.terminal]:h-full [&_.terminal]:p-2 [&_.terminal]:max-h-(--terminal-height) [&_.terminal:nth-of-type(2)]:hidden!',
+          '[&_.xterm-screen]:h-(--terminal-height)!',
+          '[&_.xterm-scrollable-element]:bg-transparent!',
+          '[&_.xterm-viewport]:no-scrollbar! [&_.xterm-viewport]:rounded-br-lg',
+          '[&_.xterm-rows]:text-xs! [&_.xterm-rows>div:first-child:empty]:hidden [&_.xterm-rows]:font-mono! [&_.xterm-rows]:h-full!'
+        )}
+      />
+    </div>
   )
 }
