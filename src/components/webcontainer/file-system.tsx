@@ -47,10 +47,10 @@ const FileSystemHeader = ({
   )
 }
 
-const NewFolder = () => {
+const NewFsItem = () => {
   const inputRef = useRef<HTMLInputElement | null>(null)
   const { mkDir } = useWebcontainer()
-  const { setNewFolderParent, newFolderParent } = useFileSystem()
+  const { newFsItem, setNewFsItem } = useFileSystem()
 
   useEffect(() => {
     requestAnimationFrame(() => {
@@ -61,14 +61,19 @@ const NewFolder = () => {
   async function onSubmit(form: HTMLFormElement) {
     const formData = new FormData(form)
     const folderName = String(formData.get('folder-name'))
-    if (folderName.trim().length === 0) return
-    const path = `${newFolderParent}/${folderName}`
-    await mkDir(path, { recursive: true })
-    setNewFolderParent('')
+    const fileName = formData.get('file-name')
+
+    if (folderName && folderName.trim().length > 0) {
+      const path = `${newFsItem?.parent}/${folderName}`
+      await mkDir(path, { recursive: true })
+      setNewFsItem(null)
+    } else if (fileName) {
+      // TODO
+    }
   }
 
   return (
-    <Item size={'xs'} className={cn('cursor-pointer p-0 m-0 min-h-6 h-6 px-1 select-none ')}>
+    <Item size={'xs'} className={cn('cursor-pointer p-0 m-0 min-h-6 h-6 px-1 select-none')}>
       <ItemMedia>
         <ChevronRight className="size-3" />
       </ItemMedia>
@@ -81,10 +86,10 @@ const NewFolder = () => {
         >
           <Input
             ref={inputRef}
-            onBlur={() => setNewFolderParent('')}
-            name="folder-name"
+            onBlur={() => setNewFsItem(null)}
+            name={newFsItem?.type === 'folder' ? 'folder-name' : 'file-name'}
             className="h-5 text-[10px]! placeholder:text-[10px] focus-visible:ring-0"
-            placeholder="Enter folder name"
+            placeholder={newFsItem?.type === 'folder' ? 'Enter folder name' : 'Enter file name'}
           />
         </form>
       </ItemContent>
@@ -93,8 +98,7 @@ const NewFolder = () => {
 }
 
 export const FileSystem = () => {
-  const { fileSystemOpen, fs, loadFolderItems, newFolderParent, setNewFolderParent } =
-    useFileSystem()
+  const { fileSystemOpen, fs, loadFolderItems, newFsItem, setNewFsItem } = useFileSystem()
   const { mounted, rootDir, wc } = useWebcontainer()
   const folderPath = `/${rootDir}`
 
@@ -137,7 +141,10 @@ export const FileSystem = () => {
       <FileSystemHeader
         rootDir={rootDir}
         handleNewFolder={() => {
-          setNewFolderParent(folderPath)
+          setNewFsItem({
+            type: 'folder',
+            parent: folderPath
+          })
         }}
       />
       {!mounted ? (
@@ -146,7 +153,7 @@ export const FileSystem = () => {
         </div>
       ) : (
         <div className="flex-1 flex flex-col gap-2 p-1 overflow-scroll no-scrollbar">
-          {newFolderParent === folderPath && <NewFolder />}
+          {newFsItem?.parent === folderPath && <NewFsItem />}
           {fs[folderPath] && <FsTree fsItems={fs[folderPath]} />}
         </div>
       )}
@@ -178,13 +185,15 @@ const FolderOptions = ({ createFolder }: { createFolder: () => void }) => {
 
 const FsItem = ({ item }: { item: ReadDirEntry }) => {
   const { activeFile } = useWebcontainer()
-  const { fs, handleFsItemClick, isFolderOpen, setNewFolderParent, newFolderParent } =
-    useFileSystem()
+  const { fs, handleFsItemClick, isFolderOpen, setNewFsItem, newFsItem } = useFileSystem()
   const folderPath = item.path
 
   function createFolder() {
     handleFsItemClick(item, true)
-    setNewFolderParent(folderPath)
+    setNewFsItem({
+      type: 'folder',
+      parent: folderPath
+    })
   }
 
   return (
@@ -215,9 +224,9 @@ const FsItem = ({ item }: { item: ReadDirEntry }) => {
           {item.isDirectory() ? <FolderOptions createFolder={createFolder} /> : <></>}
         </ItemActions>
       </Item>
-      {newFolderParent === folderPath && (
+      {newFsItem?.parent === folderPath && (
         <div className="flex flex-col gap-2 ml-2 pl-2 border-l">
-          <NewFolder />
+          <NewFsItem />
         </div>
       )}
       {isFolderOpen(folderPath) && fs[folderPath] && fs[folderPath].length > 0 && (

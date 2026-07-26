@@ -12,11 +12,15 @@ type FileSystemContextType = {
   toggleFileSystem: () => void
   fs: Fs
   loadFolderItems: (path: string) => Promise<void>
-  resetFolderItems: (path: string) => void
   handleFsItemClick: (item: ReadDirEntry, open?: true) => Promise<void>
   isFolderOpen: (path: string) => boolean
-  newFolderParent: string
-  setNewFolderParent: Dispatch<SetStateAction<string>>
+  newFsItem: NewFsItem | null
+  setNewFsItem: Dispatch<SetStateAction<NewFsItem | null>>
+}
+
+type NewFsItem = {
+  parent: string
+  type: 'folder' | 'file'
 }
 
 export const FileSystemContext = createContext<FileSystemContextType | undefined>(undefined)
@@ -26,7 +30,7 @@ export const FileSystemProvider = ({ children }: { children: React.ReactNode }) 
   const [fileSystemOpen, setFileSystemOpen] = useState(true)
   const [fs, setFs] = useState<Fs>({})
   const [openFolders, setOpenFolders] = useState(new Set<string>())
-  const [newFolderParent, setNewFolderParent] = useState('')
+  const [newFsItem, setNewFsItem] = useState<NewFsItem | null>(null)
 
   function toggleFileSystem() {
     setFileSystemOpen(!fileSystemOpen)
@@ -64,13 +68,6 @@ export const FileSystemProvider = ({ children }: { children: React.ReactNode }) 
     }))
   }
 
-  function resetFolderItems(path: string) {
-    setFs((prev) => ({
-      ...prev,
-      [path]: []
-    }))
-  }
-
   async function handleFsItemClick(item: ReadDirEntry, open?: true) {
     const folderPath = item.path
     if (item.isDirectory()) {
@@ -100,11 +97,10 @@ export const FileSystemProvider = ({ children }: { children: React.ReactNode }) 
         toggleFileSystem,
         fs,
         loadFolderItems,
-        resetFolderItems,
         handleFsItemClick,
         isFolderOpen,
-        newFolderParent,
-        setNewFolderParent
+        newFsItem,
+        setNewFsItem
       }}
     >
       {children}
