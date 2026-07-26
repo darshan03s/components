@@ -8,10 +8,11 @@ import {
   EyeOff,
   File,
   FilePlus,
-  FolderPlus
+  FolderPlus,
+  Pencil
 } from 'lucide-react'
 import { Button, buttonVariants } from '@/components/ui/button'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Item, ItemActions, ItemContent, ItemMedia } from '@/components/ui/item'
 import { ReadDirEntry } from './types'
 import { cn } from '@/lib/utils'
@@ -68,10 +69,20 @@ const FileSystemHeader = ({
   )
 }
 
-const NewFsItem = () => {
+const InputComp = ({
+  onSubmit,
+  onBlur,
+  name,
+  placeholder,
+  defaultValue
+}: {
+  onSubmit: (form: HTMLFormElement) => void
+  onBlur: () => void
+  name: string
+  placeholder: string
+  defaultValue?: string
+}) => {
   const inputRef = useRef<HTMLInputElement | null>(null)
-  const { mkDir, writeFile } = useWebcontainer()
-  const { newFsItem, setNewFsItem } = useFileSystem()
 
   useEffect(() => {
     requestAnimationFrame(() => {
@@ -79,7 +90,30 @@ const NewFsItem = () => {
     })
   }, [])
 
-  async function onSubmit(form: HTMLFormElement) {
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault()
+        onSubmit(e.currentTarget)
+      }}
+    >
+      <Input
+        defaultValue={defaultValue}
+        ref={inputRef}
+        onBlur={onBlur}
+        name={name}
+        className="h-5 text-[10px]! placeholder:text-[10px] focus-visible:ring-0"
+        placeholder={placeholder}
+      />
+    </form>
+  )
+}
+
+const NewFsItem = () => {
+  const { mkDir, writeFile } = useWebcontainer()
+  const { newFsItem, setNewFsItem } = useFileSystem()
+
+  async function createNewFsItem(form: HTMLFormElement) {
     const formData = new FormData(form)
     const folderName = formData.get('folder-name')
     const fileName = formData.get('file-name')
@@ -103,20 +137,12 @@ const NewFsItem = () => {
         <ChevronRight className="size-3" />
       </ItemMedia>
       <ItemContent>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault()
-            onSubmit(e.currentTarget)
-          }}
-        >
-          <Input
-            ref={inputRef}
-            onBlur={() => setNewFsItem(null)}
-            name={newFsItem?.type === 'folder' ? 'folder-name' : 'file-name'}
-            className="h-5 text-[10px]! placeholder:text-[10px] focus-visible:ring-0"
-            placeholder={newFsItem?.type === 'folder' ? 'Enter folder name' : 'Enter file name'}
-          />
-        </form>
+        <InputComp
+          onSubmit={createNewFsItem}
+          onBlur={() => setNewFsItem(null)}
+          name={newFsItem?.type === 'folder' ? 'folder-name' : 'file-name'}
+          placeholder={newFsItem?.type === 'folder' ? 'Enter folder name' : 'Enter file name'}
+        />
       </ItemContent>
     </Item>
   )
@@ -184,10 +210,12 @@ export const FileSystem = () => {
 
 const FolderOptions = ({
   createFolder,
-  createFile
+  createFile,
+  rename
 }: {
   createFolder: () => void
   createFile: () => void
+  rename: () => void
 }) => {
   return (
     <DropdownMenu>
@@ -206,6 +234,9 @@ const FolderOptions = ({
         <DropdownMenuItem onClick={createFile}>
           <FilePlus /> Create file
         </DropdownMenuItem>
+        <DropdownMenuItem onClick={rename}>
+          <Pencil /> Rename
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )
@@ -223,9 +254,11 @@ function ItemIcon({ item, folderPath }: { item: ReadDirEntry; folderPath: string
 }
 
 const FsItem = ({ item }: { item: ReadDirEntry }) => {
-  const { activeFile } = useWebcontainer()
+  const { activeFile, rename } = useWebcontainer()
   const { fs, handleFsItemClick, isFolderOpen, setNewFsItem, newFsItem } = useFileSystem()
+  const [isRenaming, setIsRenaming] = useState(false)
   const folderPath = item.path
+  const parentFolder = getParentFolder(folderPath)
 
   function createFolder() {
     handleFsItemClick(item, true)
@@ -243,6 +276,24 @@ const FsItem = ({ item }: { item: ReadDirEntry }) => {
     })
   }
 
+  function startRenameFolder() {
+    setIsRenaming(true)
+  }
+
+  function renameFolder(form: HTMLFormElement) {
+    const formData = new FormData(form)
+    const folderName = formData.get('folder-name')
+    const newName = String(folderName).trim()
+    if (newName === item.name) {
+      setIsRenaming(false)
+      return
+    }
+    if (newName.length > 0) {
+      rename(folderPath, `${parentFolder}/${folderName}`)
+      setIsRenaming(false)
+    }
+  }
+
   return (
     <>
       <Item
@@ -251,15 +302,35 @@ const FsItem = ({ item }: { item: ReadDirEntry }) => {
           'cursor-pointer p-0 m-0 min-h-6 h-6 px-1 select-none hover:bg-muted',
           activeFile.path === item.path && 'bg-muted'
         )}
-        onClick={() => handleFsItemClick(item)}
+        onClick={() => {
+          if (isRenaming) return
+          handleFsItemClick(item)
+        }}
       >
         <ItemMedia className="[&_svg]:size-3!">
           <ItemIcon item={item} folderPath={folderPath} />
         </ItemMedia>
-        <ItemContent className="text-xs flex truncate line-clamp-1">{item.name}</ItemContent>
+        <ItemContent className="text-xs flex truncate line-clamp-1">
+          {isRenaming ? (
+            <InputComp
+              defaultValue={item.name}
+              onSubmit={renameFolder}
+              onBlur={() => setIsRenaming(false)}
+              name="folder-name"
+              placeholder="Enter folder name"
+            />
+          ) : (
+            item.name
+          )}
+        </ItemContent>
+
         <ItemActions>
           {item.isDirectory() ? (
-            <FolderOptions createFolder={createFolder} createFile={createFile} />
+            <FolderOptions
+              createFolder={createFolder}
+              createFile={createFile}
+              rename={startRenameFolder}
+            />
           ) : (
             <></>
           )}
