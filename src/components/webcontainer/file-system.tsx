@@ -3,6 +3,7 @@
 import {
   ChevronDown,
   ChevronRight,
+  ChevronsDownUp,
   EllipsisVertical,
   File,
   FilePlus,
@@ -38,11 +39,13 @@ function getParentFolder(path: string): string {
 const FileSystemHeader = ({
   rootDir,
   handleNewFolder,
-  handleNewFile
+  handleNewFile,
+  handleCollapseAll
 }: {
   rootDir: string
   handleNewFolder: () => void
   handleNewFile: () => void
+  handleCollapseAll: () => void
 }) => {
   return (
     <div className="filesystem-header h-(--inner-header-height) min-h-(--inner-header-height) px-2 border-b bg-background z-10 flex items-center justify-between">
@@ -50,6 +53,9 @@ const FileSystemHeader = ({
         <span className="font-semibold">{rootDir}</span>
       </div>
       <div className="flex items-center">
+        <Button variant={'ghost'} size={'icon-xs'} title="Collapse all" onClick={handleCollapseAll}>
+          <ChevronsDownUp />
+        </Button>
         <Button variant={'ghost'} size={'icon-xs'} title="Add file" onClick={handleNewFile}>
           <FilePlus />
         </Button>
@@ -116,7 +122,8 @@ const NewFsItem = () => {
 }
 
 export const FileSystem = () => {
-  const { fileSystemOpen, fs, loadFolderItems, newFsItem, setNewFsItem } = useFileSystem()
+  const { fileSystemOpen, fs, loadFolderItems, newFsItem, setNewFsItem, collapseAllFolders } =
+    useFileSystem()
   const { mounted, rootDir, wc } = useWebcontainer()
   const folderPath = `/${rootDir}`
 
@@ -158,6 +165,7 @@ export const FileSystem = () => {
             parent: folderPath
           })
         }}
+        handleCollapseAll={collapseAllFolders}
       />
       {!mounted ? (
         <div className="flex-1 flex items-center justify-center">

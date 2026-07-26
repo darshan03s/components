@@ -16,6 +16,7 @@ type FileSystemContextType = {
   isFolderOpen: (path: string) => boolean
   newFsItem: NewFsItem | null
   setNewFsItem: Dispatch<SetStateAction<NewFsItem | null>>
+  collapseAllFolders: () => void
 }
 
 type NewFsItem = {
@@ -89,6 +90,10 @@ export const FileSystemProvider = ({ children }: { children: React.ReactNode }) 
     }
   }
 
+  function collapseAllFolders() {
+    setOpenFolders(new Set())
+  }
+
   return (
     <FileSystemContext.Provider
       value={{
@@ -100,7 +105,8 @@ export const FileSystemProvider = ({ children }: { children: React.ReactNode }) 
         handleFsItemClick,
         isFolderOpen,
         newFsItem,
-        setNewFsItem
+        setNewFsItem,
+        collapseAllFolders
       }}
     >
       {children}
