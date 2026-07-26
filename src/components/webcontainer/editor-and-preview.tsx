@@ -68,7 +68,7 @@ const Editor = () => {
           'editor-header sticky top-0 left-0 h-(--inner-header-height) min-h-(--inner-header-height) border-b flex items-center px-2 bg-background z-10'
         )}
       >
-        <span className="text-xs font-semibold">{activeFile.path}</span>
+        <span className="text-xs font-semibold line-clamp-1">{activeFile.path}</span>
       </div>
       {activeFile.path.length === 0 ? (
         <div

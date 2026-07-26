@@ -11,7 +11,7 @@ import {
 } from 'lucide-react'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { useEffect, useRef } from 'react'
-import { Item, ItemActions, ItemContent, ItemMedia, ItemTitle } from '@/components/ui/item'
+import { Item, ItemActions, ItemContent, ItemMedia } from '@/components/ui/item'
 import { ReadDirEntry } from './types'
 import { cn } from '@/lib/utils'
 import { Spinner } from '@/components/ui/spinner'
@@ -252,9 +252,7 @@ const FsItem = ({ item }: { item: ReadDirEntry }) => {
             <File className="size-3" />
           )}
         </ItemMedia>
-        <ItemContent>
-          <ItemTitle className="text-xs">{item.name}</ItemTitle>
-        </ItemContent>
+        <ItemContent className="text-xs flex truncate line-clamp-1">{item.name}</ItemContent>
         <ItemActions>
           {item.isDirectory() ? (
             <FolderOptions createFolder={createFolder} createFile={createFile} />
