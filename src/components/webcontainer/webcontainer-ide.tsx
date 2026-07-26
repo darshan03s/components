@@ -3,19 +3,19 @@
 import { WebcontainerProvider } from './providers/webcontainer-provider'
 import { FileSystem } from './file-system'
 import { FileSystemProvider } from './providers/filesystem-provider'
-import { EditorAndPreview } from './editor-and-preview'
+import { Workspace } from './workspace'
 import { useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Code, Eye, PanelLeft, PanelRight, Terminal } from 'lucide-react'
 import { useFileSystem, useWebcontainer } from './hooks'
 import { ButtonGroup } from '@/components/ui/button-group'
 
-type PlaygroundProps = {
+type WebContainerIDEProps = {
   loadFromSnapshot?: string
   rootDir?: string
 }
 
-export const Playground = ({ ...props }: PlaygroundProps) => {
+export const WebContainerIDE = ({ ...props }: WebContainerIDEProps) => {
   return (
     <WebcontainerProvider rootDir={props.rootDir}>
       <FileSystemProvider>
@@ -25,7 +25,7 @@ export const Playground = ({ ...props }: PlaygroundProps) => {
   )
 }
 
-const Comp = ({ loadFromSnapshot }: PlaygroundProps) => {
+const Comp = ({ loadFromSnapshot }: WebContainerIDEProps) => {
   const { init, view, toggleView, mounted } = useWebcontainer()
   const { toggleFileSystem, fileSystemOpen } = useFileSystem()
 
@@ -73,7 +73,7 @@ const Comp = ({ loadFromSnapshot }: PlaygroundProps) => {
       </div>
       <div className="flex flex-1 min-h-0 [--inner-header-height:--spacing(8)] [--fs-width:--spacing(64)] relative">
         <FileSystem />
-        <EditorAndPreview />
+        <Workspace />
       </div>
     </div>
   )

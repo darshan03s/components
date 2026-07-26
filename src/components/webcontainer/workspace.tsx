@@ -102,7 +102,7 @@ const Preview = () => {
   )
 }
 
-export const EditorAndPreview = () => {
+export const Workspace = () => {
   const { mounted } = useWebcontainer()
 
   return (
