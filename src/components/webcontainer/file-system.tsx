@@ -8,7 +8,7 @@ import {
   FilePlus,
   FolderPlus
 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
 import { useEffect, useRef } from 'react'
 import { Item, ItemActions, ItemContent, ItemMedia, ItemTitle } from '@/components/ui/item'
 import { ReadDirEntry } from './types'
@@ -173,13 +173,17 @@ export const FileSystem = () => {
   )
 }
 
-const FolderOptions = ({ createFolder }: { createFolder: () => void }) => {
+const FolderOptions = ({
+  createFolder,
+  createFile
+}: {
+  createFolder: () => void
+  createFile: () => void
+}) => {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
-        <Button variant={'ghost'} size={'icon-xs'}>
-          <EllipsisVertical />
-        </Button>
+      <DropdownMenuTrigger className={cn(buttonVariants({ variant: 'ghost', size: 'icon-xs' }))}>
+        <EllipsisVertical />
       </DropdownMenuTrigger>
       <DropdownMenuContent
         onCloseAutoFocus={(e) => e.preventDefault()}
@@ -189,6 +193,9 @@ const FolderOptions = ({ createFolder }: { createFolder: () => void }) => {
       >
         <DropdownMenuItem onClick={createFolder}>
           <FolderPlus /> Create folder
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={createFile}>
+          <FilePlus /> Create file
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -204,6 +211,14 @@ const FsItem = ({ item }: { item: ReadDirEntry }) => {
     handleFsItemClick(item, true)
     setNewFsItem({
       type: 'folder',
+      parent: folderPath
+    })
+  }
+
+  function createFile() {
+    handleFsItemClick(item, true)
+    setNewFsItem({
+      type: 'file',
       parent: folderPath
     })
   }
@@ -233,7 +248,11 @@ const FsItem = ({ item }: { item: ReadDirEntry }) => {
           <ItemTitle className="text-xs">{item.name}</ItemTitle>
         </ItemContent>
         <ItemActions>
-          {item.isDirectory() ? <FolderOptions createFolder={createFolder} /> : <></>}
+          {item.isDirectory() ? (
+            <FolderOptions createFolder={createFolder} createFile={createFile} />
+          ) : (
+            <></>
+          )}
         </ItemActions>
       </Item>
       {newFsItem?.parent === folderPath && (
