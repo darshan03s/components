@@ -9,6 +9,7 @@ import {
   EyeOff,
   File,
   FilePlus,
+  Folder,
   FolderPlus,
   Pencil,
   Trash,
@@ -133,7 +134,7 @@ const NewFsItem = ({ inputRef }: { inputRef?: RefObject<HTMLInputElement | null>
   return (
     <Item size={'xs'} className={cn('cursor-pointer p-0 m-0 min-h-6 h-6 px-1 select-none')}>
       <ItemMedia>
-        <ChevronRight className="size-3" />
+        {newFsItem?.type === 'folder' ? <Folder className="size-3" /> : <File className="size-3" />}
       </ItemMedia>
       <ItemContent>
         <InputComp
@@ -152,25 +153,25 @@ export const FileSystem = () => {
   const { fileSystemOpen, fs, loadFolderItems, newFsItem, setNewFsItem, collapseAllFolders } =
     useFileSystem()
   const { mounted, rootDir, wc } = useWebcontainer()
-  const folderPath = `/${rootDir}`
+  const rootDirPath = `/${rootDir}`
 
   useEffect(() => {
     if (!wc || !mounted) return
 
-    const watcher = wc.fs.watch(folderPath, { recursive: true }, (event, fsItem) => {
+    const watcher = wc.fs.watch(rootDirPath, { recursive: true }, (event, fsItem) => {
       if (event === 'rename') {
-        const path = `${folderPath}/${String(fsItem)}`
+        const path = `${rootDirPath}/${String(fsItem)}`
         const parentFolder = getParentFolder(path)
         loadFolderItems(parentFolder)
       }
     })
 
     return () => watcher.close()
-  }, [wc, mounted, folderPath])
+  }, [wc, mounted, rootDirPath])
 
   useEffect(() => {
     if (!mounted) return
-    loadFolderItems(folderPath)
+    loadFolderItems(rootDirPath)
   }, [mounted])
 
   return (
@@ -183,13 +184,13 @@ export const FileSystem = () => {
         handleNewFolder={() => {
           setNewFsItem({
             type: 'folder',
-            parent: folderPath
+            parent: rootDirPath
           })
         }}
         handleNewFile={() => {
           setNewFsItem({
             type: 'file',
-            parent: folderPath
+            parent: rootDirPath
           })
         }}
         handleCollapseAll={collapseAllFolders}
@@ -200,8 +201,8 @@ export const FileSystem = () => {
         </div>
       ) : (
         <div className="flex-1 flex flex-col gap-2 p-1 overflow-scroll no-scrollbar">
-          {newFsItem?.parent === folderPath && <NewFsItem />}
-          {fs[folderPath] && <FsTree fsItems={fs[folderPath]} />}
+          {newFsItem?.parent === rootDirPath && <NewFsItem />}
+          {fs[rootDirPath] && <FsTree fsItems={fs[rootDirPath]} />}
         </div>
       )}
     </div>
@@ -254,7 +255,7 @@ const FolderOptions = ({
   )
 }
 
-function ItemIcon({ item, folderPath }: { item: ReadDirEntry; folderPath: string }) {
+function ItemIcon({ item, itemPath }: { item: ReadDirEntry; itemPath: string }) {
   const { isIgnoredPath, isFolderOpen } = useFileSystem()
   if (isIgnoredPath(item.path)) return <EyeOff />
 
@@ -262,7 +263,7 @@ function ItemIcon({ item, folderPath }: { item: ReadDirEntry; folderPath: string
     return <File />
   }
 
-  return isFolderOpen(folderPath) ? <ChevronDown /> : <ChevronRight />
+  return isFolderOpen(itemPath) ? <ChevronDown /> : <ChevronRight />
 }
 
 const FsItem = ({ item }: { item: ReadDirEntry }) => {
@@ -270,14 +271,14 @@ const FsItem = ({ item }: { item: ReadDirEntry }) => {
   const { fs, handleFsItemClick, isFolderOpen, setNewFsItem, newFsItem } = useFileSystem()
   const [isRenaming, setIsRenaming] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
-  const folderPath = item.path
-  const parentFolder = getParentFolder(folderPath)
+  const itemPath = item.path
+  const parentFolder = getParentFolder(itemPath)
 
   function createFolder() {
     handleFsItemClick(item, true)
     setNewFsItem({
       type: 'folder',
-      parent: folderPath
+      parent: itemPath
     })
   }
 
@@ -285,7 +286,7 @@ const FsItem = ({ item }: { item: ReadDirEntry }) => {
     handleFsItemClick(item, true)
     setNewFsItem({
       type: 'file',
-      parent: folderPath
+      parent: itemPath
     })
   }
 
@@ -302,7 +303,7 @@ const FsItem = ({ item }: { item: ReadDirEntry }) => {
       return
     }
     if (newName.length > 0) {
-      rename(folderPath, `${parentFolder}/${folderName}`)
+      rename(itemPath, `${parentFolder}/${folderName}`)
       setIsRenaming(false)
     }
   }
@@ -312,7 +313,7 @@ const FsItem = ({ item }: { item: ReadDirEntry }) => {
   }
 
   async function deleteFolder() {
-    await rm(folderPath, { recursive: true })
+    await rm(itemPath, { recursive: true })
     setIsDeleting(false)
   }
 
@@ -332,7 +333,7 @@ const FsItem = ({ item }: { item: ReadDirEntry }) => {
         }}
       >
         <ItemMedia className="[&_svg]:size-3!">
-          <ItemIcon item={item} folderPath={folderPath} />
+          <ItemIcon item={item} itemPath={itemPath} />
         </ItemMedia>
         <ItemContent className="text-xs flex truncate line-clamp-1">
           {isRenaming ? (
@@ -379,14 +380,14 @@ const FsItem = ({ item }: { item: ReadDirEntry }) => {
           )}
         </ItemActions>
       </Item>
-      {newFsItem?.parent === folderPath && (
+      {newFsItem?.parent === itemPath && (
         <div className="flex flex-col gap-2 ml-2 pl-2 border-l">
           <NewFsItem inputRef={inputRef} />
         </div>
       )}
-      {isFolderOpen(folderPath) && fs[folderPath] && fs[folderPath].length > 0 && (
+      {isFolderOpen(itemPath) && fs[itemPath] && fs[itemPath].length > 0 && (
         <div className="flex flex-col gap-2 ml-2 pl-2 border-l">
-          <FsTree fsItems={fs[folderPath]} />
+          <FsTree fsItems={fs[itemPath]} />
         </div>
       )}
     </>
