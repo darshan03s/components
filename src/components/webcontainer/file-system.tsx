@@ -23,12 +23,26 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 
+function getParentFolder(path: string): string {
+  const normalized = path.replace(/\/+$/, '')
+
+  const lastSlash = normalized.lastIndexOf('/')
+
+  if (lastSlash <= 0) {
+    return '/'
+  }
+
+  return normalized.slice(0, lastSlash)
+}
+
 const FileSystemHeader = ({
   rootDir,
-  handleNewFolder
+  handleNewFolder,
+  handleNewFile
 }: {
   rootDir: string
   handleNewFolder: () => void
+  handleNewFile: () => void
 }) => {
   return (
     <div className="filesystem-header h-(--inner-header-height) min-h-(--inner-header-height) px-2 border-b bg-background z-10 flex items-center justify-between">
@@ -36,7 +50,7 @@ const FileSystemHeader = ({
         <span className="font-semibold">{rootDir}</span>
       </div>
       <div className="flex items-center">
-        <Button variant={'ghost'} size={'icon-xs'} title="Add file">
+        <Button variant={'ghost'} size={'icon-xs'} title="Add file" onClick={handleNewFile}>
           <FilePlus />
         </Button>
         <Button variant={'ghost'} size={'icon-xs'} title="Add folder" onClick={handleNewFolder}>
@@ -49,7 +63,7 @@ const FileSystemHeader = ({
 
 const NewFsItem = () => {
   const inputRef = useRef<HTMLInputElement | null>(null)
-  const { mkDir } = useWebcontainer()
+  const { mkDir, writeFile } = useWebcontainer()
   const { newFsItem, setNewFsItem } = useFileSystem()
 
   useEffect(() => {
@@ -60,15 +74,19 @@ const NewFsItem = () => {
 
   async function onSubmit(form: HTMLFormElement) {
     const formData = new FormData(form)
-    const folderName = String(formData.get('folder-name'))
+    const folderName = formData.get('folder-name')
     const fileName = formData.get('file-name')
 
-    if (folderName && folderName.trim().length > 0) {
-      const path = `${newFsItem?.parent}/${folderName}`
+    if (folderName && String(folderName).trim().length > 0) {
+      const path = `${newFsItem?.parent}/${String(folderName)}`
       await mkDir(path, { recursive: true })
       setNewFsItem(null)
     } else if (fileName) {
-      // TODO
+      const path = `${newFsItem?.parent}/${String(fileName)}`
+      const parent = getParentFolder(path)
+      await mkDir(parent, { recursive: true })
+      await writeFile(path, '')
+      setNewFsItem(null)
     }
   }
 
@@ -102,18 +120,6 @@ export const FileSystem = () => {
   const { mounted, rootDir, wc } = useWebcontainer()
   const folderPath = `/${rootDir}`
 
-  function getParentFolder(path: string): string {
-    const normalized = path.replace(/\/+$/, '')
-
-    const lastSlash = normalized.lastIndexOf('/')
-
-    if (lastSlash <= 0) {
-      return '/'
-    }
-
-    return normalized.slice(0, lastSlash)
-  }
-
   useEffect(() => {
     if (!wc || !mounted) return
 
@@ -143,6 +149,12 @@ export const FileSystem = () => {
         handleNewFolder={() => {
           setNewFsItem({
             type: 'folder',
+            parent: folderPath
+          })
+        }}
+        handleNewFile={() => {
+          setNewFsItem({
+            type: 'file',
             parent: folderPath
           })
         }}
