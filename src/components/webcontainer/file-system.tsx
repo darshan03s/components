@@ -280,7 +280,7 @@ const FsTree = ({ fsItems }: { fsItems: ReadDirEntry[] }) => {
     <>
       {fsItems.map((item) => (
         <FsItem
-          key={`${item.name}-${String(item.isFile)}-${String(item.isDirectory)}`}
+          key={`${item.name}-${String(item.isFile())}-${String(item.isDirectory())}`}
           item={item}
         ></FsItem>
       ))}
