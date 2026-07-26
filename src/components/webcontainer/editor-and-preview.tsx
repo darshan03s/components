@@ -75,7 +75,7 @@ const Editor = () => {
           hidden={view === 'preview'}
           className={cn('flex-1 flex items-center justify-center text-xs')}
         >
-          <File className="size-20 text-muted" />
+          <File className="size-20 text-foreground/10" strokeWidth={1} />
         </div>
       ) : (
         <EditorComp className={view === 'preview' ? 'hidden' : ''} />
@@ -94,7 +94,7 @@ const Preview = () => {
           <iframe src={serverUrl} className="h-full w-full" />
         ) : (
           <div className="h-full w-full flex items-center justify-center">
-            <Globe className="size-20 text-muted" />
+            <Globe className="size-20 text-foreground/10" strokeWidth={1} />
           </div>
         )}
       </div>

@@ -5,6 +5,7 @@ import {
   ChevronRight,
   ChevronsDownUp,
   EllipsisVertical,
+  EyeOff,
   File,
   FilePlus,
   FolderPlus
@@ -210,9 +211,21 @@ const FolderOptions = ({
   )
 }
 
+function ItemIcon({ item, folderPath }: { item: ReadDirEntry; folderPath: string }) {
+  const { isIgnoredPath, isFolderOpen } = useFileSystem()
+  if (isIgnoredPath(item.path)) return <EyeOff />
+
+  if (!item.isDirectory()) {
+    return <File />
+  }
+
+  return isFolderOpen(folderPath) ? <ChevronDown /> : <ChevronRight />
+}
+
 const FsItem = ({ item }: { item: ReadDirEntry }) => {
   const { activeFile } = useWebcontainer()
-  const { fs, handleFsItemClick, isFolderOpen, setNewFsItem, newFsItem } = useFileSystem()
+  const { fs, handleFsItemClick, isFolderOpen, setNewFsItem, newFsItem, isIgnoredPath } =
+    useFileSystem()
   const folderPath = item.path
 
   function createFolder() {
@@ -241,16 +254,8 @@ const FsItem = ({ item }: { item: ReadDirEntry }) => {
         )}
         onClick={() => handleFsItemClick(item)}
       >
-        <ItemMedia>
-          {item.isDirectory() ? (
-            isFolderOpen(folderPath) ? (
-              <ChevronDown className="size-3" />
-            ) : (
-              <ChevronRight className="size-3" />
-            )
-          ) : (
-            <File className="size-3" />
-          )}
+        <ItemMedia className="[&_svg]:size-3!">
+          <ItemIcon item={item} folderPath={folderPath} />
         </ItemMedia>
         <ItemContent className="text-xs flex truncate line-clamp-1">{item.name}</ItemContent>
         <ItemActions>

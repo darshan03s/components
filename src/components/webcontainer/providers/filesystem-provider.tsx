@@ -3,6 +3,7 @@
 import { createContext, Dispatch, SetStateAction, useState } from 'react'
 import { useWebcontainer } from '../hooks'
 import { ReadDirEntry } from '../types'
+import { IGNORED_FOLDERS } from '../constants'
 
 type Fs = Record<string, ReadDirEntry[]>
 
@@ -17,6 +18,7 @@ type FileSystemContextType = {
   newFsItem: NewFsItem | null
   setNewFsItem: Dispatch<SetStateAction<NewFsItem | null>>
   collapseAllFolders: () => void
+  isIgnoredPath: (path: string) => boolean
 }
 
 type NewFsItem = {
@@ -56,6 +58,7 @@ export const FileSystemProvider = ({ children }: { children: React.ReactNode }) 
   }
 
   async function loadFolderItems(path: string) {
+    if (IGNORED_FOLDERS.some((dir) => path.includes(dir))) return
     const items = await readDir(
       path,
       {
@@ -94,6 +97,10 @@ export const FileSystemProvider = ({ children }: { children: React.ReactNode }) 
     setOpenFolders(new Set())
   }
 
+  function isIgnoredPath(path: string) {
+    return path.split('/').some((segment) => IGNORED_FOLDERS.includes(segment))
+  }
+
   return (
     <FileSystemContext.Provider
       value={{
@@ -106,7 +113,8 @@ export const FileSystemProvider = ({ children }: { children: React.ReactNode }) 
         isFolderOpen,
         newFsItem,
         setNewFsItem,
-        collapseAllFolders
+        collapseAllFolders,
+        isIgnoredPath
       }}
     >
       {children}

@@ -225,11 +225,14 @@ export const WebcontainerProvider = ({
   const init: Init = async (loadFromSnapshot) => {
     const wc = await boot()
 
+    await wc.fs.mkdir(`/${rootDir}`)
+
     if (loadFromSnapshot) {
       const response = await fetch(loadFromSnapshot)
       const snapshot = await response.arrayBuffer()
-      await wc.fs.mkdir(rootDir)
       await wc.mount(snapshot, { mountPoint: rootDir })
+      setMounted(true)
+    } else {
       setMounted(true)
     }
   }
