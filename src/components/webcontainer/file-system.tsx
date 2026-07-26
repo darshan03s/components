@@ -209,18 +209,20 @@ export const FileSystem = () => {
   )
 }
 
-const FolderOptions = ({
+const FsItemOptions = ({
   createFolder,
   createFile,
-  renameFolder,
-  deleteFolder,
-  onTriggerFocus
+  renameFsItem,
+  deleteFsItem,
+  onTriggerFocus,
+  isFolder
 }: {
   createFolder: () => void
   createFile: () => void
-  renameFolder: () => void
-  deleteFolder: () => void
+  renameFsItem: () => void
+  deleteFsItem: () => void
   onTriggerFocus: () => void
+  isFolder: boolean
 }) => {
   return (
     <DropdownMenu>
@@ -238,16 +240,16 @@ const FolderOptions = ({
         side="left"
         className="[&_div]:cursor-pointer [&_div]:text-[10px] [&_svg]:size-3!"
       >
-        <DropdownMenuItem onClick={createFolder}>
+        <DropdownMenuItem onClick={createFolder} hidden={!isFolder}>
           <FolderPlus /> Create folder
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={createFile}>
+        <DropdownMenuItem onClick={createFile} hidden={!isFolder}>
           <FilePlus /> Create file
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={renameFolder}>
+        <DropdownMenuItem onClick={renameFsItem}>
           <Pencil /> Rename
         </DropdownMenuItem>
-        <DropdownMenuItem variant="destructive" onClick={deleteFolder}>
+        <DropdownMenuItem variant="destructive" onClick={deleteFsItem}>
           <Trash /> Delete
         </DropdownMenuItem>
       </DropdownMenuContent>
@@ -294,16 +296,16 @@ const FsItem = ({ item }: { item: ReadDirEntry }) => {
     setIsRenaming(true)
   }
 
-  function renameFolder(form: HTMLFormElement) {
+  function renameFsItem(form: HTMLFormElement) {
     const formData = new FormData(form)
-    const folderName = formData.get('folder-name')
-    const newName = String(folderName).trim()
+    const fsItemName = formData.get('new-name')
+    const newName = String(fsItemName).trim()
     if (newName === item.name) {
       setIsRenaming(false)
       return
     }
     if (newName.length > 0) {
-      rename(itemPath, `${parentFolder}/${folderName}`)
+      rename(itemPath, `${parentFolder}/${newName}`)
       setIsRenaming(false)
     }
   }
@@ -312,7 +314,7 @@ const FsItem = ({ item }: { item: ReadDirEntry }) => {
     setIsDeleting(true)
   }
 
-  async function deleteFolder() {
+  async function deleteFsItem() {
     await rm(itemPath, { recursive: true })
     setIsDeleting(false)
   }
@@ -340,10 +342,10 @@ const FsItem = ({ item }: { item: ReadDirEntry }) => {
             <InputComp
               inputRef={inputRef}
               defaultValue={item.name}
-              onSubmit={renameFolder}
+              onSubmit={renameFsItem}
               onBlur={() => setIsRenaming(false)}
-              name="folder-name"
-              placeholder="Enter folder name"
+              name="new-name"
+              placeholder={item.isDirectory() ? 'Enter folder name' : 'Enter file name'}
             />
           ) : (
             item.name
@@ -357,7 +359,7 @@ const FsItem = ({ item }: { item: ReadDirEntry }) => {
                 size={'icon-xs'}
                 autoFocus
                 onBlur={() => setIsDeleting(false)}
-                onClick={deleteFolder}
+                onClick={deleteFsItem}
               >
                 <Check />
               </Button>
@@ -365,18 +367,17 @@ const FsItem = ({ item }: { item: ReadDirEntry }) => {
                 <X />
               </Button>
             </ButtonGroup>
-          ) : item.isDirectory() ? (
-            <FolderOptions
+          ) : (
+            <FsItemOptions
               createFolder={createFolder}
               createFile={createFile}
-              renameFolder={startRenameFolder}
-              deleteFolder={startDeletingFolder}
+              renameFsItem={startRenameFolder}
+              deleteFsItem={startDeletingFolder}
               onTriggerFocus={() => {
                 inputRef.current?.focus()
               }}
+              isFolder={item.isDirectory()}
             />
-          ) : (
-            <></>
           )}
         </ItemActions>
       </Item>
