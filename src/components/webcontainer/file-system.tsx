@@ -225,7 +225,12 @@ const FolderOptions = ({
 }) => {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className={cn(buttonVariants({ variant: 'ghost', size: 'icon-xs' }))}>
+      <DropdownMenuTrigger
+        className={cn(
+          buttonVariants({ variant: 'ghost', size: 'icon-xs' }),
+          'opacity-0 group-hover/fs-item:opacity-100'
+        )}
+      >
         <EllipsisVertical />
       </DropdownMenuTrigger>
       <DropdownMenuContent
@@ -318,7 +323,7 @@ const FsItem = ({ item }: { item: ReadDirEntry }) => {
       <Item
         size={'xs'}
         className={cn(
-          'cursor-pointer p-0 m-0 min-h-6 h-6 px-1 select-none hover:bg-muted',
+          'cursor-pointer p-0 m-0 min-h-6 h-6 px-1 select-none hover:bg-muted group/fs-item',
           activeFile.path === item.path && 'bg-muted'
         )}
         onClick={() => {
