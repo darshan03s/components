@@ -211,11 +211,11 @@ export const FileSystem = () => {
 const FolderOptions = ({
   createFolder,
   createFile,
-  rename
+  renameFolder
 }: {
   createFolder: () => void
   createFile: () => void
-  rename: () => void
+  renameFolder: () => void
 }) => {
   return (
     <DropdownMenu>
@@ -234,7 +234,7 @@ const FolderOptions = ({
         <DropdownMenuItem onClick={createFile}>
           <FilePlus /> Create file
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={rename}>
+        <DropdownMenuItem onClick={renameFolder}>
           <Pencil /> Rename
         </DropdownMenuItem>
       </DropdownMenuContent>
@@ -329,7 +329,7 @@ const FsItem = ({ item }: { item: ReadDirEntry }) => {
             <FolderOptions
               createFolder={createFolder}
               createFile={createFile}
-              rename={startRenameFolder}
+              renameFolder={startRenameFolder}
             />
           ) : (
             <></>
