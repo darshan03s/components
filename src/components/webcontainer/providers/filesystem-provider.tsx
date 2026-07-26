@@ -59,17 +59,19 @@ export const FileSystemProvider = ({ children }: { children: React.ReactNode }) 
 
   async function loadFolderItems(path: string) {
     if (IGNORED_FOLDERS.some((dir) => path.includes(dir))) return
-    const items = await readDir(
-      path,
-      {
-        withFileTypes: true
-      },
-      true
-    )
-    setFs((prev) => ({
-      ...prev,
-      [path]: items
-    }))
+    try {
+      const items = await readDir(
+        path,
+        {
+          withFileTypes: true
+        },
+        true
+      )
+      setFs((prev) => ({
+        ...prev,
+        [path]: items
+      }))
+    } catch {}
   }
 
   async function handleFsItemClick(item: ReadDirEntry, open?: true) {

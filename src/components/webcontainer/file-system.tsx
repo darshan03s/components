@@ -1,6 +1,7 @@
 'use client'
 
 import {
+  Check,
   ChevronDown,
   ChevronRight,
   ChevronsDownUp,
@@ -9,7 +10,9 @@ import {
   File,
   FilePlus,
   FolderPlus,
-  Pencil
+  Pencil,
+  Trash,
+  X
 } from 'lucide-react'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { useEffect, useRef, useState } from 'react'
@@ -25,6 +28,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
+import { ButtonGroup } from '@/components/ui/button-group'
 
 function getParentFolder(path: string): string {
   const normalized = path.replace(/\/+$/, '')
@@ -211,11 +215,13 @@ export const FileSystem = () => {
 const FolderOptions = ({
   createFolder,
   createFile,
-  renameFolder
+  renameFolder,
+  deleteFolder
 }: {
   createFolder: () => void
   createFile: () => void
   renameFolder: () => void
+  deleteFolder: () => void
 }) => {
   return (
     <DropdownMenu>
@@ -237,6 +243,9 @@ const FolderOptions = ({
         <DropdownMenuItem onClick={renameFolder}>
           <Pencil /> Rename
         </DropdownMenuItem>
+        <DropdownMenuItem variant="destructive" onClick={deleteFolder}>
+          <Trash /> Delete
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )
@@ -254,9 +263,10 @@ function ItemIcon({ item, folderPath }: { item: ReadDirEntry; folderPath: string
 }
 
 const FsItem = ({ item }: { item: ReadDirEntry }) => {
-  const { activeFile, rename } = useWebcontainer()
+  const { activeFile, rename, rm } = useWebcontainer()
   const { fs, handleFsItemClick, isFolderOpen, setNewFsItem, newFsItem } = useFileSystem()
   const [isRenaming, setIsRenaming] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
   const folderPath = item.path
   const parentFolder = getParentFolder(folderPath)
 
@@ -294,6 +304,15 @@ const FsItem = ({ item }: { item: ReadDirEntry }) => {
     }
   }
 
+  function startDeletingFolder() {
+    setIsDeleting(true)
+  }
+
+  async function deleteFolder() {
+    await rm(folderPath, { recursive: true })
+    setIsDeleting(false)
+  }
+
   return (
     <>
       <Item
@@ -323,13 +342,28 @@ const FsItem = ({ item }: { item: ReadDirEntry }) => {
             item.name
           )}
         </ItemContent>
-
         <ItemActions>
-          {item.isDirectory() ? (
+          {isDeleting ? (
+            <ButtonGroup onClick={(e) => e.stopPropagation()}>
+              <Button
+                variant={'destructive'}
+                size={'icon-xs'}
+                autoFocus
+                onBlur={() => setIsDeleting(false)}
+                onClick={deleteFolder}
+              >
+                <Check />
+              </Button>
+              <Button variant={'outline'} size={'icon-xs'} onClick={() => setIsDeleting(false)}>
+                <X />
+              </Button>
+            </ButtonGroup>
+          ) : item.isDirectory() ? (
             <FolderOptions
               createFolder={createFolder}
               createFile={createFile}
               renameFolder={startRenameFolder}
+              deleteFolder={startDeletingFolder}
             />
           ) : (
             <></>

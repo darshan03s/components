@@ -26,12 +26,13 @@ export const Playground = ({ ...props }: PlaygroundProps) => {
 }
 
 const Comp = ({ loadFromSnapshot }: PlaygroundProps) => {
-  const { init, view, toggleView } = useWebcontainer()
+  const { init, view, toggleView, mounted } = useWebcontainer()
   const { toggleFileSystem, fileSystemOpen } = useFileSystem()
 
   useEffect(() => {
+    if (mounted) return
     init(loadFromSnapshot)
-  }, [])
+  }, [mounted])
 
   function handleTerminalToggle() {
     window.dispatchEvent(new CustomEvent('toggle-terminal'))
