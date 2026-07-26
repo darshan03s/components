@@ -15,7 +15,7 @@ import {
   X
 } from 'lucide-react'
 import { Button, buttonVariants } from '@/components/ui/button'
-import { useEffect, useRef, useState } from 'react'
+import { RefObject, useEffect, useRef, useState } from 'react'
 import { Item, ItemActions, ItemContent, ItemMedia } from '@/components/ui/item'
 import { ReadDirEntry } from './types'
 import { cn } from '@/lib/utils'
@@ -78,22 +78,16 @@ const InputComp = ({
   onBlur,
   name,
   placeholder,
-  defaultValue
+  defaultValue,
+  inputRef
 }: {
   onSubmit: (form: HTMLFormElement) => void
   onBlur: () => void
   name: string
   placeholder: string
   defaultValue?: string
+  inputRef?: RefObject<HTMLInputElement | null>
 }) => {
-  const inputRef = useRef<HTMLInputElement | null>(null)
-
-  useEffect(() => {
-    requestAnimationFrame(() => {
-      inputRef.current?.focus()
-    })
-  }, [])
-
   return (
     <form
       onSubmit={(e) => {
@@ -103,6 +97,7 @@ const InputComp = ({
     >
       <Input
         defaultValue={defaultValue}
+        autoFocus
         ref={inputRef}
         onBlur={onBlur}
         name={name}
@@ -113,7 +108,7 @@ const InputComp = ({
   )
 }
 
-const NewFsItem = () => {
+const NewFsItem = ({ inputRef }: { inputRef?: RefObject<HTMLInputElement | null> }) => {
   const { mkDir, writeFile } = useWebcontainer()
   const { newFsItem, setNewFsItem } = useFileSystem()
 
@@ -142,6 +137,7 @@ const NewFsItem = () => {
       </ItemMedia>
       <ItemContent>
         <InputComp
+          inputRef={inputRef}
           onSubmit={createNewFsItem}
           onBlur={() => setNewFsItem(null)}
           name={newFsItem?.type === 'folder' ? 'folder-name' : 'file-name'}
@@ -216,16 +212,19 @@ const FolderOptions = ({
   createFolder,
   createFile,
   renameFolder,
-  deleteFolder
+  deleteFolder,
+  onTriggerFocus
 }: {
   createFolder: () => void
   createFile: () => void
   renameFolder: () => void
   deleteFolder: () => void
+  onTriggerFocus: () => void
 }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
+        onFocus={onTriggerFocus}
         className={cn(
           buttonVariants({ variant: 'ghost', size: 'icon-xs' }),
           'opacity-0 group-hover/fs-item:opacity-100'
@@ -234,7 +233,6 @@ const FolderOptions = ({
         <EllipsisVertical />
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        onCloseAutoFocus={(e) => e.preventDefault()}
         onClick={(e) => e.stopPropagation()}
         side="left"
         className="[&_div]:cursor-pointer [&_div]:text-[10px] [&_svg]:size-3!"
@@ -318,6 +316,8 @@ const FsItem = ({ item }: { item: ReadDirEntry }) => {
     setIsDeleting(false)
   }
 
+  const inputRef = useRef<HTMLInputElement | null>(null)
+
   return (
     <>
       <Item
@@ -337,6 +337,7 @@ const FsItem = ({ item }: { item: ReadDirEntry }) => {
         <ItemContent className="text-xs flex truncate line-clamp-1">
           {isRenaming ? (
             <InputComp
+              inputRef={inputRef}
               defaultValue={item.name}
               onSubmit={renameFolder}
               onBlur={() => setIsRenaming(false)}
@@ -369,6 +370,9 @@ const FsItem = ({ item }: { item: ReadDirEntry }) => {
               createFile={createFile}
               renameFolder={startRenameFolder}
               deleteFolder={startDeletingFolder}
+              onTriggerFocus={() => {
+                inputRef.current?.focus()
+              }}
             />
           ) : (
             <></>
@@ -377,7 +381,7 @@ const FsItem = ({ item }: { item: ReadDirEntry }) => {
       </Item>
       {newFsItem?.parent === folderPath && (
         <div className="flex flex-col gap-2 ml-2 pl-2 border-l">
-          <NewFsItem />
+          <NewFsItem inputRef={inputRef} />
         </div>
       )}
       {isFolderOpen(folderPath) && fs[folderPath] && fs[folderPath].length > 0 && (
