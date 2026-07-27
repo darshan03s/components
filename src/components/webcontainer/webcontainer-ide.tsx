@@ -67,7 +67,12 @@ const Comp = ({ loadFromSnapshot }: WebContainerIDEProps) => {
             </Button>
           </ButtonGroup>
         </div>
-        <Button variant={'outline'} size={'icon-xs'} onClick={handleTerminalToggle}>
+        <Button
+          variant={'outline'}
+          size={'icon-xs'}
+          onClick={handleTerminalToggle}
+          disabled={!mounted}
+        >
           <Terminal />
         </Button>
       </div>
