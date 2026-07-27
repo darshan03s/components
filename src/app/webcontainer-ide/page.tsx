@@ -1,5 +1,5 @@
 import Main from '@/components/main'
-import { WebContainerIDE } from '@/components/webcontainer/webcontainer-ide'
+import { WebContainerIDE } from '@/components/webcontainer-ide/webcontainer-ide'
 
 const Page = () => {
   return (
