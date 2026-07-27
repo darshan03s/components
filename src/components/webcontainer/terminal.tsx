@@ -11,7 +11,7 @@ import { X, TerminalIcon } from 'lucide-react'
 import { Button } from '../ui/button'
 
 export const Terminal = () => {
-  const { startShell, mounted } = useWebcontainer()
+  const { startShell, mounted, setServerUrl, serverUrl, shellProcessWriter } = useWebcontainer()
   const terminalRef = useRef<XtermTerminal | null>(null)
   const terminalEleRef = useRef<HTMLDivElement | null>(null)
   const fitAddonRef = useRef<FitAddon | null>(null)
@@ -32,6 +32,28 @@ export const Terminal = () => {
     if (terminalEleRef.current) {
       terminal.open(terminalEleRef.current)
       fitAddon.fit()
+      terminal.attachCustomKeyEventHandler((event) => {
+        if (event.ctrlKey && event.key.toLocaleLowerCase() === 'c' && event.type === 'keydown') {
+          setServerUrl('')
+        }
+        if (event.ctrlKey && event.key.toLowerCase() === 'v' && event.type === 'keydown') {
+          event.preventDefault()
+          navigator.clipboard.readText().then(async (text) => {
+            await shellProcessWriter.current?.write(text)
+          })
+        }
+        if (
+          event.ctrlKey &&
+          event.shiftKey &&
+          event.key.toLowerCase() === 'c' &&
+          event.type === 'keydown'
+        ) {
+          event.preventDefault()
+          const selection = terminal.getSelection()
+          navigator.clipboard.writeText(selection)
+        }
+        return true
+      })
     }
   }, [])
 

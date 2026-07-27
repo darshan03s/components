@@ -1,6 +1,14 @@
 'use client'
 
-import { createContext, Dispatch, SetStateAction, useEffect, useState } from 'react'
+import {
+  createContext,
+  Dispatch,
+  RefObject,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState
+} from 'react'
 import {
   FileSystemAPI,
   FileSystemTree,
@@ -79,6 +87,8 @@ type WebcontainerContextType = {
   setView: Dispatch<SetStateAction<View>>
   toggleView: () => void
   serverUrl: string
+  setServerUrl: Dispatch<SetStateAction<string>>
+  shellProcessWriter: RefObject<WritableStreamDefaultWriter<string> | null>
 }
 
 export const WebcontainerContext = createContext<WebcontainerContextType | undefined>(undefined)
@@ -98,6 +108,7 @@ export const WebcontainerProvider = ({
   })
   const [view, setView] = useState<View>('editor')
   const [serverUrl, setServerUrl] = useState<string>('')
+  const shellProcessWriter = useRef<WritableStreamDefaultWriter<string>>(null)
 
   useEffect(() => {
     if (!wc) return
@@ -285,6 +296,7 @@ export const WebcontainerProvider = ({
     terminal.onData((data) => {
       input.write(data)
     })
+    shellProcessWriter.current = input
 
     return shellProcess
   }
@@ -320,7 +332,9 @@ export const WebcontainerProvider = ({
         view,
         setView,
         toggleView,
-        serverUrl
+        serverUrl,
+        setServerUrl,
+        shellProcessWriter
       }}
     >
       {children}
