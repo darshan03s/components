@@ -11,7 +11,7 @@ import { X, TerminalIcon } from 'lucide-react'
 import { Button } from '../ui/button'
 
 export const Terminal = () => {
-  const { startShell, mounted, setServerUrl, serverUrl, shellProcessWriter } = useWebcontainer()
+  const { startShell, mounted, setServerUrl, shellProcessWriter } = useWebcontainer()
   const terminalRef = useRef<XtermTerminal | null>(null)
   const terminalEleRef = useRef<HTMLDivElement | null>(null)
   const fitAddonRef = useRef<FitAddon | null>(null)
