@@ -76,7 +76,7 @@ const Comp = ({ loadFromSnapshot }: WebContainerIDEProps) => {
           <Terminal />
         </Button>
       </div>
-      <div className="flex flex-1 min-h-0 [--inner-header-height:--spacing(8)] [--fs-width:--spacing(64)] relative">
+      <div className="flex flex-1 min-h-0 [--inner-header-height:--spacing(8)] [--fs-width:--spacing(64)]">
         <FileSystem />
         <Workspace />
       </div>

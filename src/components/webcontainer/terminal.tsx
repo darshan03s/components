@@ -4,7 +4,7 @@ import { Terminal as XtermTerminal } from '@xterm/xterm'
 import { FitAddon } from '@xterm/addon-fit'
 import { useEffect, useRef, useState } from 'react'
 import '@xterm/xterm/css/xterm.css'
-import { useWebcontainer } from './hooks'
+import { useFileSystem, useWebcontainer } from './hooks'
 import { WebContainerProcess } from '@webcontainer/api'
 import { cn } from '@/lib/utils'
 import { X, TerminalIcon } from 'lucide-react'
@@ -17,6 +17,7 @@ export const Terminal = () => {
   const fitAddonRef = useRef<FitAddon | null>(null)
   const shellProcessRef = useRef<WebContainerProcess | null>(null)
   const [isOpen, setIsOpen] = useState(false)
+  const { fileSystemOpen } = useFileSystem()
 
   useEffect(() => {
     const fitAddon = new FitAddon()
@@ -98,6 +99,7 @@ export const Terminal = () => {
           '[&_.xterm-screen]:h-(--terminal-height)!',
           '[&_.xterm-scrollable-element]:bg-transparent!',
           '[&_.xterm-viewport]:no-scrollbar! [&_.xterm-viewport]:rounded-br-lg',
+          !fileSystemOpen ? '[&_.xterm-viewport]:rounded-bl-lg' : '',
           '[&_.xterm-rows]:text-xs! [&_.xterm-rows>div:first-child:empty]:hidden [&_.xterm-rows]:font-mono! [&_.xterm-rows]:h-full!'
         )}
       />
