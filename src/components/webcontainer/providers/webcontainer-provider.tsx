@@ -9,8 +9,9 @@ import {
   WebContainerProcess
 } from '@webcontainer/api'
 import { ReadDirEntry } from '../types'
-import { DEFAULT_ROOT_DIR } from '../constants'
+import { DEFAULT_ROOT_DIR, IGNORED_FS_EXTENSIONS } from '../constants'
 import { Terminal } from '@xterm/xterm'
+import { getExtension } from '../utils'
 
 type Boot = () => Promise<WebContainer>
 
@@ -238,16 +239,17 @@ export const WebcontainerProvider = ({
   }
 
   const activePath = async (path: string) => {
-    const NOT_ALLOWED = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'mp4', 'mov', 'mkv', 'mp3', 'pdf']
-
-    const getExtension = (path: string) => {
-      const fileName = path.split('/').pop() ?? ''
-      return fileName.includes('.') ? (fileName.split('.').pop()?.toLowerCase() ?? '') : ''
+    if (path === '') {
+      setActiveFile({
+        path: '',
+        content: ''
+      })
+      return
     }
 
     const ext = getExtension(path)
 
-    if (NOT_ALLOWED.includes(ext)) {
+    if (IGNORED_FS_EXTENSIONS.includes(ext)) {
       setActiveFile({
         path,
         content: `Content cannot be displayed for .${ext}`

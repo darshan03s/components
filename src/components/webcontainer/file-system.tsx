@@ -30,18 +30,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { ButtonGroup } from '@/components/ui/button-group'
-
-function getParentFolder(path: string): string {
-  const normalized = path.replace(/\/+$/, '')
-
-  const lastSlash = normalized.lastIndexOf('/')
-
-  if (lastSlash <= 0) {
-    return '/'
-  }
-
-  return normalized.slice(0, lastSlash)
-}
+import { getParentFolder } from './utils'
 
 const FileSystemHeader = ({
   rootDir,

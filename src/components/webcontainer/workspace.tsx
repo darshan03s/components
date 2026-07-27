@@ -1,9 +1,11 @@
 'use client'
 
-import { File, Globe } from 'lucide-react'
+import { Check, Copy, File, Globe, X } from 'lucide-react'
 import { useWebcontainer } from './hooks'
 import { cn } from '@/lib/utils'
 import { Spinner } from '@/components/ui/spinner'
+import { Button } from '@/components/ui/button'
+import { ButtonGroup } from '@/components/ui/button-group'
 import CodeMirror from '@uiw/react-codemirror'
 import { javascript } from '@codemirror/lang-javascript'
 import { json } from '@codemirror/lang-json'
@@ -13,6 +15,9 @@ import { css } from '@codemirror/lang-css'
 import { vscodeDark, vscodeLight } from '@uiw/codemirror-theme-vscode'
 import { useTheme } from 'next-themes'
 import { Terminal } from './terminal'
+import { getExtension } from './utils'
+import { IGNORED_FS_EXTENSIONS } from './constants'
+import { useState } from 'react'
 
 const EditorComp = ({ className }: { className?: string }) => {
   const { activeFile, writeFile } = useWebcontainer()
@@ -58,17 +63,55 @@ const Loading = () => {
 }
 
 const Editor = () => {
-  const { activeFile, view } = useWebcontainer()
+  const { activeFile, view, activePath } = useWebcontainer()
+  const [copied, setCopied] = useState(false)
+
+  function showCopy() {
+    const ext = getExtension(activeFile.path)
+    if (IGNORED_FS_EXTENSIONS.includes(ext)) return false
+    return true
+  }
+
+  function handleCopy() {
+    navigator.clipboard.writeText(activeFile.content)
+    setCopied(true)
+    setTimeout(() => {
+      setCopied(false)
+    }, 2000)
+  }
 
   return (
     <>
       <div
         hidden={view === 'preview' || activeFile.path.length === 0}
         className={cn(
-          'editor-header sticky top-0 left-0 h-(--inner-header-height) min-h-(--inner-header-height) border-b flex items-center px-2 bg-background z-10'
+          'editor-header sticky top-0 left-0 h-(--inner-header-height) min-h-(--inner-header-height) border-b flex items-center justify-between px-2 bg-background z-10'
         )}
       >
         <span className="text-xs font-semibold line-clamp-1">{activeFile.path}</span>
+        <ButtonGroup>
+          {showCopy() && (
+            <Button
+              variant={'ghost'}
+              size={'icon-xs'}
+              title="Copy"
+              onClick={handleCopy}
+              disabled={copied}
+            >
+              {copied ? <Check /> : <Copy />}
+            </Button>
+          )}
+          <Button
+            variant={'ghost'}
+            size={'icon-xs'}
+            title="Close"
+            onClick={() => {
+              activePath('')
+            }}
+          >
+            <X />
+          </Button>
+        </ButtonGroup>
       </div>
       {activeFile.path.length === 0 ? (
         <div

@@ -10,3 +10,16 @@ export const IGNORED_FOLDERS = [
   '__pycache__',
   '.next'
 ]
+
+export const IGNORED_FS_EXTENSIONS = [
+  'png',
+  'jpg',
+  'jpeg',
+  'gif',
+  'webp',
+  'mp4',
+  'mov',
+  'mkv',
+  'mp3',
+  'pdf'
+]
