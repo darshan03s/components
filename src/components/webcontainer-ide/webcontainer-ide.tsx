@@ -7,18 +7,20 @@ import { Button } from '@/components/ui/button'
 import { Code, Eye, PanelLeft, PanelRight, Terminal } from 'lucide-react'
 import { useFileSystem, useWebcontainer } from './hooks'
 import { ButtonGroup } from '@/components/ui/button-group'
+import { FileSystemTree } from '@webcontainer/api'
 
 type WebContainerIDEProps = {
   loadFromSnapshot?: string
+  loadFromTemplate?: FileSystemTree
 }
 
-export const WebContainerIDE = ({ loadFromSnapshot }: WebContainerIDEProps) => {
+export const WebContainerIDE = ({ loadFromSnapshot, loadFromTemplate }: WebContainerIDEProps) => {
   const { init, view, toggleView, mounted } = useWebcontainer()
   const { toggleFileSystem, fileSystemOpen } = useFileSystem()
 
   useEffect(() => {
     if (mounted) return
-    init(loadFromSnapshot)
+    init(loadFromSnapshot, loadFromTemplate)
   }, [mounted])
 
   function handleTerminalToggle() {

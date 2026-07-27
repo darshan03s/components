@@ -56,7 +56,10 @@ type Rename = (...args: Parameters<FileSystemAPI['rename']>) => ReturnType<FileS
 
 type LoadSnapshot = (snapshotUrl: string) => Promise<void>
 
-type Init = (loadFromSnapshot?: string) => Promise<void>
+type Init = (
+  loadFromSnapshot?: string,
+  loadFromTemplate: FileSystemTree | undefined
+) => Promise<void>
 
 type ActiveFile = {
   path: string
@@ -234,7 +237,7 @@ export const WebcontainerProvider = ({
     setMounted(true)
   }
 
-  const init: Init = async (loadFromSnapshot) => {
+  const init: Init = async (loadFromSnapshot, loadFromTemplate) => {
     const wc = await boot()
 
     await wc.fs.mkdir(`/${rootDir}`)
@@ -243,6 +246,9 @@ export const WebcontainerProvider = ({
       const response = await fetch(loadFromSnapshot)
       const snapshot = await response.arrayBuffer()
       await wc.mount(snapshot, { mountPoint: rootDir })
+      setMounted(true)
+    } else if (loadFromTemplate) {
+      await wc.mount(loadFromTemplate, { mountPoint: rootDir })
       setMounted(true)
     } else {
       setMounted(true)
