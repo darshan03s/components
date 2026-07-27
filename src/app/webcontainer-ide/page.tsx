@@ -1,10 +1,12 @@
 import Main from '@/components/main'
-import { WebContainerIDE } from '@/components/webcontainer-ide/webcontainer-ide'
+import { WebContainerIDE, WebContainerIDEProvider } from '@/components/webcontainer-ide'
 
 const Page = () => {
   return (
     <Main className="flex items-center justify-center">
-      <WebContainerIDE loadFromSnapshot="/api/snapshot?template=all" />
+      <WebContainerIDEProvider>
+        <WebContainerIDE loadFromSnapshot="/api/snapshot?template=all" />
+      </WebContainerIDEProvider>
     </Main>
   )
 }

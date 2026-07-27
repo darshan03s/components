@@ -1,8 +1,6 @@
 'use client'
 
-import { WebcontainerProvider } from './providers/webcontainer-provider'
 import { FileSystem } from './file-system'
-import { FileSystemProvider } from './providers/filesystem-provider'
 import { Workspace } from './workspace'
 import { useEffect } from 'react'
 import { Button } from '@/components/ui/button'
@@ -12,20 +10,9 @@ import { ButtonGroup } from '@/components/ui/button-group'
 
 type WebContainerIDEProps = {
   loadFromSnapshot?: string
-  rootDir?: string
 }
 
-export const WebContainerIDE = ({ ...props }: WebContainerIDEProps) => {
-  return (
-    <WebcontainerProvider rootDir={props.rootDir}>
-      <FileSystemProvider>
-        <Comp {...props} />
-      </FileSystemProvider>
-    </WebcontainerProvider>
-  )
-}
-
-const Comp = ({ loadFromSnapshot }: WebContainerIDEProps) => {
+export const WebContainerIDE = ({ loadFromSnapshot }: WebContainerIDEProps) => {
   const { init, view, toggleView, mounted } = useWebcontainer()
   const { toggleFileSystem, fileSystemOpen } = useFileSystem()
 
@@ -39,7 +26,7 @@ const Comp = ({ loadFromSnapshot }: WebContainerIDEProps) => {
   }
 
   return (
-    <div className="[--playground-width:--spacing(240)] [--playground-height:--spacing(140)] w-(--playground-width) h-(--playground-height) border rounded-lg flex flex-col relative">
+    <div className="[--ide-width:--spacing(240)] [--ide-height:--spacing(140)] w-(--ide-width) h-(--ide-height) border rounded-lg flex flex-col relative">
       <div className="bg-background rounded-tl-lg rounded-tr-lg min-h-10 h-10 px-2 flex items-center justify-between border-b">
         <div className="flex items-center gap-4">
           <Button
