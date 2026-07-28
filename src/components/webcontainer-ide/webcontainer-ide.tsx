@@ -24,7 +24,7 @@ export const WebContainerIDE = ({ loadFromSnapshot, loadFromTemplate }: WebConta
   }, [mounted])
 
   function handleTerminalToggle() {
-    window.dispatchEvent(new CustomEvent('toggle-terminal'))
+    window.dispatchEvent(new CustomEvent('ide-toggle-terminal'))
   }
 
   return (

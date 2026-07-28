@@ -91,10 +91,10 @@ export const Terminal = () => {
       setIsOpen((prev) => !prev)
     }
 
-    window.addEventListener('toggle-terminal', toggleTerminal)
+    window.addEventListener('ide-toggle-terminal', toggleTerminal)
 
     return () => {
-      window.removeEventListener('toggle-terminal', toggleTerminal)
+      window.removeEventListener('ide-toggle-terminal', toggleTerminal)
     }
   }, [])
 
