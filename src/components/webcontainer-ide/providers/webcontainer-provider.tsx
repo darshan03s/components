@@ -54,6 +54,8 @@ type Rm = (...args: Parameters<FileSystemAPI['rm']>) => ReturnType<FileSystemAPI
 
 type Rename = (...args: Parameters<FileSystemAPI['rename']>) => ReturnType<FileSystemAPI['rename']>
 
+type Mv = (source: string, destination: string) => Promise<void>
+
 type LoadSnapshot = (snapshotUrl: string) => Promise<void>
 
 type Init = (
@@ -79,6 +81,7 @@ type WebcontainerContextType = {
   readDir: ReadDir
   rm: Rm
   rename: Rename
+  mv: Mv
   loadSnapshot: LoadSnapshot
   mounted: boolean
   init: Init
@@ -227,6 +230,12 @@ export const WebcontainerProvider = ({
     return await wc.fs.rename(oldPath, newPath)
   }
 
+  const mv: Mv = async (source, destination) => {
+    const sourceNew = `${wc?.workdir}${source}`
+    const destinationNew = `${wc?.workdir}${destination}`
+    await spawn('mv', [sourceNew, destinationNew])
+  }
+
   const loadSnapshot: LoadSnapshot = async (snapshotUrl: string) => {
     const wc = requireWc()
 
@@ -340,6 +349,7 @@ export const WebcontainerProvider = ({
         readDir,
         rm,
         rename,
+        mv,
         loadSnapshot,
         mounted,
         init,

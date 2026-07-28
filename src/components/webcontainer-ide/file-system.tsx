@@ -18,7 +18,7 @@ import {
 import { Button, buttonVariants } from '@/components/ui/button'
 import { RefObject, useEffect, useRef, useState } from 'react'
 import { Item, ItemActions, ItemContent, ItemMedia } from '@/components/ui/item'
-import { ReadDirEntry } from './types'
+import { FsItemDrag, ReadDirEntry } from './types'
 import { cn } from '@/lib/utils'
 import { Spinner } from '@/components/ui/spinner'
 import { Input } from '@/components/ui/input'
@@ -139,8 +139,18 @@ const NewFsItem = ({ inputRef }: { inputRef?: RefObject<HTMLInputElement | null>
 }
 
 export const FileSystem = () => {
-  const { fileSystemOpen, fs, loadFolderItems, newFsItem, setNewFsItem, collapseAllFolders } =
-    useFileSystem()
+  const {
+    fileSystemOpen,
+    fs,
+    loadFolderItems,
+    newFsItem,
+    setNewFsItem,
+    collapseAllFolders,
+    draggedItem,
+    setHoveredPath,
+    endFsItemMove,
+    handleFsItemDrop
+  } = useFileSystem()
   const { mounted, rootDir, wc } = useWebcontainer()
   const rootDirPath = `/${rootDir}`
 
@@ -189,9 +199,30 @@ export const FileSystem = () => {
           <Spinner />
         </div>
       ) : (
-        <div className="flex-1 flex flex-col gap-2 p-1 overflow-scroll no-scrollbar">
+        <div className="flex-1 flex flex-col gap-1 p-1 overflow-scroll no-scrollbar">
           {newFsItem?.parent === rootDirPath && <NewFsItem />}
           {fs[rootDirPath] && <FsTree fsItems={fs[rootDirPath]} />}
+          <div
+            onDragOver={(e) => {
+              e.preventDefault()
+
+              const source = draggedItem.current
+              if (!source) return
+
+              setHoveredPath(rootDirPath)
+            }}
+            onDrop={(e) => {
+              e.preventDefault()
+
+              const source = draggedItem.current
+              if (!source) return
+
+              handleFsItemDrop(source, rootDirPath)
+
+              endFsItemMove()
+            }}
+            className="min-h-20 grow"
+          ></div>
         </div>
       )}
     </div>
@@ -259,11 +290,35 @@ function ItemIcon({ item, itemPath }: { item: ReadDirEntry; itemPath: string }) 
 
 const FsItem = ({ item }: { item: ReadDirEntry }) => {
   const { activeFile, rename, rm } = useWebcontainer()
-  const { fs, handleFsItemClick, isFolderOpen, setNewFsItem, newFsItem } = useFileSystem()
+  const {
+    fs,
+    handleFsItemClick,
+    isFolderOpen,
+    setNewFsItem,
+    newFsItem,
+    hoveredPath,
+    setHoveredPath,
+    draggedItem,
+    openFolder,
+    startFsItemMove,
+    endFsItemMove,
+    handleFsItemDrop
+  } = useFileSystem()
   const [isRenaming, setIsRenaming] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const itemPath = item.path
+  const type = item.isDirectory() ? 'folder' : 'file'
   const parentFolder = getParentFolder(itemPath)
+
+  useEffect(() => {
+    if (hoveredPath !== itemPath) return
+
+    const id = window.setTimeout(() => {
+      openFolder(hoveredPath)
+    }, 2000)
+
+    return () => clearTimeout(id)
+  }, [hoveredPath, openFolder])
 
   function createFolder() {
     handleFsItemClick(item, true)
@@ -308,15 +363,61 @@ const FsItem = ({ item }: { item: ReadDirEntry }) => {
     setIsDeleting(false)
   }
 
+  function dragOrDropNotAllowed(source: FsItemDrag) {
+    if (item.isFile()) return true
+    if (source.path === item.path) return true
+
+    return false
+  }
+
   const inputRef = useRef<HTMLInputElement | null>(null)
 
   return (
     <>
       <Item
+        draggable
+        onDragStart={() => {
+          startFsItemMove({
+            name: item.name,
+            path: itemPath,
+            type
+          })
+        }}
+        onDragOver={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+
+          const source = draggedItem.current
+          if (!source) return
+
+          if (dragOrDropNotAllowed(source)) return
+
+          setHoveredPath(itemPath)
+        }}
+        onDragLeave={() => {
+          setHoveredPath((path) => (path === itemPath ? null : path))
+        }}
+        onDragEnd={() => {
+          endFsItemMove()
+        }}
+        onDrop={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+
+          const source = draggedItem.current
+          if (!source) return
+
+          if (dragOrDropNotAllowed(source)) return
+
+          handleFsItemDrop(source, itemPath)
+
+          endFsItemMove()
+        }}
         size={'xs'}
         className={cn(
           'cursor-pointer p-0 m-0 min-h-6 h-6 px-1 select-none hover:bg-muted group/fs-item',
-          activeFile.path === item.path && 'bg-muted'
+          activeFile.path === itemPath && 'bg-muted',
+          hoveredPath === itemPath && 'ring-1'
         )}
         onClick={() => {
           if (isRenaming) return
@@ -371,12 +472,12 @@ const FsItem = ({ item }: { item: ReadDirEntry }) => {
         </ItemActions>
       </Item>
       {newFsItem?.parent === itemPath && (
-        <div className="flex flex-col gap-2 ml-2 pl-2 border-l">
+        <div className="ml-2 pl-2 border-l">
           <NewFsItem inputRef={inputRef} />
         </div>
       )}
       {isFolderOpen(itemPath) && fs[itemPath] && fs[itemPath].length > 0 && (
-        <div className="flex flex-col gap-2 ml-2 pl-2 border-l">
+        <div className="flex flex-col gap-1 ml-2 pl-2 border-l">
           <FsTree fsItems={fs[itemPath]} />
         </div>
       )}

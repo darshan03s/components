@@ -1,9 +1,10 @@
 'use client'
 
-import { createContext, Dispatch, SetStateAction, useState } from 'react'
+import { createContext, Dispatch, RefObject, SetStateAction, useRef, useState } from 'react'
 import { useWebcontainer } from '../hooks'
-import { ReadDirEntry } from '../types'
+import { FsItemDrag, ReadDirEntry } from '../types'
 import { IGNORED_FOLDERS } from '../constants'
+import { getParentFolder } from '../utils'
 
 type Fs = Record<string, ReadDirEntry[]>
 
@@ -19,6 +20,14 @@ type FileSystemContextType = {
   setNewFsItem: Dispatch<SetStateAction<NewFsItem | null>>
   collapseAllFolders: () => void
   isIgnoredPath: (path: string) => boolean
+  hoveredPath: string | null
+  setHoveredPath: Dispatch<SetStateAction<string | null>>
+  draggedItem: RefObject<FsItemDrag | null>
+  openFolder: (path: string) => Promise<void>
+  closeFolder: (path: string) => Promise<void>
+  handleFsItemDrop: (source: FsItemDrag, destination: string) => Promise<void>
+  startFsItemMove: (item: FsItemDrag) => void
+  endFsItemMove: () => void
 }
 
 type NewFsItem = {
@@ -29,11 +38,13 @@ type NewFsItem = {
 export const FileSystemContext = createContext<FileSystemContextType | undefined>(undefined)
 
 export const FileSystemProvider = ({ children }: { children: React.ReactNode }) => {
-  const { readDir, activePath, setView } = useWebcontainer()
+  const { readDir, activePath, setView, mv, activeFile } = useWebcontainer()
   const [fileSystemOpen, setFileSystemOpen] = useState(true)
   const [fs, setFs] = useState<Fs>({})
   const [openFolders, setOpenFolders] = useState(new Set<string>())
   const [newFsItem, setNewFsItem] = useState<NewFsItem | null>(null)
+  const [hoveredPath, setHoveredPath] = useState<string | null>(null)
+  const draggedItem = useRef<FsItemDrag | null>(null)
 
   function toggleFileSystem() {
     setFileSystemOpen(!fileSystemOpen)
@@ -99,8 +110,44 @@ export const FileSystemProvider = ({ children }: { children: React.ReactNode }) 
     setOpenFolders(new Set())
   }
 
+  async function openFolder(path: string) {
+    await loadFolderItems(path)
+    setOpenFolders((prev) => {
+      const next = new Set(prev)
+      next.add(path)
+      return next
+    })
+  }
+
+  async function closeFolder(path: string) {
+    setOpenFolders((prev) => {
+      const next = new Set(prev)
+      next.delete(path)
+      return next
+    })
+  }
+
   function isIgnoredPath(path: string) {
     return path.split('/').some((segment) => IGNORED_FOLDERS.includes(segment))
+  }
+
+  function startFsItemMove(item: FsItemDrag) {
+    draggedItem.current = item
+  }
+
+  function endFsItemMove() {
+    draggedItem.current = null
+    setHoveredPath(null)
+  }
+
+  async function handleFsItemDrop(source: FsItemDrag, destination: string) {
+    const parent = getParentFolder(source.path)
+    if (parent === destination) return
+    await mv(source.path, destination)
+    if (source.type === 'file' && activeFile.path === source.path) {
+      const newPath = `${destination}/${source.name}`
+      activePath(newPath)
+    }
   }
 
   return (
@@ -116,7 +163,15 @@ export const FileSystemProvider = ({ children }: { children: React.ReactNode }) 
         newFsItem,
         setNewFsItem,
         collapseAllFolders,
-        isIgnoredPath
+        isIgnoredPath,
+        hoveredPath,
+        setHoveredPath,
+        draggedItem,
+        openFolder,
+        closeFolder,
+        handleFsItemDrop,
+        startFsItemMove,
+        endFsItemMove
       }}
     >
       {children}
