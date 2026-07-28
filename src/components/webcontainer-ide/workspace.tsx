@@ -16,8 +16,8 @@ import { vscodeDark, vscodeLight } from '@uiw/codemirror-theme-vscode'
 import { useTheme } from 'next-themes'
 import { Terminal } from './terminal'
 import { getExtension } from './utils'
-import { IGNORED_FS_EXTENSIONS } from './constants'
-import { useState } from 'react'
+import { IGNORED_FS_EXTENSIONS, IMAGE_EXTENSIONS } from './constants'
+import { useEffect, useState } from 'react'
 
 const EditorComp = ({ className }: { className?: string }) => {
   const { activeFile, writeFile } = useWebcontainer()
@@ -62,6 +62,26 @@ const Loading = () => {
   )
 }
 
+const ImageComp = ({ className, path }: { className?: string; path: string }) => {
+  const { readImage } = useWebcontainer()
+  const [img, setImg] = useState<string | undefined>()
+
+  useEffect(() => {
+    async function getUrl() {
+      const url = await readImage(path)
+      setImg(url)
+    }
+
+    getUrl()
+  }, [])
+
+  return (
+    <div className={cn('flex-1 flex items-center justify-center object-contain p-2', className)}>
+      <img src={img} alt={path} />
+    </div>
+  )
+}
+
 const Editor = () => {
   const { activeFile, view, activePath } = useWebcontainer()
   const [copied, setCopied] = useState(false)
@@ -70,6 +90,13 @@ const Editor = () => {
     const ext = getExtension(activeFile.path)
     if (IGNORED_FS_EXTENSIONS.includes(ext)) return false
     return true
+  }
+
+  function isImage() {
+    const path = activeFile.path
+    const ext = getExtension(path)
+    if (IMAGE_EXTENSIONS.includes(ext)) return true
+    return false
   }
 
   function handleCopy() {
@@ -120,6 +147,8 @@ const Editor = () => {
         >
           <File className="size-20 text-foreground/10" strokeWidth={1} />
         </div>
+      ) : isImage() ? (
+        <ImageComp path={activeFile.path} className={view === 'preview' ? 'hidden' : ''} />
       ) : (
         <EditorComp className={view === 'preview' ? 'hidden' : ''} />
       )}

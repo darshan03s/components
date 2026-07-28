@@ -11,15 +11,12 @@ export const IGNORED_FOLDERS = [
   '.next'
 ]
 
-export const IGNORED_FS_EXTENSIONS = [
-  'png',
-  'jpg',
-  'jpeg',
-  'gif',
-  'webp',
-  'mp4',
-  'mov',
-  'mkv',
-  'mp3',
-  'pdf'
-]
+export const IMAGE_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'ico']
+
+export const VIDEO_EXTENSIONS = ['mp4', 'mov', 'mkv']
+
+export const AUDIO_EXTENSIONS = ['mp3']
+
+export const OTHER_EXTENSIONS = ['pdf']
+
+export const IGNORED_FS_EXTENSIONS = [...VIDEO_EXTENSIONS, ...AUDIO_EXTENSIONS, ...OTHER_EXTENSIONS]

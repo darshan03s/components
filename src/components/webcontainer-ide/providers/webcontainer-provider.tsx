@@ -58,7 +58,7 @@ type LoadSnapshot = (snapshotUrl: string) => Promise<void>
 
 type Init = (
   loadFromSnapshot?: string,
-  loadFromTemplate: FileSystemTree | undefined
+  loadFromTemplate?: FileSystemTree | undefined
 ) => Promise<void>
 
 type ActiveFile = {
@@ -92,6 +92,7 @@ type WebcontainerContextType = {
   serverUrl: string
   setServerUrl: Dispatch<SetStateAction<string>>
   shellProcessWriter: RefObject<WritableStreamDefaultWriter<string> | null>
+  readImage: (path: string) => Promise<string>
 }
 
 export const WebcontainerContext = createContext<WebcontainerContextType | undefined>(undefined)
@@ -315,6 +316,17 @@ export const WebcontainerProvider = ({
     })
   }
 
+  async function readImage(path: string) {
+    const wc = requireWc()
+
+    const bytes = await wc.fs.readFile(path)
+
+    const copy = new Uint8Array(bytes)
+
+    const blob = new Blob([copy])
+    return URL.createObjectURL(blob)
+  }
+
   return (
     <WebcontainerContext.Provider
       value={{
@@ -340,7 +352,8 @@ export const WebcontainerProvider = ({
         toggleView,
         serverUrl,
         setServerUrl,
-        shellProcessWriter
+        shellProcessWriter,
+        readImage
       }}
     >
       {children}
