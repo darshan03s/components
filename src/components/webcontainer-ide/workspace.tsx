@@ -16,7 +16,12 @@ import { vscodeDark, vscodeLight } from '@uiw/codemirror-theme-vscode'
 import { useTheme } from 'next-themes'
 import { Terminal } from './terminal'
 import { getExtension } from './utils'
-import { IGNORED_FS_EXTENSIONS, IMAGE_EXTENSIONS } from './constants'
+import {
+  AUDIO_EXTENSIONS,
+  IGNORED_FS_EXTENSIONS_TO_COPY,
+  IMAGE_EXTENSIONS,
+  VIDEO_EXTENSIONS
+} from './constants'
 import { useEffect, useState } from 'react'
 
 const EditorComp = ({ className }: { className?: string }) => {
@@ -62,24 +67,50 @@ const Loading = () => {
   )
 }
 
-const ImageComp = ({ className, path }: { className?: string; path: string }) => {
-  const { readImage } = useWebcontainer()
-  const [img, setImg] = useState<string | undefined>()
+const Displayable = ({
+  className,
+  path,
+  type
+}: {
+  className?: string
+  path: string
+  type: 'image' | 'video' | 'audio' | undefined
+}) => {
+  const { readMedia } = useWebcontainer()
+  const [url, setUrl] = useState<string | undefined>()
 
   useEffect(() => {
     async function getUrl() {
-      const url = await readImage(path)
-      setImg(url)
+      const url = await readMedia(path)
+      setUrl(url)
     }
 
     getUrl()
   }, [])
 
-  return (
-    <div className={cn('flex-1 flex items-center justify-center object-contain p-2', className)}>
-      <img src={img} alt={path} />
-    </div>
-  )
+  if (type === 'image') {
+    return (
+      <div className={cn('flex-1 flex items-center justify-center object-contain p-4', className)}>
+        <img src={url} alt={path} />
+      </div>
+    )
+  }
+
+  if (type === 'video') {
+    return (
+      <div className={cn('flex-1 flex items-center justify-center p-4', className)}>
+        <video src={url} controls className="aspect-video w-full border rounded-lg" />
+      </div>
+    )
+  }
+
+  if (type === 'audio') {
+    return (
+      <div className={cn('flex-1 flex items-center justify-center p-2', className)}>
+        <audio src={url} controls className="w-full" />
+      </div>
+    )
+  }
 }
 
 const Editor = () => {
@@ -88,7 +119,7 @@ const Editor = () => {
 
   function showCopy() {
     const ext = getExtension(activeFile.path)
-    if (IGNORED_FS_EXTENSIONS.includes(ext)) return false
+    if (IGNORED_FS_EXTENSIONS_TO_COPY.includes(ext)) return false
     return true
   }
 
@@ -99,6 +130,24 @@ const Editor = () => {
     return false
   }
 
+  function isVideo() {
+    const path = activeFile.path
+    const ext = getExtension(path)
+    if (VIDEO_EXTENSIONS.includes(ext)) return true
+    return false
+  }
+
+  function isAudio() {
+    const path = activeFile.path
+    const ext = getExtension(path)
+    if (AUDIO_EXTENSIONS.includes(ext)) return true
+    return false
+  }
+
+  function isDisplayable() {
+    return isImage() || isVideo() || isAudio()
+  }
+
   function handleCopy() {
     navigator.clipboard.writeText(activeFile.content)
     setCopied(true)
@@ -106,6 +155,12 @@ const Editor = () => {
       setCopied(false)
     }, 2000)
   }
+
+  const displayableType = (() => {
+    if (isImage()) return 'image'
+    if (isVideo()) return 'video'
+    if (isAudio()) return 'audio'
+  })()
 
   return (
     <>
@@ -147,8 +202,12 @@ const Editor = () => {
         >
           <File className="size-20 text-foreground/10" strokeWidth={1} />
         </div>
-      ) : isImage() ? (
-        <ImageComp path={activeFile.path} className={view === 'preview' ? 'hidden' : ''} />
+      ) : isDisplayable() ? (
+        <Displayable
+          path={activeFile.path}
+          className={view === 'preview' ? 'hidden' : ''}
+          type={displayableType}
+        />
       ) : (
         <EditorComp className={view === 'preview' ? 'hidden' : ''} />
       )}

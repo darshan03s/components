@@ -17,7 +17,7 @@ import {
   WebContainerProcess
 } from '@webcontainer/api'
 import { ReadDirEntry } from '../types'
-import { DEFAULT_ROOT_DIR, IGNORED_FS_EXTENSIONS } from '../constants'
+import { DEFAULT_ROOT_DIR, IGNORED_FS_EXTENSIONS_TO_DISPLAY } from '../constants'
 import { Terminal } from '@xterm/xterm'
 import { getExtension } from '../utils'
 
@@ -92,7 +92,7 @@ type WebcontainerContextType = {
   serverUrl: string
   setServerUrl: Dispatch<SetStateAction<string>>
   shellProcessWriter: RefObject<WritableStreamDefaultWriter<string> | null>
-  readImage: (path: string) => Promise<string>
+  readMedia: (path: string) => Promise<string>
 }
 
 export const WebcontainerContext = createContext<WebcontainerContextType | undefined>(undefined)
@@ -267,7 +267,7 @@ export const WebcontainerProvider = ({
 
     const ext = getExtension(path)
 
-    if (IGNORED_FS_EXTENSIONS.includes(ext)) {
+    if (IGNORED_FS_EXTENSIONS_TO_DISPLAY.includes(ext)) {
       setActiveFile({
         path,
         content: `Content cannot be displayed for .${ext}`
@@ -316,7 +316,7 @@ export const WebcontainerProvider = ({
     })
   }
 
-  async function readImage(path: string) {
+  async function readMedia(path: string) {
     const wc = requireWc()
 
     const bytes = await wc.fs.readFile(path)
@@ -353,7 +353,7 @@ export const WebcontainerProvider = ({
         serverUrl,
         setServerUrl,
         shellProcessWriter,
-        readImage
+        readMedia
       }}
     >
       {children}
