@@ -148,6 +148,9 @@ export const FileSystemProvider = ({ children }: { children: React.ReactNode }) 
       const newPath = `${destination}/${source.name}`
       activePath(newPath)
     }
+    if (source.type === 'folder' && activeFile.path.startsWith(source.path + '/')) {
+      activePath(activeFile.path.replace(source.path, `${destination}/${source.name}`))
+    }
   }
 
   return (

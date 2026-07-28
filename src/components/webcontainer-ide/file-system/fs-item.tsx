@@ -14,7 +14,7 @@ import { NewFsItem } from './new-fs-item'
 import { FsTree } from './fs-tree'
 
 export const FsItem = ({ item }: { item: ReadDirEntry }) => {
-  const { activeFile, rename, rm } = useWebcontainer()
+  const { activeFile, rename, rm, activePath } = useWebcontainer()
   const {
     fs,
     handleFsItemClick,
@@ -85,6 +85,9 @@ export const FsItem = ({ item }: { item: ReadDirEntry }) => {
 
   async function deleteFsItem() {
     await rm(itemPath, { recursive: true })
+    if (activeFile.path.startsWith(itemPath)) {
+      activePath('')
+    }
     setIsDeleting(false)
   }
 
