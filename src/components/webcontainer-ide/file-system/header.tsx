@@ -1,0 +1,33 @@
+import { Button } from '@/components/ui/button'
+import { ChevronsDownUp, FilePlus, FolderPlus } from 'lucide-react'
+
+export const FileSystemHeader = ({
+  rootDir,
+  handleNewFolder,
+  handleNewFile,
+  handleCollapseAll
+}: {
+  rootDir: string
+  handleNewFolder: () => void
+  handleNewFile: () => void
+  handleCollapseAll: () => void
+}) => {
+  return (
+    <div className="filesystem-header h-(--inner-header-height) min-h-(--inner-header-height) px-2 border-b bg-background z-10 flex items-center justify-between">
+      <div className="flex items-center gap-1">
+        <span className="font-semibold">{rootDir}</span>
+      </div>
+      <div className="flex items-center">
+        <Button variant={'ghost'} size={'icon-xs'} title="Collapse all" onClick={handleCollapseAll}>
+          <ChevronsDownUp />
+        </Button>
+        <Button variant={'ghost'} size={'icon-xs'} title="Add file" onClick={handleNewFile}>
+          <FilePlus />
+        </Button>
+        <Button variant={'ghost'} size={'icon-xs'} title="Add folder" onClick={handleNewFolder}>
+          <FolderPlus />
+        </Button>
+      </div>
+    </div>
+  )
+}
