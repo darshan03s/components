@@ -1,7 +1,7 @@
 'use client'
 
 import { Check, Copy, File, Globe, X } from 'lucide-react'
-import { useWebcontainer } from './hooks'
+import { useWebContainer } from './hooks'
 import { cn } from '@/lib/utils'
 import { Spinner } from '@/components/ui/spinner'
 import { Button } from '@/components/ui/button'
@@ -25,7 +25,7 @@ import {
 import { useEffect, useState } from 'react'
 
 const EditorComp = ({ className }: { className?: string }) => {
-  const { activeFile, writeFile } = useWebcontainer()
+  const { activeFile, writeFile } = useWebContainer()
   const { resolvedTheme } = useTheme()
 
   const extensions = [
@@ -76,7 +76,7 @@ const Displayable = ({
   path: string
   type: 'image' | 'video' | 'audio' | undefined
 }) => {
-  const { readMedia } = useWebcontainer()
+  const { readMedia } = useWebContainer()
   const [url, setUrl] = useState<string | undefined>()
 
   useEffect(() => {
@@ -114,7 +114,7 @@ const Displayable = ({
 }
 
 const Editor = () => {
-  const { activeFile, view, activePath } = useWebcontainer()
+  const { activeFile, view, activePath } = useWebContainer()
   const [copied, setCopied] = useState(false)
 
   function showCopy() {
@@ -216,7 +216,7 @@ const Editor = () => {
 }
 
 const Preview = () => {
-  const { view, serverUrl } = useWebcontainer()
+  const { view, serverUrl } = useWebContainer()
 
   return (
     <div hidden={view === 'editor'} className="h-full rounded-br-lg flex flex-col">
@@ -234,7 +234,7 @@ const Preview = () => {
 }
 
 export const Workspace = () => {
-  const { mounted } = useWebcontainer()
+  const { mounted } = useWebContainer()
 
   return (
     <div className="flex-1 min-w-0 min-h-0 flex flex-col relative">

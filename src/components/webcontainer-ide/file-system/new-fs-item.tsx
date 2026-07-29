@@ -1,5 +1,5 @@
 import { RefObject } from 'react'
-import { useFileSystem, useWebcontainer } from '../hooks'
+import { useFileSystem, useWebContainer } from '../hooks'
 import { getParentFolder } from '../utils'
 import { cn } from '@/lib/utils'
 import { Item, ItemContent, ItemMedia } from '@/components/ui/item'
@@ -7,7 +7,7 @@ import { InputComp } from './input-comp'
 import { File, Folder } from 'lucide-react'
 
 export const NewFsItem = ({ inputRef }: { inputRef?: RefObject<HTMLInputElement | null> }) => {
-  const { mkDir, writeFile } = useWebcontainer()
+  const { mkDir, writeFile } = useWebContainer()
   const { newFsItem, setNewFsItem } = useFileSystem()
 
   async function createNewFsItem(form: HTMLFormElement) {

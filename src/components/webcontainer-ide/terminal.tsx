@@ -4,14 +4,14 @@ import { Terminal as XtermTerminal } from '@xterm/xterm'
 import { FitAddon } from '@xterm/addon-fit'
 import { useEffect, useRef, useState } from 'react'
 import '@xterm/xterm/css/xterm.css'
-import { useFileSystem, useWebcontainer } from './hooks'
+import { useFileSystem, useWebContainer } from './hooks'
 import { WebContainerProcess } from '@webcontainer/api'
 import { cn } from '@/lib/utils'
 import { X, TerminalIcon } from 'lucide-react'
 import { Button } from '../ui/button'
 
 export const Terminal = () => {
-  const { startShell, mounted, setServerUrl, shellProcessWriter } = useWebcontainer()
+  const { startShell, mounted, setServerUrl, shellProcessWriter } = useWebContainer()
   const terminalRef = useRef<XtermTerminal | null>(null)
   const terminalEleRef = useRef<HTMLDivElement | null>(null)
   const fitAddonRef = useRef<FitAddon | null>(null)

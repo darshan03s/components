@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 import { FileSystemContext } from './providers/filesystem-provider'
-import { WebcontainerContext } from './providers/webcontainer-provider'
+import { WebContainerContext } from './providers/webcontainer-provider'
 import { PropsContext } from './providers/props-provider'
 
 export const useFileSystem = () => {
@@ -12,10 +12,10 @@ export const useFileSystem = () => {
   return context
 }
 
-export const useWebcontainer = () => {
-  const context = useContext(WebcontainerContext)
+export const useWebContainer = () => {
+  const context = useContext(WebContainerContext)
   if (!context) {
-    throw new Error('useWebcontainerContext must be used within a WebcontainerProvider')
+    throw new Error('useWebContainerContext must be used within a WebContainerProvider')
   }
   return context
 }

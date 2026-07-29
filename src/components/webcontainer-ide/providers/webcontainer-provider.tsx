@@ -70,7 +70,7 @@ type ActiveFile = {
 
 type View = 'editor' | 'preview'
 
-type WebcontainerContextType = {
+type WebContainerContextType = {
   wc: WebContainer | null
   boot: Boot
   mount: Mount
@@ -98,9 +98,9 @@ type WebcontainerContextType = {
   readMedia: (path: string) => Promise<string>
 }
 
-export const WebcontainerContext = createContext<WebcontainerContextType | undefined>(undefined)
+export const WebContainerContext = createContext<WebContainerContextType | undefined>(undefined)
 
-export const WebcontainerProvider = ({
+export const WebContainerProvider = ({
   children,
   rootDir = DEFAULT_ROOT_DIR
 }: {
@@ -337,7 +337,7 @@ export const WebcontainerProvider = ({
   }
 
   return (
-    <WebcontainerContext.Provider
+    <WebContainerContext.Provider
       value={{
         boot,
         wc,
@@ -367,6 +367,6 @@ export const WebcontainerProvider = ({
       }}
     >
       {children}
-    </WebcontainerContext.Provider>
+    </WebContainerContext.Provider>
   )
 }

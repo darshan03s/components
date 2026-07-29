@@ -1,7 +1,7 @@
 'use client'
 
 import { createContext, Dispatch, RefObject, SetStateAction, useRef, useState } from 'react'
-import { useWebcontainer } from '../hooks'
+import { useWebContainer } from '../hooks'
 import { FsItemDrag, ReadDirEntry } from '../types'
 import { IGNORED_FOLDERS } from '../constants'
 import { getParentFolder } from '../utils'
@@ -39,7 +39,7 @@ type NewFsItem = {
 export const FileSystemContext = createContext<FileSystemContextType | undefined>(undefined)
 
 export const FileSystemProvider = ({ children }: { children: React.ReactNode }) => {
-  const { readDir, activePath, setView, mv, activeFile } = useWebcontainer()
+  const { readDir, activePath, setView, mv, activeFile } = useWebContainer()
   const [fileSystemOpen, setFileSystemOpen] = useState(true)
   const [fs, setFs] = useState<Fs>({})
   const [openFolders, setOpenFolders] = useState(new Set<string>())

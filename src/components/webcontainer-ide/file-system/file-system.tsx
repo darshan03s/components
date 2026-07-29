@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import { Spinner } from '@/components/ui/spinner'
-import { useFileSystem, useWebcontainer } from '../hooks'
+import { useFileSystem, useWebContainer } from '../hooks'
 import { getParentFolder } from '../utils'
 import { FileSystemHeader } from './header'
 import { FsTree } from './fs-tree'
@@ -21,7 +21,7 @@ export const FileSystem = () => {
     endFsItemMove,
     handleFsItemDrop
   } = useFileSystem()
-  const { mounted, rootDir, wc } = useWebcontainer()
+  const { mounted, rootDir, wc } = useWebContainer()
   const rootDirPath = `/${rootDir}`
 
   useEffect(() => {

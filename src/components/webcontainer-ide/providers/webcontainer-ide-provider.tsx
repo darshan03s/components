@@ -1,7 +1,7 @@
 'use client'
 
 import { FileSystemProvider } from './filesystem-provider'
-import { WebcontainerProvider } from './webcontainer-provider'
+import { WebContainerProvider } from './webcontainer-provider'
 
 export const WebContainerIDEProvider = ({
   children,
@@ -11,8 +11,8 @@ export const WebContainerIDEProvider = ({
   rootDir?: string
 }) => {
   return (
-    <WebcontainerProvider rootDir={rootDir}>
+    <WebContainerProvider rootDir={rootDir}>
       <FileSystemProvider>{children}</FileSystemProvider>
-    </WebcontainerProvider>
+    </WebContainerProvider>
   )
 }

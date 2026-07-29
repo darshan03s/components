@@ -5,7 +5,7 @@ import { Workspace } from './workspace'
 import { useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Code, Eye, PanelLeft, PanelRight, Terminal } from 'lucide-react'
-import { useFileSystem, useProps, useWebcontainer } from './hooks'
+import { useFileSystem, useProps, useWebContainer } from './hooks'
 import { ButtonGroup } from '@/components/ui/button-group'
 import { PropsProvider } from './providers/props-provider'
 import { WebContainerIDEProps } from './types'
@@ -19,7 +19,7 @@ export const WebContainerIDE = ({ ...props }: WebContainerIDEProps) => {
 }
 
 export const Comp = () => {
-  const { init, view, toggleView, mounted } = useWebcontainer()
+  const { init, view, toggleView, mounted } = useWebContainer()
   const { toggleFileSystem, fileSystemOpen } = useFileSystem()
   const { loadFromSnapshot, loadFromTemplate } = useProps()
 

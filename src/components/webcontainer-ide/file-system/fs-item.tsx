@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { useFileSystem, useWebcontainer } from '../hooks'
+import { useFileSystem, useWebContainer } from '../hooks'
 import { FsItemDrag, ReadDirEntry } from '../types'
 import { getParentFolder } from '../utils'
 import { Item, ItemActions, ItemContent, ItemMedia } from '@/components/ui/item'
@@ -14,7 +14,7 @@ import { NewFsItem } from './new-fs-item'
 import { FsTree } from './fs-tree'
 
 export const FsItem = ({ item }: { item: ReadDirEntry }) => {
-  const { activeFile, rename, rm, activePath } = useWebcontainer()
+  const { activeFile, rename, rm, activePath } = useWebContainer()
   const {
     fs,
     handleFsItemClick,
