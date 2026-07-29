@@ -1,7 +1,7 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "registry",
-  "homepage": "https://ui.shadcn.com",
+  "homepage": "https://components.darshans.site",
   "items": [
     {
       "name": "media-player",
@@ -12,33 +12,33 @@
       "dependencies": ["mediabunny@^1.50.6"],
       "files": [
         {
+          "type": "registry:component",
           "path": "src/components/media-player/index.ts",
-          "type": "registry:file",
           "target": "@components/media-player/index.ts"
         },
         {
-          "path": "src/components/media-player/info-modal.tsx",
           "type": "registry:component",
+          "path": "src/components/media-player/info-modal.tsx",
           "target": "@components/media-player/info-modal.tsx"
         },
         {
+          "type": "registry:component",
           "path": "src/components/media-player/mediabunny.ts",
-          "type": "registry:file",
           "target": "@components/media-player/mediabunny.ts"
         },
         {
-          "path": "src/components/media-player/player.tsx",
           "type": "registry:component",
+          "path": "src/components/media-player/player.tsx",
           "target": "@components/media-player/player.tsx"
         },
         {
-          "path": "src/components/media-player/provider.tsx",
           "type": "registry:component",
+          "path": "src/components/media-player/provider.tsx",
           "target": "@components/media-player/provider.tsx"
         },
         {
+          "type": "registry:component",
           "path": "src/components/media-player/utils.ts",
-          "type": "registry:file",
           "target": "@components/media-player/utils.ts"
         }
       ]
