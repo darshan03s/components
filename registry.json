@@ -48,7 +48,7 @@
       "type": "registry:block",
       "title": "WebContainer IDE",
       "description": "WebContainer based IDE",
-      "docs": "Make sure to use the WebContainerIDE Provider. <WebContainerIDEProvider rootDir=\"project\">{children}<WebContainerIDEProvider/>",
+      "docs": "The `WebContainerIDE` component was added to your project.\n\n### Wrap your component with `WebContainerIDEProvider`\n\n```tsx title='page.tsx'\n'use client'\n\nimport { WebContainerIDE, WebContainerIDEProvider } from '@/components/webcontainer-ide'\nimport { useTheme } from 'next-themes'\n\nconst Page = () => {\n  const { resolvedTheme } = useTheme()\n\n  return (\n    <div className=\"flex items-center justify-center\">\n      <WebContainerIDEProvider rootDir=\"projects\">\n        <WebContainerIDE theme={resolvedTheme as 'light' | 'dark'} />\n      </WebContainerIDEProvider>\n    </div>\n  )\n}\n\nexport default Page\n```\n\n### Configure headers(Refer: https://webcontainers.io/guides/configuring-headers)\n\n```\nCross-Origin-Embedder-Policy: require-corp\nCross-Origin-Opener-Policy: same-origin\n```\n",
       "registryDependencies": [
         "button",
         "button-group",
@@ -61,6 +61,7 @@
       "dependencies": [
         "@webcontainer/api",
         "@uiw/react-codemirror",
+        "@uiw/codemirror-theme-vscode",
         "@codemirror/lang-javascript",
         "@codemirror/lang-json",
         "@codemirror/lang-html",

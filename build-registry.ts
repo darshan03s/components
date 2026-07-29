@@ -1,10 +1,12 @@
 import { execSync } from 'node:child_process'
-import fs from 'node:fs'
+import fs, { readFileSync } from 'node:fs'
 import path from 'node:path'
 
 const registryFilePath = './registry.json'
 const registryName = 'registry'
 const registryHost = 'https://components.darshans.site'
+
+const webContainerIdeDocs = readFileSync('./src/docs/webcontainer-ide.md', 'utf-8')
 
 const registryItems: RegistryItem[] = [
   {
@@ -27,7 +29,7 @@ const registryItems: RegistryItem[] = [
     type: 'registry:block',
     title: 'WebContainer IDE',
     description: 'WebContainer based IDE',
-    docs: 'Make sure to use the WebContainerIDE Provider. <WebContainerIDEProvider rootDir="project">{children}<WebContainerIDEProvider/>',
+    docs: webContainerIdeDocs,
     registryDependencies: [
       'button',
       'button-group',
@@ -40,6 +42,7 @@ const registryItems: RegistryItem[] = [
     dependencies: [
       '@webcontainer/api',
       '@uiw/react-codemirror',
+      '@uiw/codemirror-theme-vscode',
       '@codemirror/lang-javascript',
       '@codemirror/lang-json',
       '@codemirror/lang-html',
