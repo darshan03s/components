@@ -1,14 +1,14 @@
 'use client'
 
-import { Code, Eye, PanelLeft, PanelRight, Terminal } from 'lucide-react'
-import { useFileSystem, useProps, useWebContainer } from './hooks'
-import { ButtonGroup } from '@/components/ui/button-group'
-import { PropsProvider } from './providers/props-provider'
-import { Button } from '@/components/ui/button'
-import { WebContainerIDEProps } from './types'
-import { FileSystem } from './file-system'
-import { Workspace } from './workspace'
 import { useEffect } from 'react'
+import { Code, Eye, PanelLeft, PanelRight, Terminal } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { ButtonGroup } from '@/components/ui/button-group'
+import { FileSystem } from './file-system'
+import { useFileSystem, useProps, useWebContainer } from './hooks'
+import { PropsProvider } from './providers/props-provider'
+import { WebContainerIDEProps } from './types'
+import { Workspace } from './workspace'
 
 export const WebContainerIDE = ({ ...props }: WebContainerIDEProps) => {
   return (

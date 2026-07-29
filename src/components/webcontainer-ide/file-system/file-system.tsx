@@ -1,12 +1,12 @@
 'use client'
 
-import { useFileSystem, useWebContainer } from '../hooks'
-import { Spinner } from '@/components/ui/spinner'
-import { FileSystemHeader } from './header'
-import { getParentFolder } from '../utils'
-import { NewFsItem } from './new-fs-item'
-import { FsTree } from './fs-tree'
 import { useEffect } from 'react'
+import { Spinner } from '@/components/ui/spinner'
+import { useFileSystem, useWebContainer } from '../hooks'
+import { getParentFolder } from '../utils'
+import { FsTree } from './fs-tree'
+import { FileSystemHeader } from './header'
+import { NewFsItem } from './new-fs-item'
 
 export const FileSystem = () => {
   const {

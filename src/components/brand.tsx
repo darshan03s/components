@@ -1,5 +1,5 @@
-import { APP_NAME } from '@/metadata'
 import Link from 'next/link'
+import { APP_NAME } from '@/metadata'
 
 const Brand = () => {
   return (

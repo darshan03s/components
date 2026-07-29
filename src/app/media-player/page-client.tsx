@@ -1,9 +1,9 @@
 'use client'
 
-import { MediaPlayer } from '@/components/media-player'
+import { useState } from 'react'
 import FileImport from '@/components/file-import'
 import Main from '@/components/main'
-import { useState } from 'react'
+import { MediaPlayer } from '@/components/media-player'
 
 const PageClient = () => {
   const [file, setFile] = useState<File | null>(null)

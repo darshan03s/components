@@ -1,6 +1,6 @@
 import nextVitals from 'eslint-config-next/core-web-vitals'
-import { defineConfig, globalIgnores } from 'eslint/config'
 import nextTs from 'eslint-config-next/typescript'
+import { defineConfig, globalIgnores } from 'eslint/config'
 
 const eslintConfig = defineConfig([
   ...nextVitals,

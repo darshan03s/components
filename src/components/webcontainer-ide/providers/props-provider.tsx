@@ -1,5 +1,5 @@
-import { WebContainerIDEProps } from '../types'
 import { createContext } from 'react'
+import { WebContainerIDEProps } from '../types'
 
 export const PropsContext = createContext<WebContainerIDEProps | null>(null)
 

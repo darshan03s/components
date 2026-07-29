@@ -1,5 +1,5 @@
-import { APP_URL } from '@/metadata'
 import { MetadataRoute } from 'next'
+import { APP_URL } from '@/metadata'
 
 export default function robots(): MetadataRoute.Robots {
   return {

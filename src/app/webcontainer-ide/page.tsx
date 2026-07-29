@@ -1,8 +1,8 @@
 'use client'
 
-import { WebContainerIDE, WebContainerIDEProvider } from '@/components/webcontainer-ide'
 import { useTheme } from 'next-themes'
 import Main from '@/components/main'
+import { WebContainerIDE, WebContainerIDEProvider } from '@/components/webcontainer-ide'
 
 const Page = () => {
   const { resolvedTheme } = useTheme()

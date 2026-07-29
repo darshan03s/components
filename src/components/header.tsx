@@ -1,5 +1,5 @@
-import { ModeToggle } from './mode-toggle'
 import Brand from './brand'
+import { ModeToggle } from './mode-toggle'
 
 const Header = () => {
   return (

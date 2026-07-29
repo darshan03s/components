@@ -1,5 +1,5 @@
-import { Input } from '@/components/ui/input'
 import { RefObject } from 'react'
+import { Input } from '@/components/ui/input'
 
 export const InputComp = ({
   onSubmit,

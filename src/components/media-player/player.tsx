@@ -1,5 +1,6 @@
 'use client'
 
+import { memo, useState } from 'react'
 import {
   EllipsisVertical,
   FastForward,
@@ -13,6 +14,8 @@ import {
   Volume2,
   VolumeX
 } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,14 +23,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { PlayerProvider, usePlayerStaticContext, usePlayerPlaybackContext } from './provider'
-import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { Slider } from '@/components/ui/slider'
-import { Button } from '@/components/ui/button'
-import { InfoModal } from './info-modal'
-import { formatDuration } from './utils'
-import { memo, useState } from 'react'
 import { cn } from '@/lib/utils'
+import { InfoModal } from './info-modal'
+import { PlayerProvider, usePlayerPlaybackContext, usePlayerStaticContext } from './provider'
+import { formatDuration } from './utils'
 
 type MediaPlayerProps = {
   file: File

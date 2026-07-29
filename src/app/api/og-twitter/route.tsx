@@ -1,5 +1,5 @@
-import { InstrumentSerifFontData } from '@/font'
 import { ImageResponse } from 'next/og'
+import { InstrumentSerifFontData } from '@/font'
 import { APP_NAME } from '@/metadata'
 
 export async function GET() {

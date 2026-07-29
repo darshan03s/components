@@ -1,7 +1,7 @@
-import { ThemeProvider } from './theme-provider'
-import { TooltipProvider } from './ui/tooltip'
-import { Toaster } from './ui/sonner'
 import { ReactNode } from 'react'
+import { ThemeProvider } from './theme-provider'
+import { Toaster } from './ui/sonner'
+import { TooltipProvider } from './ui/tooltip'
 
 const Providers = ({ children }: { children: ReactNode }) => {
   return (

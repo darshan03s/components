@@ -1,5 +1,5 @@
-import Main from '@/components/main'
 import Link from 'next/link'
+import Main from '@/components/main'
 
 const Page = () => {
   return (

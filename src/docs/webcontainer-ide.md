@@ -5,8 +5,8 @@ The `WebContainerIDE` component was added to your project.
 ```tsx title='page.tsx'
 'use client'
 
-import { WebContainerIDE, WebContainerIDEProvider } from '@/components/webcontainer-ide'
 import { useTheme } from 'next-themes'
+import { WebContainerIDE, WebContainerIDEProvider } from '@/components/webcontainer-ide'
 
 const Page = () => {
   const { resolvedTheme } = useTheme()

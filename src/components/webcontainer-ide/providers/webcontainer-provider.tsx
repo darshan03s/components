@@ -1,25 +1,25 @@
 'use client'
 
 import {
+  Dispatch,
+  RefObject,
+  SetStateAction,
+  createContext,
+  useEffect,
+  useRef,
+  useState
+} from 'react'
+import {
   FileSystemAPI,
   FileSystemTree,
   LoadFilesOptions,
   WebContainer,
   WebContainerProcess
 } from '@webcontainer/api'
-import {
-  createContext,
-  Dispatch,
-  RefObject,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState
-} from 'react'
-import { DEFAULT_ROOT_DIR, IGNORED_FS_EXTENSIONS_TO_DISPLAY } from '../constants'
 import { Terminal } from '@xterm/xterm'
-import { getExtension } from '../utils'
+import { DEFAULT_ROOT_DIR, IGNORED_FS_EXTENSIONS_TO_DISPLAY } from '../constants'
 import { ReadDirEntry } from '../types'
+import { getExtension } from '../utils'
 
 type Boot = () => Promise<WebContainer>
 

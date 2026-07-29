@@ -1,27 +1,27 @@
 'use client'
 
+import { useEffect, useState } from 'react'
+import { css } from '@codemirror/lang-css'
+import { html } from '@codemirror/lang-html'
+import { javascript } from '@codemirror/lang-javascript'
+import { json } from '@codemirror/lang-json'
+import { sass } from '@codemirror/lang-sass'
+import { vscodeDark, vscodeLight } from '@uiw/codemirror-theme-vscode'
+import CodeMirror from '@uiw/react-codemirror'
+import { Check, Copy, File, Globe, X } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { ButtonGroup } from '@/components/ui/button-group'
+import { Spinner } from '@/components/ui/spinner'
+import { cn } from '@/lib/utils'
 import {
   AUDIO_EXTENSIONS,
   IGNORED_FS_EXTENSIONS_TO_COPY,
   IMAGE_EXTENSIONS,
   VIDEO_EXTENSIONS
 } from './constants'
-import { vscodeDark, vscodeLight } from '@uiw/codemirror-theme-vscode'
-import { ButtonGroup } from '@/components/ui/button-group'
-import { Check, Copy, File, Globe, X } from 'lucide-react'
-import { javascript } from '@codemirror/lang-javascript'
 import { useProps, useWebContainer } from './hooks'
-import { Spinner } from '@/components/ui/spinner'
-import { Button } from '@/components/ui/button'
-import CodeMirror from '@uiw/react-codemirror'
-import { sass } from '@codemirror/lang-sass'
-import { json } from '@codemirror/lang-json'
-import { html } from '@codemirror/lang-html'
-import { useEffect, useState } from 'react'
-import { css } from '@codemirror/lang-css'
-import { getExtension } from './utils'
 import { Terminal } from './terminal'
-import { cn } from '@/lib/utils'
+import { getExtension } from './utils'
 
 const EditorComp = ({ className }: { className?: string }) => {
   const { activeFile, writeFile } = useWebContainer()
