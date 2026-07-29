@@ -19,7 +19,7 @@ import {
   IMAGE_EXTENSIONS,
   VIDEO_EXTENSIONS
 } from './constants'
-import { useProps, useWebContainer } from './hooks'
+import { useIde, useProps, useWebContainer } from './hooks'
 import { Terminal } from './terminal'
 import { getExtension } from './utils'
 
@@ -113,7 +113,8 @@ const Displayable = ({
 }
 
 const Editor = () => {
-  const { activeFile, view, activePath } = useWebContainer()
+  const { activeFile, activePath } = useWebContainer()
+  const { view } = useIde()
   const [copied, setCopied] = useState(false)
 
   function showCopy() {
@@ -215,7 +216,8 @@ const Editor = () => {
 }
 
 const Preview = () => {
-  const { view, serverUrl } = useWebContainer()
+  const { serverUrl } = useWebContainer()
+  const { view } = useIde()
 
   return (
     <div hidden={view === 'editor'} className="flex h-full flex-col rounded-br-lg">

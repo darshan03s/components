@@ -1,7 +1,20 @@
 'use client'
 
+import { Dispatch, SetStateAction, createContext, useState } from 'react'
 import { FileSystemProvider } from './filesystem-provider'
 import { WebContainerProvider } from './webcontainer-provider'
+
+type View = 'editor' | 'preview'
+
+type ToggleView = () => void
+
+type WebContainerIDEContext = {
+  view: View
+  setView: Dispatch<SetStateAction<View>>
+  toggleView: ToggleView
+}
+
+export const WebContainerIDEContext = createContext<WebContainerIDEContext | null>(null)
 
 export const WebContainerIDEProvider = ({
   children,
@@ -10,9 +23,21 @@ export const WebContainerIDEProvider = ({
   children: React.ReactNode
   rootDir?: string
 }) => {
+  const [view, setView] = useState<View>('editor')
+
+  const toggleView: ToggleView = () => {
+    setView((prev) => {
+      if (prev === 'editor') return 'preview'
+      else if (prev === 'preview') return 'editor'
+      return 'editor'
+    })
+  }
+
   return (
-    <WebContainerProvider rootDir={rootDir}>
-      <FileSystemProvider>{children}</FileSystemProvider>
-    </WebContainerProvider>
+    <WebContainerIDEContext.Provider value={{ view, setView, toggleView }}>
+      <WebContainerProvider rootDir={rootDir}>
+        <FileSystemProvider>{children}</FileSystemProvider>
+      </WebContainerProvider>
+    </WebContainerIDEContext.Provider>
   )
 }

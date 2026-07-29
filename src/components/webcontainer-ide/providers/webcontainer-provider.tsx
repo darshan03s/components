@@ -70,11 +70,7 @@ type ActiveFile = {
 
 type ActivePath = (path: string) => void
 
-type View = 'editor' | 'preview'
-
 type StartShell = (terminal: Terminal) => Promise<WebContainerProcess>
-
-type ToggleView = () => void
 
 type ReadMedia = (path: string) => Promise<string>
 
@@ -97,9 +93,6 @@ type WebContainerContext = {
   activePath: ActivePath
   activeFile: ActiveFile
   startShell: StartShell
-  view: View
-  setView: Dispatch<SetStateAction<View>>
-  toggleView: ToggleView
   serverUrl: string
   setServerUrl: Dispatch<SetStateAction<string>>
   shellProcessWriter: RefObject<WritableStreamDefaultWriter<string> | null>
@@ -121,7 +114,7 @@ export const WebContainerProvider = ({
     path: '',
     content: ''
   })
-  const [view, setView] = useState<View>('editor')
+
   const [serverUrl, setServerUrl] = useState<string>('')
   const shellProcessWriter = useRef<WritableStreamDefaultWriter<string>>(null)
 
@@ -326,14 +319,6 @@ export const WebContainerProvider = ({
     return shellProcess
   }
 
-  const toggleView: ToggleView = () => {
-    setView((prev) => {
-      if (prev === 'editor') return 'preview'
-      else if (prev === 'preview') return 'editor'
-      return 'editor'
-    })
-  }
-
   const readMedia: ReadMedia = async (path) => {
     const wc = requireWc()
 
@@ -366,9 +351,6 @@ export const WebContainerProvider = ({
         activePath,
         activeFile,
         startShell,
-        view,
-        setView,
-        toggleView,
         serverUrl,
         setServerUrl,
         shellProcessWriter,

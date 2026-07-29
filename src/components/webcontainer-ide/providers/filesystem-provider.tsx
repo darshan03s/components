@@ -2,7 +2,7 @@
 
 import { Dispatch, RefObject, SetStateAction, createContext, useRef, useState } from 'react'
 import { IGNORED_FOLDERS } from '../constants'
-import { useWebContainer } from '../hooks'
+import { useIde, useWebContainer } from '../hooks'
 import { FsItemDrag, ReadDirEntry } from '../types'
 import { getParentFolder } from '../utils'
 
@@ -63,7 +63,8 @@ type FileSystemContextType = {
 export const FileSystemContext = createContext<FileSystemContextType | undefined>(undefined)
 
 export const FileSystemProvider = ({ children }: { children: React.ReactNode }) => {
-  const { readDir, activePath, setView, mv, activeFile } = useWebContainer()
+  const { readDir, activePath, mv, activeFile } = useWebContainer()
+  const { setView } = useIde()
   const [fileSystemOpen, setFileSystemOpen] = useState(true)
   const [fs, setFs] = useState<Fs>({})
   const [openFolders, setOpenFolders] = useState(new Set<string>())
