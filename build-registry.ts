@@ -27,6 +27,7 @@ const registryItems: RegistryItem[] = [
     type: 'registry:block',
     title: 'WebContainer IDE',
     description: 'WebContainer based IDE',
+    docs: 'Make sure to use the WebContainerIDE Provider. <WebContainerIDEProvider rootDir="project">{children}<WebContainerIDEProvider/>',
     registryDependencies: [
       'button',
       'button-group',
@@ -85,6 +86,7 @@ type RegistryItem = {
   title: string
   author?: string
   description?: string
+  docs?: string
   registryDependencies?: string[]
   dependencies?: string[]
   devDependencies?: string[]

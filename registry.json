@@ -42,6 +42,140 @@
           "target": "@components/media-player/utils.ts"
         }
       ]
+    },
+    {
+      "name": "webcontainer-id",
+      "type": "registry:block",
+      "title": "WebContainer IDE",
+      "description": "WebContainer based IDE",
+      "docs": "Make sure to use the WebContainerIDE Provider. <WebContainerIDEProvider rootDir=\"project\">{children}<WebContainerIDEProvider/>",
+      "registryDependencies": [
+        "button",
+        "button-group",
+        "item",
+        "spinner",
+        "dropdown-menu",
+        "slider",
+        "input"
+      ],
+      "dependencies": [
+        "@webcontainer/api",
+        "@uiw/react-codemirror",
+        "@codemirror/lang-javascript",
+        "@codemirror/lang-json",
+        "@codemirror/lang-html",
+        "@codemirror/lang-sass",
+        "@codemirror/lang-css",
+        "@xterm/xterm",
+        "@xterm/addon-fit"
+      ],
+      "files": [
+        {
+          "type": "registry:component",
+          "path": "src/components/webcontainer-ide/constants.ts",
+          "target": "@components/webcontainer-ide/constants.ts"
+        },
+        {
+          "type": "registry:component",
+          "path": "src/components/webcontainer-ide/hooks.ts",
+          "target": "@components/webcontainer-ide/hooks.ts"
+        },
+        {
+          "type": "registry:component",
+          "path": "src/components/webcontainer-ide/index.ts",
+          "target": "@components/webcontainer-ide/index.ts"
+        },
+        {
+          "type": "registry:component",
+          "path": "src/components/webcontainer-ide/terminal.tsx",
+          "target": "@components/webcontainer-ide/terminal.tsx"
+        },
+        {
+          "type": "registry:component",
+          "path": "src/components/webcontainer-ide/types.ts",
+          "target": "@components/webcontainer-ide/types.ts"
+        },
+        {
+          "type": "registry:component",
+          "path": "src/components/webcontainer-ide/utils.ts",
+          "target": "@components/webcontainer-ide/utils.ts"
+        },
+        {
+          "type": "registry:component",
+          "path": "src/components/webcontainer-ide/webcontainer-ide.tsx",
+          "target": "@components/webcontainer-ide/webcontainer-ide.tsx"
+        },
+        {
+          "type": "registry:component",
+          "path": "src/components/webcontainer-ide/workspace.tsx",
+          "target": "@components/webcontainer-ide/workspace.tsx"
+        },
+        {
+          "type": "registry:component",
+          "path": "src/components/webcontainer-ide/file-system/file-system.tsx",
+          "target": "@components/webcontainer-ide/file-system/file-system.tsx"
+        },
+        {
+          "type": "registry:component",
+          "path": "src/components/webcontainer-ide/file-system/fs-item-icon.tsx",
+          "target": "@components/webcontainer-ide/file-system/fs-item-icon.tsx"
+        },
+        {
+          "type": "registry:component",
+          "path": "src/components/webcontainer-ide/file-system/fs-item-options.tsx",
+          "target": "@components/webcontainer-ide/file-system/fs-item-options.tsx"
+        },
+        {
+          "type": "registry:component",
+          "path": "src/components/webcontainer-ide/file-system/fs-item.tsx",
+          "target": "@components/webcontainer-ide/file-system/fs-item.tsx"
+        },
+        {
+          "type": "registry:component",
+          "path": "src/components/webcontainer-ide/file-system/fs-tree.tsx",
+          "target": "@components/webcontainer-ide/file-system/fs-tree.tsx"
+        },
+        {
+          "type": "registry:component",
+          "path": "src/components/webcontainer-ide/file-system/header.tsx",
+          "target": "@components/webcontainer-ide/file-system/header.tsx"
+        },
+        {
+          "type": "registry:component",
+          "path": "src/components/webcontainer-ide/file-system/index.ts",
+          "target": "@components/webcontainer-ide/file-system/index.ts"
+        },
+        {
+          "type": "registry:component",
+          "path": "src/components/webcontainer-ide/file-system/input-comp.tsx",
+          "target": "@components/webcontainer-ide/file-system/input-comp.tsx"
+        },
+        {
+          "type": "registry:component",
+          "path": "src/components/webcontainer-ide/file-system/new-fs-item.tsx",
+          "target": "@components/webcontainer-ide/file-system/new-fs-item.tsx"
+        },
+        {
+          "type": "registry:component",
+          "path": "src/components/webcontainer-ide/providers/filesystem-provider.tsx",
+          "target": "@components/webcontainer-ide/providers/filesystem-provider.tsx"
+        },
+        {
+          "type": "registry:component",
+          "path": "src/components/webcontainer-ide/providers/props-provider.tsx",
+          "target": "@components/webcontainer-ide/providers/props-provider.tsx"
+        },
+        {
+          "type": "registry:component",
+          "path": "src/components/webcontainer-ide/providers/webcontainer-ide-provider.tsx",
+          "target": "@components/webcontainer-ide/providers/webcontainer-ide-provider.tsx"
+        },
+        {
+          "type": "registry:component",
+          "path": "src/components/webcontainer-ide/providers/webcontainer-provider.tsx",
+          "target": "@components/webcontainer-ide/providers/webcontainer-provider.tsx"
+        }
+      ]
     }
   ]
 }
