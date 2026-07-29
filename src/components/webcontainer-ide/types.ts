@@ -1,3 +1,10 @@
+import { FileSystemTree } from '@webcontainer/api'
+
+export type WebContainerIDEProps = {
+  loadFromSnapshot?: string
+  loadFromTemplate?: FileSystemTree
+}
+
 export type ReadDirEntry = {
   path: string
   name: string

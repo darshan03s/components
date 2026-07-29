@@ -5,18 +5,23 @@ import { Workspace } from './workspace'
 import { useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Code, Eye, PanelLeft, PanelRight, Terminal } from 'lucide-react'
-import { useFileSystem, useWebcontainer } from './hooks'
+import { useFileSystem, useProps, useWebcontainer } from './hooks'
 import { ButtonGroup } from '@/components/ui/button-group'
-import { FileSystemTree } from '@webcontainer/api'
+import { PropsProvider } from './providers/props-provider'
+import { WebContainerIDEProps } from './types'
 
-type WebContainerIDEProps = {
-  loadFromSnapshot?: string
-  loadFromTemplate?: FileSystemTree
+export const WebContainerIDE = ({ ...props }: WebContainerIDEProps) => {
+  return (
+    <PropsProvider {...props}>
+      <Comp />
+    </PropsProvider>
+  )
 }
 
-export const WebContainerIDE = ({ loadFromSnapshot, loadFromTemplate }: WebContainerIDEProps) => {
+export const Comp = () => {
   const { init, view, toggleView, mounted } = useWebcontainer()
   const { toggleFileSystem, fileSystemOpen } = useFileSystem()
+  const { loadFromSnapshot, loadFromTemplate } = useProps()
 
   useEffect(() => {
     if (mounted) return
