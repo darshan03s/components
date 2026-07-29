@@ -4,7 +4,7 @@ type Props = React.ComponentProps<'main'>
 
 const Main = ({ className, ...props }: Props) => {
   return (
-    <main className={cn('min-h-[calc(100vh-var(--header-height))] h-full', className)} {...props} />
+    <main className={cn('h-full min-h-[calc(100vh-var(--header-height))]', className)} {...props} />
   )
 }
 

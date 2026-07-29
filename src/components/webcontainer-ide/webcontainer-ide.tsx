@@ -33,8 +33,8 @@ export const Comp = () => {
   }
 
   return (
-    <div className="[--ide-width:--spacing(240)] [--ide-height:--spacing(140)] w-(--ide-width) h-(--ide-height) border rounded-lg flex flex-col relative">
-      <div className="bg-background rounded-tl-lg rounded-tr-lg min-h-10 h-10 px-2 flex items-center justify-between border-b">
+    <div className="relative flex h-(--ide-height) w-(--ide-width) flex-col rounded-lg border [--ide-height:--spacing(140)] [--ide-width:--spacing(240)]">
+      <div className="bg-background flex h-10 min-h-10 items-center justify-between rounded-tl-lg rounded-tr-lg border-b px-2">
         <div className="flex items-center gap-4">
           <Button
             size={'icon-xs'}
@@ -70,7 +70,7 @@ export const Comp = () => {
           <Terminal />
         </Button>
       </div>
-      <div className="flex flex-1 min-h-0 [--inner-header-height:--spacing(8)] [--fs-width:--spacing(64)]">
+      <div className="flex min-h-0 flex-1 [--fs-width:--spacing(64)] [--inner-header-height:--spacing(8)]">
         <FileSystem />
         <Workspace />
       </div>

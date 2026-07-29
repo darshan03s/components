@@ -53,9 +53,9 @@ const PlayerMain = ({ className }: { className?: string }) => {
   const { fileData } = usePlayerStaticContext()
 
   return (
-    <Card className={cn('w-86 md:w-120 max-w-full gap-0 p-0 relative overflow-hidden', className)}>
+    <Card className={cn('relative w-86 max-w-full gap-0 overflow-hidden p-0 md:w-120', className)}>
       {!fileData ? (
-        <div className="absolute inset-0 bg-muted animate-pulse" />
+        <div className="bg-muted absolute inset-0 animate-pulse" />
       ) : (
         <>
           <Poster />
@@ -89,10 +89,10 @@ const Video = memo(function Video() {
     usePlayerStaticContext()
 
   return (
-    <CardContent className="p-0 relative aspect-video" onClick={playPause}>
+    <CardContent className="relative aspect-video p-0" onClick={playPause}>
       {type === 'audio' && !posterUrl && (
-        <div className="absolute inset-0 flex items-center justify-center bg-linear-to-b from-primary/10 to-transparent">
-          <Music className="size-14 text-primary" />
+        <div className="from-primary/10 absolute inset-0 flex items-center justify-center bg-linear-to-b to-transparent">
+          <Music className="text-primary size-14" />
         </div>
       )}
       <video
@@ -101,7 +101,7 @@ const Video = memo(function Video() {
         controls={showHTMLControls}
         poster={posterUrl}
         src={videoUrl}
-        className="w-full h-full"
+        className="h-full w-full"
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
         onEnded={() => setIsPlaying(false)}
@@ -116,7 +116,7 @@ const PlayerFooter = memo(function PlayerFooter() {
   return (
     <CardFooter
       className={cn(
-        'flex min-w-0 w-full flex-col gap-2 overflow-hidden border-none relative',
+        'relative flex w-full min-w-0 flex-col gap-2 overflow-hidden border-none',
         posterUrl ? 'bg-black/30 backdrop-blur-md' : 'bg-background',
         !posterUrl ? '**:data-time:text-foreground' : '**:data-time:text-white',
         '**:data-playpause:text-primary-foreground **:data-playpause:bg-primary/80',
@@ -157,7 +157,7 @@ const Controls = () => {
   ]
 
   return (
-    <div className="text-xs font-sans w-full grid grid-cols-3">
+    <div className="grid w-full grid-cols-3 font-sans text-xs">
       <span data-time className="flex items-center">
         {formatDuration(currentTime)} / {formatDuration(duration)}
       </span>
@@ -238,7 +238,7 @@ const MoreControls = ({ children }: { children: React.ReactNode }) => {
                 return (
                   <DropdownMenuItem
                     key={control.id}
-                    className="text-xs cursor-pointer"
+                    className="cursor-pointer text-xs"
                     onSelect={() => setInfoOpen(true)}
                     title={control.title}
                   >
@@ -249,7 +249,7 @@ const MoreControls = ({ children }: { children: React.ReactNode }) => {
               return (
                 <DropdownMenuItem
                   key={control.id}
-                  className={`text-xs cursor-pointer ${control.id === 'capture' && 'inline-flex md:hidden'}`}
+                  className={`cursor-pointer text-xs ${control.id === 'capture' && 'inline-flex md:hidden'}`}
                   onClick={control.onClick}
                   title={control.title}
                 >
@@ -274,7 +274,7 @@ const ProgressBar = () => {
       value={[progress]}
       max={100}
       onValueChange={sliderOnValueChange}
-      className="flex-1 w-full"
+      className="w-full flex-1"
     />
   )
 }
@@ -285,7 +285,7 @@ const FileName = memo(function FileName() {
   const fileName = fileData?.metadataTags.title || file.name
 
   return (
-    <span data-filename className="min-w-0 w-full truncate text-xs text-center" title={fileName}>
+    <span data-filename className="w-full min-w-0 truncate text-center text-xs" title={fileName}>
       {fileName}
     </span>
   )

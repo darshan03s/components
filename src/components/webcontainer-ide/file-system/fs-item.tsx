@@ -152,7 +152,7 @@ export const FsItem = ({ item }: { item: ReadDirEntry }) => {
         }}
         size={'xs'}
         className={cn(
-          'cursor-pointer p-0 m-0 min-h-6 h-6 px-1 select-none hover:bg-muted group/fs-item',
+          'hover:bg-muted group/fs-item m-0 h-6 min-h-6 cursor-pointer p-0 px-1 select-none',
           activeFile.path === itemPath && 'bg-muted',
           hoveredPath === itemPath && 'ring-1'
         )}
@@ -164,7 +164,7 @@ export const FsItem = ({ item }: { item: ReadDirEntry }) => {
         <ItemMedia className="[&_svg]:size-3!">
           <FsItemIcon item={item} itemPath={itemPath} />
         </ItemMedia>
-        <ItemContent className="text-xs flex truncate line-clamp-1">
+        <ItemContent className="line-clamp-1 flex truncate text-xs">
           {isRenaming ? (
             <InputComp
               inputRef={inputRef}
@@ -209,12 +209,12 @@ export const FsItem = ({ item }: { item: ReadDirEntry }) => {
         </ItemActions>
       </Item>
       {newFsItem?.parent === itemPath && (
-        <div className="ml-2 pl-2 border-l">
+        <div className="ml-2 border-l pl-2">
           <NewFsItem inputRef={inputRef} />
         </div>
       )}
       {isFolderOpen(itemPath) && fs[itemPath] && fs[itemPath].length > 0 && (
-        <div className="flex flex-col gap-1 ml-2 pl-2 border-l">
+        <div className="ml-2 flex flex-col gap-1 border-l pl-2">
           <FsTree fsItems={fs[itemPath]} />
         </div>
       )}

@@ -101,13 +101,13 @@ export const Terminal = () => {
   return (
     <div
       className={cn(
-        'absolute bottom-0 right-0 w-full',
+        'absolute right-0 bottom-0 w-full',
         '[--terminal-height:--spacing(46)]',
-        isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        isOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
       )}
     >
-      <div className="terminal-header bg-background h-8 border flex items-center justify-between px-2 select-none">
-        <span className="font-mono text-xs text-foreground flex items-center gap-2 [&_svg]:text-foreground [&_svg]:size-3">
+      <div className="terminal-header bg-background flex h-8 items-center justify-between border px-2 select-none">
+        <span className="text-foreground [&_svg]:text-foreground flex items-center gap-2 font-mono text-xs [&_svg]:size-3">
           <TerminalIcon /> Terminal
         </span>
         <Button variant={'ghost'} size={'icon-xs'} onClick={() => setIsOpen(false)} title="Close">
@@ -117,12 +117,12 @@ export const Terminal = () => {
       <div
         ref={terminalEleRef}
         className={cn(
-          '[&_.terminal]:h-full [&_.terminal]:p-2 [&_.terminal]:max-h-(--terminal-height) [&_.terminal:nth-of-type(2)]:hidden!',
+          '[&_.terminal]:h-full [&_.terminal]:max-h-(--terminal-height) [&_.terminal]:p-2 [&_.terminal:nth-of-type(2)]:hidden!',
           '[&_.xterm-screen]:h-(--terminal-height)!',
           '[&_.xterm-scrollable-element]:bg-transparent!',
           '[&_.xterm-viewport]:no-scrollbar! [&_.xterm-viewport]:rounded-br-lg',
           !fileSystemOpen ? '[&_.xterm-viewport]:rounded-bl-lg' : '',
-          '[&_.xterm-rows]:text-xs! [&_.xterm-rows>div:first-child:empty]:hidden [&_.xterm-rows]:font-mono! [&_.xterm-rows]:h-full!'
+          '[&_.xterm-rows]:h-full! [&_.xterm-rows]:font-mono! [&_.xterm-rows]:text-xs! [&_.xterm-rows>div:first-child:empty]:hidden'
         )}
       />
     </div>

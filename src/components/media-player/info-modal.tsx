@@ -93,14 +93,14 @@ export const InfoModal = memo(function InfoModal({ children, open, onOpenChange 
           <DialogTitle>Info</DialogTitle>
           <DialogDescription>Metadata about the file</DialogDescription>
         </DialogHeader>
-        <div className="-mx-4 no-scrollbar max-h-[50vh] overflow-y-auto px-4">
+        <div className="no-scrollbar -mx-4 max-h-[50vh] overflow-y-auto px-4">
           <div className="grid grid-cols-2 gap-2">
             {Object.entries(hoverCardContentMap).map(
               ([key, value]) =>
                 value && (
                   <Item variant="default" size="xs" key={key}>
                     <ItemContent>
-                      <ItemTitle className="font-semibold text-xs">{key}</ItemTitle>
+                      <ItemTitle className="text-xs font-semibold">{key}</ItemTitle>
                       <ItemDescription className="text-xs">{value}</ItemDescription>
                     </ItemContent>
                   </Item>
@@ -114,10 +114,10 @@ export const InfoModal = memo(function InfoModal({ children, open, onOpenChange 
                   <Item
                     key={track.id}
                     variant="default"
-                    className='**:data-[slot="item-title"]:text-xs **:data-[slot="item-description"]:text-xs bg-muted'
+                    className='bg-muted **:data-[slot="item-description"]:text-xs **:data-[slot="item-title"]:text-xs'
                   >
                     <ItemContent>
-                      <ItemTitle className="capitalize bg-primary text-primary-foreground p-1 px-2 rounded-full text-[10px]!">
+                      <ItemTitle className="bg-primary text-primary-foreground rounded-full p-1 px-2 text-[10px]! capitalize">
                         {track.type}
                       </ItemTitle>
                       <div className="grid grid-cols-2 gap-2">

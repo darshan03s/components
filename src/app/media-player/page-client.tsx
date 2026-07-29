@@ -9,7 +9,7 @@ const PageClient = () => {
   const [file, setFile] = useState<File | null>(null)
 
   return (
-    <Main className="flex items-center justify-center ">
+    <Main className="flex items-center justify-center">
       <div>
         {!file ? <FileImport setFile={setFile} /> : <MediaPlayer file={file} showFileName={true} />}
       </div>

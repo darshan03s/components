@@ -46,13 +46,13 @@ const EditorComp = ({ className }: { className?: string }) => {
   }
 
   return (
-    <div className={cn('flex-1 overflow-scroll no-scrollbar', className)}>
+    <div className={cn('no-scrollbar flex-1 overflow-scroll', className)}>
       <CodeMirror
         onChange={onChange}
         value={activeFile.content}
         extensions={extensions}
         theme={editorTheme}
-        className="h-full [&_.cm-activeLine]:bg-transparent! [&_.cm-activeLineGutter]:bg-transparent! [&_.cm-editor]:h-full! [&_.cm-scroller]:no-scrollbar text-sm [&_.cm-editor]:rounded-br-lg"
+        className="[&_.cm-scroller]:no-scrollbar h-full text-sm [&_.cm-activeLine]:bg-transparent! [&_.cm-activeLineGutter]:bg-transparent! [&_.cm-editor]:h-full! [&_.cm-editor]:rounded-br-lg"
       />
     </div>
   )
@@ -60,7 +60,7 @@ const EditorComp = ({ className }: { className?: string }) => {
 
 const Loading = () => {
   return (
-    <div className={cn('flex-1 flex items-center justify-center')}>
+    <div className={cn('flex flex-1 items-center justify-center')}>
       <Spinner />
     </div>
   )
@@ -89,7 +89,7 @@ const Displayable = ({
 
   if (type === 'image') {
     return (
-      <div className={cn('flex-1 flex items-center justify-center object-contain p-4', className)}>
+      <div className={cn('flex flex-1 items-center justify-center object-contain p-4', className)}>
         <img src={url} alt={path} />
       </div>
     )
@@ -97,15 +97,15 @@ const Displayable = ({
 
   if (type === 'video') {
     return (
-      <div className={cn('flex-1 flex items-center justify-center p-4', className)}>
-        <video src={url} controls className="aspect-video w-full border rounded-lg" />
+      <div className={cn('flex flex-1 items-center justify-center p-4', className)}>
+        <video src={url} controls className="aspect-video w-full rounded-lg border" />
       </div>
     )
   }
 
   if (type === 'audio') {
     return (
-      <div className={cn('flex-1 flex items-center justify-center p-2', className)}>
+      <div className={cn('flex flex-1 items-center justify-center p-2', className)}>
         <audio src={url} controls className="w-full" />
       </div>
     )
@@ -166,10 +166,10 @@ const Editor = () => {
       <div
         hidden={view === 'preview' || activeFile.path.length === 0}
         className={cn(
-          'editor-header sticky top-0 left-0 h-(--inner-header-height) min-h-(--inner-header-height) border-b flex items-center justify-between px-2 bg-background z-10'
+          'editor-header bg-background sticky top-0 left-0 z-10 flex h-(--inner-header-height) min-h-(--inner-header-height) items-center justify-between border-b px-2'
         )}
       >
-        <span className="text-xs font-semibold line-clamp-1">{activeFile.path}</span>
+        <span className="line-clamp-1 text-xs font-semibold">{activeFile.path}</span>
         <ButtonGroup>
           {showCopy() && (
             <Button
@@ -197,9 +197,9 @@ const Editor = () => {
       {activeFile.path.length === 0 ? (
         <div
           hidden={view === 'preview'}
-          className={cn('flex-1 flex items-center justify-center text-xs')}
+          className={cn('flex flex-1 items-center justify-center text-xs')}
         >
-          <File className="size-20 text-foreground/10" strokeWidth={1} />
+          <File className="text-foreground/10 size-20" strokeWidth={1} />
         </div>
       ) : isDisplayable() ? (
         <Displayable
@@ -218,13 +218,13 @@ const Preview = () => {
   const { view, serverUrl } = useWebContainer()
 
   return (
-    <div hidden={view === 'editor'} className="h-full rounded-br-lg flex flex-col">
+    <div hidden={view === 'editor'} className="flex h-full flex-col rounded-br-lg">
       <div className="flex-1">
         {serverUrl.length > 0 ? (
           <iframe src={serverUrl} className="h-full w-full" />
         ) : (
-          <div className="h-full w-full flex items-center justify-center">
-            <Globe className="size-20 text-foreground/10" strokeWidth={1} />
+          <div className="flex h-full w-full items-center justify-center">
+            <Globe className="text-foreground/10 size-20" strokeWidth={1} />
           </div>
         )}
       </div>
@@ -236,7 +236,7 @@ export const Workspace = () => {
   const { mounted } = useWebContainer()
 
   return (
-    <div className="flex-1 min-w-0 min-h-0 flex flex-col relative">
+    <div className="relative flex min-h-0 min-w-0 flex-1 flex-col">
       {mounted ? (
         <>
           <Editor />

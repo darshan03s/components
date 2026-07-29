@@ -45,7 +45,7 @@ export const FileSystem = () => {
 
   return (
     <div
-      className="w-(--fs-width) min-w-(--fs-width) border-r text-xs relative flex flex-col"
+      className="relative flex w-(--fs-width) min-w-(--fs-width) flex-col border-r text-xs"
       hidden={!fileSystemOpen}
     >
       <FileSystemHeader
@@ -65,11 +65,11 @@ export const FileSystem = () => {
         handleCollapseAll={collapseAllFolders}
       />
       {!mounted ? (
-        <div className="flex-1 flex items-center justify-center">
+        <div className="flex flex-1 items-center justify-center">
           <Spinner />
         </div>
       ) : (
-        <div className="flex-1 flex flex-col gap-1 p-1 overflow-scroll no-scrollbar">
+        <div className="no-scrollbar flex flex-1 flex-col gap-1 overflow-scroll p-1">
           {newFsItem?.parent === rootDirPath && <NewFsItem />}
           {fs[rootDirPath] && <FsTree fsItems={fs[rootDirPath]} />}
           <div
