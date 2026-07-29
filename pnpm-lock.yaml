@@ -67,6 +67,9 @@ importers:
       next-themes:
         specifier: ^0.4.6
         version: 0.4.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      prettier-plugin-sort-imports:
+        specifier: ^1.8.11
+        version: 1.8.11(typescript@5.9.3)
       radix-ui:
         specifier: ^1.4.3
         version: 1.6.2(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -130,7 +133,7 @@ importers:
         version: 3.8.3
       prettier-plugin-tailwindcss:
         specifier: ^0.8.1
-        version: 0.8.1(prettier@3.8.3)
+        version: 0.8.1(prettier-plugin-sort-imports@1.8.11(typescript@5.9.3))(prettier@3.8.3)
       tailwindcss:
         specifier: ^4
         version: 4.3.3
@@ -5351,6 +5354,14 @@ packages:
       }
     engines: { node: '>= 0.8.0' }
 
+  prettier-plugin-sort-imports@1.8.11:
+    resolution:
+      {
+        integrity: sha512-ApmZkEmNh2Fi6TAcYNgUR15rsP1+omX43+8neY+MXfNZ7JQwrqSdjzKhLUYTtaLo52aaC9gCs+lJaYSU8oSJJA==
+      }
+    peerDependencies:
+      typescript: '>4.0.0'
+
   prettier-plugin-tailwindcss@0.8.1:
     resolution:
       {
@@ -9894,9 +9905,16 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prettier-plugin-tailwindcss@0.8.1(prettier@3.8.3):
+  prettier-plugin-sort-imports@1.8.11(typescript@5.9.3):
     dependencies:
       prettier: 3.8.3
+      typescript: 5.9.3
+
+  prettier-plugin-tailwindcss@0.8.1(prettier-plugin-sort-imports@1.8.11(typescript@5.9.3))(prettier@3.8.3):
+    dependencies:
+      prettier: 3.8.3
+    optionalDependencies:
+      prettier-plugin-sort-imports: 1.8.11(typescript@5.9.3)
 
   prettier@3.8.3: {}
 

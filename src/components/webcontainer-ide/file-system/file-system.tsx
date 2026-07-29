@@ -1,12 +1,12 @@
 'use client'
 
-import { useEffect } from 'react'
-import { Spinner } from '@/components/ui/spinner'
 import { useFileSystem, useWebContainer } from '../hooks'
-import { getParentFolder } from '../utils'
+import { Spinner } from '@/components/ui/spinner'
 import { FileSystemHeader } from './header'
-import { FsTree } from './fs-tree'
+import { getParentFolder } from '../utils'
 import { NewFsItem } from './new-fs-item'
+import { FsTree } from './fs-tree'
+import { useEffect } from 'react'
 
 export const FileSystem = () => {
   const {

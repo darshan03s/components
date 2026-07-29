@@ -1,6 +1,6 @@
-import { APP_NAME } from '@/metadata'
 import { InstrumentSerifFontData } from '@/font'
 import { ImageResponse } from 'next/og'
+import { APP_NAME } from '@/metadata'
 
 export async function GET() {
   return new ImageResponse(

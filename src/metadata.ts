@@ -1,5 +1,5 @@
-import { env } from './env'
 import { Metadata } from 'next'
+import { env } from './env'
 
 export const APP_NAME = 'Components'
 

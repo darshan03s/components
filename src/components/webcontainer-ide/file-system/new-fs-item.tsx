@@ -1,10 +1,10 @@
-import { RefObject } from 'react'
-import { useFileSystem, useWebContainer } from '../hooks'
-import { getParentFolder } from '../utils'
-import { cn } from '@/lib/utils'
 import { Item, ItemContent, ItemMedia } from '@/components/ui/item'
-import { InputComp } from './input-comp'
+import { useFileSystem, useWebContainer } from '../hooks'
 import { File, Folder } from 'lucide-react'
+import { getParentFolder } from '../utils'
+import { InputComp } from './input-comp'
+import { RefObject } from 'react'
+import { cn } from '@/lib/utils'
 
 export const NewFsItem = ({ inputRef }: { inputRef?: RefObject<HTMLInputElement | null> }) => {
   const { mkDir, writeFile } = useWebContainer()

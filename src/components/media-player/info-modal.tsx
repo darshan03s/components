@@ -6,11 +6,11 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog'
+import { formatBitrate, formatBytes, formatDuration, truncateTo2Decimals } from './utils'
 import { Item, ItemContent, ItemDescription, ItemTitle } from '@/components/ui/item'
 import { getTracksData, TrackData } from './mediabunny'
-import { memo, useEffect, useState } from 'react'
-import { formatBitrate, formatBytes, formatDuration, truncateTo2Decimals } from './utils'
 import { usePlayerStaticContext } from './provider'
+import { memo, useEffect, useState } from 'react'
 
 function TrackInfoField({ title, value }: { title: string; value: React.ReactNode }) {
   return (

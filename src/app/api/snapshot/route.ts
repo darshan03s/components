@@ -1,6 +1,6 @@
-import path from 'node:path'
-import { snapshot } from '@webcontainer/snapshot'
 import { NextRequest, NextResponse } from 'next/server'
+import { snapshot } from '@webcontainer/snapshot'
+import path from 'node:path'
 
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams

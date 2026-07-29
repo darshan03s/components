@@ -1,5 +1,5 @@
-import { getFileData, InputFileData } from './mediabunny'
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { getFileData, InputFileData } from './mediabunny'
 import { getType } from './utils'
 
 type PlaybackState = {

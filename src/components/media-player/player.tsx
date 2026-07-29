@@ -13,14 +13,6 @@ import {
   Volume2,
   VolumeX
 } from 'lucide-react'
-import { Card, CardContent, CardFooter } from '@/components/ui/card'
-import { memo, useState } from 'react'
-import { Slider } from '@/components/ui/slider'
-import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
-import { formatDuration } from './utils'
-import { PlayerProvider, usePlayerStaticContext, usePlayerPlaybackContext } from './provider'
-import { InfoModal } from './info-modal'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,6 +20,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
+import { PlayerProvider, usePlayerStaticContext, usePlayerPlaybackContext } from './provider'
+import { Card, CardContent, CardFooter } from '@/components/ui/card'
+import { Slider } from '@/components/ui/slider'
+import { Button } from '@/components/ui/button'
+import { InfoModal } from './info-modal'
+import { formatDuration } from './utils'
+import { memo, useState } from 'react'
+import { cn } from '@/lib/utils'
 
 type MediaPlayerProps = {
   file: File

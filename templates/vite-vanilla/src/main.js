@@ -1,8 +1,8 @@
-import './style.css'
 import javascriptLogo from './assets/javascript.svg'
+import { setupCounter } from './counter.js'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
-import { setupCounter } from './counter.js'
+import './style.css'
 
 document.querySelector('#app').innerHTML = `
 <section id="center">

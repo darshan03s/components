@@ -1,14 +1,14 @@
 'use client'
 
 import { Terminal as XtermTerminal } from '@xterm/xterm'
-import { FitAddon } from '@xterm/addon-fit'
-import { useEffect, useRef, useState } from 'react'
-import '@xterm/xterm/css/xterm.css'
 import { useFileSystem, useWebContainer } from './hooks'
 import { WebContainerProcess } from '@webcontainer/api'
-import { cn } from '@/lib/utils'
+import { useEffect, useRef, useState } from 'react'
 import { X, TerminalIcon } from 'lucide-react'
+import { FitAddon } from '@xterm/addon-fit'
 import { Button } from '../ui/button'
+import '@xterm/xterm/css/xterm.css'
+import { cn } from '@/lib/utils'
 
 export const Terminal = () => {
   const { startShell, mounted, setServerUrl, shellProcessWriter } = useWebContainer()

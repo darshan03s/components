@@ -1,6 +1,13 @@
 'use client'
 
 import {
+  FileSystemAPI,
+  FileSystemTree,
+  LoadFilesOptions,
+  WebContainer,
+  WebContainerProcess
+} from '@webcontainer/api'
+import {
   createContext,
   Dispatch,
   RefObject,
@@ -9,17 +16,10 @@ import {
   useRef,
   useState
 } from 'react'
-import {
-  FileSystemAPI,
-  FileSystemTree,
-  LoadFilesOptions,
-  WebContainer,
-  WebContainerProcess
-} from '@webcontainer/api'
-import { ReadDirEntry } from '../types'
 import { DEFAULT_ROOT_DIR, IGNORED_FS_EXTENSIONS_TO_DISPLAY } from '../constants'
 import { Terminal } from '@xterm/xterm'
 import { getExtension } from '../utils'
+import { ReadDirEntry } from '../types'
 
 type Boot = () => Promise<WebContainer>
 

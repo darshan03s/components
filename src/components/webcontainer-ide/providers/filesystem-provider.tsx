@@ -1,10 +1,10 @@
 'use client'
 
 import { createContext, Dispatch, RefObject, SetStateAction, useRef, useState } from 'react'
-import { useWebContainer } from '../hooks'
 import { FsItemDrag, ReadDirEntry } from '../types'
 import { IGNORED_FOLDERS } from '../constants'
 import { getParentFolder } from '../utils'
+import { useWebContainer } from '../hooks'
 
 type Fs = Record<string, ReadDirEntry[]>
 
