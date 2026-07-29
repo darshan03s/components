@@ -20,15 +20,15 @@ export const WebContainerIDE = ({ ...props }: WebContainerIDEProps) => {
 }
 
 export const Comp = () => {
-  const { init, mounted } = useWebContainer()
+  const { init, isMounted } = useWebContainer()
   const { view, toggleView } = useIde()
   const { toggleFileSystem, fileSystemOpen } = useFileSystem()
   const { loadFromSnapshot, loadFromTemplate, className } = useProps()
 
   useEffect(() => {
-    if (mounted) return
+    if (isMounted) return
     init(loadFromSnapshot, loadFromTemplate)
-  }, [mounted])
+  }, [isMounted])
 
   function handleTerminalToggle() {
     window.dispatchEvent(new CustomEvent('ide-toggle-terminal'))
@@ -78,7 +78,7 @@ export const Comp = () => {
           variant={'outline'}
           size={'icon-xs'}
           onClick={handleTerminalToggle}
-          disabled={!mounted}
+          disabled={!isMounted}
           title="Toggle terminal"
         >
           <Terminal />

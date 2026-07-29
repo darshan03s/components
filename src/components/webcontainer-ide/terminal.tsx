@@ -11,7 +11,7 @@ import { Button } from '../ui/button'
 import { useFileSystem, useWebContainer } from './hooks'
 
 export const Terminal = () => {
-  const { startShell, mounted, setServerUrl, shellProcessWriter } = useWebContainer()
+  const { startShell, isMounted, setServerUrl, shellProcessWriter } = useWebContainer()
   const terminalRef = useRef<XtermTerminal | null>(null)
   const terminalEleRef = useRef<HTMLDivElement | null>(null)
   const fitAddonRef = useRef<FitAddon | null>(null)
@@ -58,7 +58,7 @@ export const Terminal = () => {
   }, [])
 
   useEffect(() => {
-    if (!mounted || !terminalRef.current) return
+    if (!isMounted || !terminalRef.current) return
 
     async function init() {
       const shellProcess = await startShell(terminalRef.current!)
@@ -66,7 +66,7 @@ export const Terminal = () => {
     }
 
     init()
-  }, [mounted])
+  }, [isMounted])
 
   useEffect(() => {
     if (!fitAddonRef.current || !shellProcessRef.current || !terminalRef.current) return

@@ -21,11 +21,11 @@ export const FileSystem = () => {
     endFsItemMove,
     handleFsItemDrop
   } = useFileSystem()
-  const { mounted, rootDir, wc } = useWebContainer()
+  const { isMounted, rootDir, wc } = useWebContainer()
   const rootDirPath = `/${rootDir}`
 
   useEffect(() => {
-    if (!wc || !mounted) return
+    if (!wc || !isMounted) return
 
     const watcher = wc.fs.watch(rootDirPath, { recursive: true }, (event, fsItem) => {
       if (event === 'rename') {
@@ -36,12 +36,12 @@ export const FileSystem = () => {
     })
 
     return () => watcher.close()
-  }, [wc, mounted, rootDirPath])
+  }, [wc, isMounted, rootDirPath])
 
   useEffect(() => {
-    if (!mounted) return
+    if (!isMounted) return
     loadFolderItems(rootDirPath)
-  }, [mounted])
+  }, [isMounted])
 
   return (
     <div
@@ -64,7 +64,7 @@ export const FileSystem = () => {
         }}
         handleCollapseAll={collapseAllFolders}
       />
-      {!mounted ? (
+      {!isMounted ? (
         <div className="ide-file-system-loading flex flex-1 items-center justify-center">
           <Spinner />
         </div>

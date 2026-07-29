@@ -87,7 +87,7 @@ type WebContainerContext = {
   rename: Rename
   mv: Mv
   loadSnapshot: LoadSnapshot
-  mounted: boolean
+  isMounted: boolean
   init: Init
   rootDir: string
   activePath: ActivePath
@@ -109,7 +109,7 @@ export const WebContainerProvider = ({
   rootDir?: string
 }) => {
   const [wc, setWc] = useState<WebContainer | null>(null)
-  const [mounted, setMounted] = useState<boolean>(false)
+  const [isMounted, setIsMounted] = useState<boolean>(false)
   const [activeFile, setActiveFile] = useState<ActiveFile>({
     path: '',
     content: ''
@@ -151,7 +151,7 @@ export const WebContainerProvider = ({
     const wc = requireWc()
     await wc.fs.mkdir(rootDir)
     await wc.mount(projectFiles, options)
-    setMounted(true)
+    setIsMounted(true)
   }
 
   const spawn: Spawn = async (baseCommand, args, output) => {
@@ -246,7 +246,7 @@ export const WebContainerProvider = ({
 
     await wc.fs.mkdir(rootDir)
     await wc.mount(snapshot)
-    setMounted(true)
+    setIsMounted(true)
   }
 
   const init: Init = async (loadFromSnapshot, loadFromTemplate) => {
@@ -258,12 +258,12 @@ export const WebContainerProvider = ({
       const response = await fetch(loadFromSnapshot)
       const snapshot = await response.arrayBuffer()
       await wc.mount(snapshot, { mountPoint: rootDir })
-      setMounted(true)
+      setIsMounted(true)
     } else if (loadFromTemplate) {
       await wc.mount(loadFromTemplate, { mountPoint: rootDir })
-      setMounted(true)
+      setIsMounted(true)
     } else {
-      setMounted(true)
+      setIsMounted(true)
     }
   }
 
@@ -345,7 +345,7 @@ export const WebContainerProvider = ({
         rename,
         mv,
         loadSnapshot,
-        mounted,
+        isMounted,
         init,
         rootDir,
         activePath,
