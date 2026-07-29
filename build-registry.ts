@@ -23,7 +23,7 @@ const registryItems: RegistryItem[] = [
     ]
   },
   {
-    name: 'webcontainer-id',
+    name: 'webcontainer-ide',
     type: 'registry:block',
     title: 'WebContainer IDE',
     description: 'WebContainer based IDE',
