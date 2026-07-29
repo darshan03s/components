@@ -28,6 +28,7 @@ export const FsItemOptions = ({
       <DropdownMenuTrigger
         onFocus={onTriggerFocus}
         className={cn(
+          'ide-file-system-item-options-trigger',
           buttonVariants({ variant: 'ghost', size: 'icon-xs' }),
           'opacity-0 group-hover/fs-item:opacity-100'
         )}
@@ -37,7 +38,7 @@ export const FsItemOptions = ({
       <DropdownMenuContent
         onClick={(e) => e.stopPropagation()}
         side="left"
-        className="[&_div]:cursor-pointer [&_div]:text-[10px] [&_svg]:size-3!"
+        className="ide-file-system-item-options [&_div]:cursor-pointer [&_div]:text-[10px] [&_svg]:size-3!"
       >
         <DropdownMenuItem onClick={createFolder} hidden={!isFolder}>
           <FolderPlus /> Create folder

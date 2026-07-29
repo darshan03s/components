@@ -29,7 +29,7 @@ export const InputComp = ({
         ref={inputRef}
         onBlur={onBlur}
         name={name}
-        className="h-5 text-[10px]! placeholder:text-[10px] focus-visible:ring-0"
+        className="ide-file-system-input h-5 text-[10px]! placeholder:text-[10px] focus-visible:ring-0"
         placeholder={placeholder}
       />
     </form>

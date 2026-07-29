@@ -46,13 +46,13 @@ const EditorComp = ({ className }: { className?: string }) => {
   }
 
   return (
-    <div className={cn('no-scrollbar flex-1 overflow-scroll', className)}>
+    <div className={cn('ide-workspace-editor-comp no-scrollbar flex-1 overflow-scroll', className)}>
       <CodeMirror
         onChange={onChange}
         value={activeFile.content}
         extensions={extensions}
         theme={editorTheme}
-        className="[&_.cm-scroller]:no-scrollbar h-full text-sm [&_.cm-activeLine]:bg-transparent! [&_.cm-activeLineGutter]:bg-transparent! [&_.cm-editor]:h-full! [&_.cm-editor]:rounded-br-lg"
+        className="ide-workspace-editor-codemirror [&_.cm-scroller]:no-scrollbar h-full text-sm [&_.cm-activeLine]:bg-transparent! [&_.cm-activeLineGutter]:bg-transparent! [&_.cm-editor]:h-full! [&_.cm-editor]:rounded-br-lg"
       />
     </div>
   )
@@ -60,7 +60,7 @@ const EditorComp = ({ className }: { className?: string }) => {
 
 const Loading = () => {
   return (
-    <div className={cn('flex flex-1 items-center justify-center')}>
+    <div className={cn('ide-workspace-loading flex flex-1 items-center justify-center')}>
       <Spinner />
     </div>
   )
@@ -89,7 +89,12 @@ const Displayable = ({
 
   if (type === 'image') {
     return (
-      <div className={cn('flex flex-1 items-center justify-center object-contain p-4', className)}>
+      <div
+        className={cn(
+          'ide-workspace-displayable flex flex-1 items-center justify-center object-contain p-4',
+          className
+        )}
+      >
         <img src={url} alt={path} />
       </div>
     )
@@ -167,6 +172,7 @@ const Editor = () => {
       <div
         hidden={view === 'preview' || activeFile.path.length === 0}
         className={cn(
+          'ide-workspace-editor',
           'editor-header bg-background sticky top-0 left-0 z-10 flex h-(--inner-header-height) min-h-(--inner-header-height) items-center justify-between border-b px-2'
         )}
       >
@@ -174,6 +180,7 @@ const Editor = () => {
         <ButtonGroup>
           {showCopy() && (
             <Button
+              className="ide-workspace-copy-file-content"
               variant={'ghost'}
               size={'icon-xs'}
               title="Copy"
@@ -184,6 +191,7 @@ const Editor = () => {
             </Button>
           )}
           <Button
+            className="ide-workspace-close-file"
             variant={'ghost'}
             size={'icon-xs'}
             title="Close"
@@ -238,7 +246,7 @@ export const Workspace = () => {
   const { mounted } = useWebContainer()
 
   return (
-    <div className="relative flex min-h-0 min-w-0 flex-1 flex-col">
+    <div className="ide-workspace relative flex min-h-0 min-w-0 flex-1 flex-col">
       {mounted ? (
         <>
           <Editor />

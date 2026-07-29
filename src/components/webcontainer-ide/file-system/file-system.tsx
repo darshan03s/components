@@ -45,7 +45,7 @@ export const FileSystem = () => {
 
   return (
     <div
-      className="relative flex w-(--fs-width) min-w-(--fs-width) flex-col border-r text-xs"
+      className="ide-file-system-container relative flex w-(--fs-width) min-w-(--fs-width) flex-col border-r text-xs"
       hidden={!fileSystemOpen}
     >
       <FileSystemHeader
@@ -65,11 +65,11 @@ export const FileSystem = () => {
         handleCollapseAll={collapseAllFolders}
       />
       {!mounted ? (
-        <div className="flex flex-1 items-center justify-center">
+        <div className="ide-file-system-loading flex flex-1 items-center justify-center">
           <Spinner />
         </div>
       ) : (
-        <div className="no-scrollbar flex flex-1 flex-col gap-1 overflow-scroll p-1">
+        <div className="ide-file-system-tree no-scrollbar flex flex-1 flex-col gap-1 overflow-scroll p-1">
           {newFsItem?.parent === rootDirPath && <NewFsItem />}
           {fs[rootDirPath] && <FsTree fsItems={fs[rootDirPath]} />}
           <div
@@ -91,7 +91,7 @@ export const FileSystem = () => {
 
               endFsItemMove()
             }}
-            className="min-h-20 grow"
+            className="ide-file-system-root-dropzone min-h-20 grow"
           ></div>
         </div>
       )}

@@ -101,6 +101,7 @@ export const Terminal = () => {
   return (
     <div
       className={cn(
+        'ide-terminal',
         'absolute right-0 bottom-0 w-full',
         '[--terminal-height:--spacing(46)]',
         isOpen ? 'opacity-100' : 'pointer-events-none opacity-0'

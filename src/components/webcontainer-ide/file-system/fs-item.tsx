@@ -152,7 +152,7 @@ export const FsItem = ({ item }: { item: ReadDirEntry }) => {
         }}
         size={'xs'}
         className={cn(
-          'hover:bg-muted group/fs-item m-0 h-6 min-h-6 cursor-pointer p-0 px-1 select-none',
+          'ide-file-system-item hover:bg-muted group/fs-item m-0 h-6 min-h-6 cursor-pointer p-0 px-1 select-none',
           activeFile.path === itemPath && 'bg-muted',
           hoveredPath === itemPath && 'ring-1'
         )}

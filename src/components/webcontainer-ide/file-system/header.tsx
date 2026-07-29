@@ -13,7 +13,7 @@ export const FileSystemHeader = ({
   handleCollapseAll: () => void
 }) => {
   return (
-    <div className="filesystem-header bg-background z-10 flex h-(--inner-header-height) min-h-(--inner-header-height) items-center justify-between border-b px-2">
+    <div className="ide-filesystem-header bg-background z-10 flex h-(--inner-header-height) min-h-(--inner-header-height) items-center justify-between border-b px-2">
       <div className="flex items-center gap-1">
         <span className="font-semibold">{rootDir}</span>
       </div>

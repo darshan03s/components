@@ -37,13 +37,14 @@ export const Comp = () => {
   return (
     <div
       className={cn(
-        'relative flex h-(--ide-height) w-(--ide-width) flex-col rounded-lg border [--ide-height:--spacing(140)] [--ide-width:--spacing(240)]',
+        'ide-container relative flex h-(--ide-height) w-(--ide-width) flex-col rounded-lg border [--ide-height:--spacing(140)] [--ide-width:--spacing(240)]',
         className
       )}
     >
-      <div className="bg-background flex h-10 min-h-10 items-center justify-between rounded-tl-lg rounded-tr-lg border-b px-2">
+      <div className="ide-header bg-background flex h-10 min-h-10 items-center justify-between rounded-tl-lg rounded-tr-lg border-b px-2">
         <div className="flex items-center gap-4">
           <Button
+            className="ide-file-system-toggle"
             size={'icon-xs'}
             variant={'ghost'}
             onClick={toggleFileSystem}
@@ -53,26 +54,32 @@ export const Comp = () => {
           </Button>
           <ButtonGroup>
             <Button
+              className="ide-editor-toggle"
               size={'icon-xs'}
               variant={view === 'editor' ? 'default' : 'outline'}
               onClick={toggleView}
+              title="Editor"
             >
               <Code />
             </Button>
             <Button
+              className="ide-preview-toggle"
               size={'icon-xs'}
               variant={view === 'preview' ? 'default' : 'outline'}
               onClick={toggleView}
+              title="Preview"
             >
               <Eye />
             </Button>
           </ButtonGroup>
         </div>
         <Button
+          className="ide-terminal-toggle"
           variant={'outline'}
           size={'icon-xs'}
           onClick={handleTerminalToggle}
           disabled={!mounted}
+          title="Toggle terminal"
         >
           <Terminal />
         </Button>

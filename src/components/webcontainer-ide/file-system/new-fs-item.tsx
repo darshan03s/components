@@ -29,7 +29,10 @@ export const NewFsItem = ({ inputRef }: { inputRef?: RefObject<HTMLInputElement 
   }
 
   return (
-    <Item size={'xs'} className={cn('m-0 h-6 min-h-6 cursor-pointer p-0 px-1 select-none')}>
+    <Item
+      size={'xs'}
+      className={cn('ide-file-system-new-item m-0 h-6 min-h-6 cursor-pointer p-0 px-1 select-none')}
+    >
       <ItemMedia>
         {newFsItem?.type === 'folder' ? <Folder className="size-3" /> : <File className="size-3" />}
       </ItemMedia>
