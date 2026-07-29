@@ -21,6 +21,39 @@ const registryItems: RegistryItem[] = [
         target: '@components/media-player/'
       }
     ]
+  },
+  {
+    name: 'webcontainer-id',
+    type: 'registry:block',
+    title: 'WebContainer IDE',
+    description: 'WebContainer based IDE',
+    registryDependencies: [
+      'button',
+      'button-group',
+      'item',
+      'spinner',
+      'dropdown-menu',
+      'slider',
+      'input'
+    ],
+    dependencies: [
+      '@webcontainer/api',
+      '@uiw/react-codemirror',
+      '@codemirror/lang-javascript',
+      '@codemirror/lang-json',
+      '@codemirror/lang-html',
+      '@codemirror/lang-sass',
+      '@codemirror/lang-css',
+      '@xterm/xterm',
+      '@xterm/addon-fit'
+    ],
+    files: [
+      {
+        path: 'src/components/webcontainer-ide/*',
+        type: 'registry:component',
+        target: '@components/webcontainer-ide/'
+      }
+    ]
   }
 ]
 
