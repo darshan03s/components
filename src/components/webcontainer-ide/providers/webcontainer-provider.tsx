@@ -68,9 +68,17 @@ type ActiveFile = {
   content: string
 }
 
+type ActivePath = (path: string) => void
+
 type View = 'editor' | 'preview'
 
-type WebContainerContextType = {
+type StartShell = (terminal: Terminal) => Promise<WebContainerProcess>
+
+type ToggleView = () => void
+
+type ReadMedia = (path: string) => Promise<string>
+
+type WebContainerContext = {
   wc: WebContainer | null
   boot: Boot
   mount: Mount
@@ -86,19 +94,19 @@ type WebContainerContextType = {
   mounted: boolean
   init: Init
   rootDir: string
-  activePath: (path: string) => void
+  activePath: ActivePath
   activeFile: ActiveFile
-  startShell: (terminal: Terminal) => Promise<WebContainerProcess>
+  startShell: StartShell
   view: View
   setView: Dispatch<SetStateAction<View>>
-  toggleView: () => void
+  toggleView: ToggleView
   serverUrl: string
   setServerUrl: Dispatch<SetStateAction<string>>
   shellProcessWriter: RefObject<WritableStreamDefaultWriter<string> | null>
-  readMedia: (path: string) => Promise<string>
+  readMedia: ReadMedia
 }
 
-export const WebContainerContext = createContext<WebContainerContextType | undefined>(undefined)
+export const WebContainerContext = createContext<WebContainerContext | undefined>(undefined)
 
 export const WebContainerProvider = ({
   children,
@@ -141,9 +149,9 @@ export const WebContainerProvider = ({
 
   const boot: Boot = async () => {
     if (wc) return wc
-    const webcontainerInstance = await WebContainer.boot()
-    setWc(webcontainerInstance)
-    return webcontainerInstance
+    const webContainerInstance = await WebContainer.boot()
+    setWc(webContainerInstance)
+    return webContainerInstance
   }
 
   const mount: Mount = async (projectFiles, options) => {
@@ -231,8 +239,9 @@ export const WebContainerProvider = ({
   }
 
   const mv: Mv = async (source, destination) => {
-    const sourceNew = `${wc?.workdir}${source}`
-    const destinationNew = `${wc?.workdir}${destination}`
+    const wc = requireWc()
+    const sourceNew = `${wc.workdir}${source}`
+    const destinationNew = `${wc.workdir}${destination}`
     await spawn('mv', [sourceNew, destinationNew])
   }
 
@@ -291,7 +300,7 @@ export const WebContainerProvider = ({
     })
   }
 
-  async function startShell(terminal: Terminal) {
+  const startShell: StartShell = async (terminal) => {
     const wc = requireWc()
     const shellProcess = await wc.spawn(`jsh`, {
       cwd: rootDir,
@@ -317,7 +326,7 @@ export const WebContainerProvider = ({
     return shellProcess
   }
 
-  function toggleView() {
+  const toggleView: ToggleView = () => {
     setView((prev) => {
       if (prev === 'editor') return 'preview'
       else if (prev === 'preview') return 'editor'
@@ -325,7 +334,7 @@ export const WebContainerProvider = ({
     })
   }
 
-  async function readMedia(path: string) {
+  const readMedia: ReadMedia = async (path) => {
     const wc = requireWc()
 
     const bytes = await wc.fs.readFile(path)
