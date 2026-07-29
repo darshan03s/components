@@ -8,32 +8,56 @@ import { getParentFolder } from '../utils'
 
 type Fs = Record<string, ReadDirEntry[]>
 
-type FileSystemContextType = {
-  fileSystemOpen: boolean
-  setFileSystemOpen: Dispatch<SetStateAction<boolean>>
-  toggleFileSystem: () => void
-  fs: Fs
-  loadFolderItems: (path: string) => Promise<void>
-  handleFsItemClick: (item: ReadDirEntry, open?: true) => Promise<void>
-  isFolderOpen: (path: string) => boolean
-  newFsItem: NewFsItem | null
-  setNewFsItem: Dispatch<SetStateAction<NewFsItem | null>>
-  collapseAllFolders: () => void
-  isIgnoredPath: (path: string) => boolean
-  hoveredPath: string | null
-  setHoveredPath: Dispatch<SetStateAction<string | null>>
-  draggedItem: RefObject<FsItemDrag | null>
-  openFolder: (path: string) => Promise<void>
-  closeFolder: (path: string) => void
-  clearFolder: (path: string) => void
-  handleFsItemDrop: (source: FsItemDrag, destination: string) => Promise<void>
-  startFsItemMove: (item: FsItemDrag) => void
-  endFsItemMove: () => void
-}
-
 type NewFsItem = {
   parent: string
   type: 'folder' | 'file'
+}
+
+type ToggleFileSystem = () => void
+
+type LoadFolderItems = (path: string) => Promise<void>
+
+type HandleFsItemClick = (item: ReadDirEntry, open?: true) => Promise<void>
+
+type IsFolderOpen = (path: string) => boolean
+
+type CollapseAllFolders = () => void
+
+type IsIgnoredPath = (path: string) => boolean
+
+type OpenFolder = (path: string) => Promise<void>
+
+type CloseFolder = (path: string) => void
+
+type ClearFolder = (path: string) => void
+
+type HandleFsItemDrop = (source: FsItemDrag, destination: string) => Promise<void>
+
+type StartFsItemMove = (item: FsItemDrag) => void
+
+type EndFsItemMove = () => void
+
+type FileSystemContextType = {
+  fileSystemOpen: boolean
+  setFileSystemOpen: Dispatch<SetStateAction<boolean>>
+  toggleFileSystem: ToggleFileSystem
+  fs: Fs
+  loadFolderItems: LoadFolderItems
+  handleFsItemClick: HandleFsItemClick
+  isFolderOpen: IsFolderOpen
+  newFsItem: NewFsItem | null
+  setNewFsItem: Dispatch<SetStateAction<NewFsItem | null>>
+  collapseAllFolders: CollapseAllFolders
+  isIgnoredPath: IsIgnoredPath
+  hoveredPath: string | null
+  setHoveredPath: Dispatch<SetStateAction<string | null>>
+  draggedItem: RefObject<FsItemDrag | null>
+  openFolder: OpenFolder
+  closeFolder: CloseFolder
+  clearFolder: ClearFolder
+  handleFsItemDrop: HandleFsItemDrop
+  startFsItemMove: StartFsItemMove
+  endFsItemMove: EndFsItemMove
 }
 
 export const FileSystemContext = createContext<FileSystemContextType | undefined>(undefined)
@@ -47,11 +71,11 @@ export const FileSystemProvider = ({ children }: { children: React.ReactNode }) 
   const [hoveredPath, setHoveredPath] = useState<string | null>(null)
   const draggedItem = useRef<FsItemDrag | null>(null)
 
-  function toggleFileSystem() {
+  const toggleFileSystem: ToggleFileSystem = () => {
     setFileSystemOpen(!fileSystemOpen)
   }
 
-  function toggleFolderOpen(folderPath: string) {
+  const toggleFolderOpen = (folderPath: string) => {
     setOpenFolders((prev) => {
       const next = new Set(prev)
 
@@ -65,11 +89,11 @@ export const FileSystemProvider = ({ children }: { children: React.ReactNode }) 
     })
   }
 
-  function isFolderOpen(path: string) {
+  const isFolderOpen: IsFolderOpen = (path) => {
     return openFolders.has(path)
   }
 
-  async function loadFolderItems(path: string) {
+  const loadFolderItems: LoadFolderItems = async (path) => {
     if (IGNORED_FOLDERS.some((dir) => path.includes(dir))) return
     try {
       const items = await readDir(
@@ -86,7 +110,7 @@ export const FileSystemProvider = ({ children }: { children: React.ReactNode }) 
     } catch {}
   }
 
-  async function handleFsItemClick(item: ReadDirEntry, open?: true) {
+  const handleFsItemClick: HandleFsItemClick = async (item, open) => {
     const folderPath = item.path
     if (item.isDirectory()) {
       if (!fs[folderPath] || fs[folderPath].length === 0) {
@@ -107,11 +131,11 @@ export const FileSystemProvider = ({ children }: { children: React.ReactNode }) 
     }
   }
 
-  function collapseAllFolders() {
+  const collapseAllFolders: CollapseAllFolders = () => {
     setOpenFolders(new Set())
   }
 
-  async function openFolder(path: string) {
+  const openFolder: OpenFolder = async (path) => {
     await loadFolderItems(path)
     setOpenFolders((prev) => {
       const next = new Set(prev)
@@ -120,7 +144,7 @@ export const FileSystemProvider = ({ children }: { children: React.ReactNode }) 
     })
   }
 
-  function closeFolder(path: string) {
+  const closeFolder: CloseFolder = (path) => {
     setOpenFolders((prev) => {
       const next = new Set(prev)
       next.delete(path)
@@ -128,7 +152,7 @@ export const FileSystemProvider = ({ children }: { children: React.ReactNode }) 
     })
   }
 
-  function clearFolder(path: string) {
+  const clearFolder: ClearFolder = (path) => {
     closeFolder(path)
     if (fs[path]) {
       setFs((prev) => {
@@ -138,20 +162,20 @@ export const FileSystemProvider = ({ children }: { children: React.ReactNode }) 
     }
   }
 
-  function isIgnoredPath(path: string) {
+  const isIgnoredPath: IsIgnoredPath = (path) => {
     return path.split('/').some((segment) => IGNORED_FOLDERS.includes(segment))
   }
 
-  function startFsItemMove(item: FsItemDrag) {
+  const startFsItemMove: StartFsItemMove = (item) => {
     draggedItem.current = item
   }
 
-  function endFsItemMove() {
+  const endFsItemMove: EndFsItemMove = () => {
     draggedItem.current = null
     setHoveredPath(null)
   }
 
-  async function handleFsItemDrop(source: FsItemDrag, destination: string) {
+  const handleFsItemDrop: HandleFsItemDrop = async (source, destination) => {
     const parent = getParentFolder(source.path)
     if (parent === destination) return
     await mv(source.path, destination)
