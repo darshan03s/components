@@ -1,6 +1,7 @@
 import { FileSystemTree } from '@webcontainer/api'
 
 export type WebContainerIDEProps = {
+  className?: string
   loadFromSnapshot?: string
   loadFromTemplate?: FileSystemTree
   theme: 'light' | 'dark'

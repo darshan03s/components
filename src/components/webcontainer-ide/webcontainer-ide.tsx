@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { Code, Eye, PanelLeft, PanelRight, Terminal } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ButtonGroup } from '@/components/ui/button-group'
+import { cn } from '@/lib/utils'
 import { FileSystem } from './file-system'
 import { useFileSystem, useIde, useProps, useWebContainer } from './hooks'
 import { PropsProvider } from './providers/props-provider'
@@ -22,7 +23,7 @@ export const Comp = () => {
   const { init, mounted } = useWebContainer()
   const { view, toggleView } = useIde()
   const { toggleFileSystem, fileSystemOpen } = useFileSystem()
-  const { loadFromSnapshot, loadFromTemplate } = useProps()
+  const { loadFromSnapshot, loadFromTemplate, className } = useProps()
 
   useEffect(() => {
     if (mounted) return
@@ -34,7 +35,12 @@ export const Comp = () => {
   }
 
   return (
-    <div className="relative flex h-(--ide-height) w-(--ide-width) flex-col rounded-lg border [--ide-height:--spacing(140)] [--ide-width:--spacing(240)]">
+    <div
+      className={cn(
+        'relative flex h-(--ide-height) w-(--ide-width) flex-col rounded-lg border [--ide-height:--spacing(140)] [--ide-width:--spacing(240)]',
+        className
+      )}
+    >
       <div className="bg-background flex h-10 min-h-10 items-center justify-between rounded-tl-lg rounded-tr-lg border-b px-2">
         <div className="flex items-center gap-4">
           <Button
