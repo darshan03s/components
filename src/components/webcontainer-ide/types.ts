@@ -3,6 +3,7 @@ import { FileSystemTree } from '@webcontainer/api'
 export type WebContainerIDEProps = {
   loadFromSnapshot?: string
   loadFromTemplate?: FileSystemTree
+  theme: 'light' | 'dark'
 }
 
 export type ReadDirEntry = {

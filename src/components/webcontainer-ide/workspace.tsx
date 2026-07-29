@@ -1,7 +1,7 @@
 'use client'
 
 import { Check, Copy, File, Globe, X } from 'lucide-react'
-import { useWebContainer } from './hooks'
+import { useProps, useWebContainer } from './hooks'
 import { cn } from '@/lib/utils'
 import { Spinner } from '@/components/ui/spinner'
 import { Button } from '@/components/ui/button'
@@ -13,7 +13,6 @@ import { html } from '@codemirror/lang-html'
 import { sass } from '@codemirror/lang-sass'
 import { css } from '@codemirror/lang-css'
 import { vscodeDark, vscodeLight } from '@uiw/codemirror-theme-vscode'
-import { useTheme } from 'next-themes'
 import { Terminal } from './terminal'
 import { getExtension } from './utils'
 import {
@@ -26,7 +25,7 @@ import { useEffect, useState } from 'react'
 
 const EditorComp = ({ className }: { className?: string }) => {
   const { activeFile, writeFile } = useWebContainer()
-  const { resolvedTheme } = useTheme()
+  const { theme } = useProps()
 
   const extensions = [
     javascript({ jsx: true }),
@@ -40,7 +39,7 @@ const EditorComp = ({ className }: { className?: string }) => {
     css()
   ]
 
-  const theme = resolvedTheme === 'dark' ? vscodeDark : vscodeLight
+  const editorTheme = theme === 'dark' ? vscodeDark : vscodeLight
 
   const onChange = (val: string) => {
     writeFile(activeFile.path, val)
@@ -52,7 +51,7 @@ const EditorComp = ({ className }: { className?: string }) => {
         onChange={onChange}
         value={activeFile.content}
         extensions={extensions}
-        theme={theme}
+        theme={editorTheme}
         className="h-full [&_.cm-activeLine]:bg-transparent! [&_.cm-activeLineGutter]:bg-transparent! [&_.cm-editor]:h-full! [&_.cm-scroller]:no-scrollbar text-sm [&_.cm-editor]:rounded-br-lg"
       />
     </div>
