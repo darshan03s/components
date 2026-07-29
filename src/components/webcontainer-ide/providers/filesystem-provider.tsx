@@ -24,7 +24,8 @@ type FileSystemContextType = {
   setHoveredPath: Dispatch<SetStateAction<string | null>>
   draggedItem: RefObject<FsItemDrag | null>
   openFolder: (path: string) => Promise<void>
-  closeFolder: (path: string) => Promise<void>
+  closeFolder: (path: string) => void
+  clearFolder: (path: string) => void
   handleFsItemDrop: (source: FsItemDrag, destination: string) => Promise<void>
   startFsItemMove: (item: FsItemDrag) => void
   endFsItemMove: () => void
@@ -119,12 +120,22 @@ export const FileSystemProvider = ({ children }: { children: React.ReactNode }) 
     })
   }
 
-  async function closeFolder(path: string) {
+  function closeFolder(path: string) {
     setOpenFolders((prev) => {
       const next = new Set(prev)
       next.delete(path)
       return next
     })
+  }
+
+  function clearFolder(path: string) {
+    closeFolder(path)
+    if (fs[path]) {
+      setFs((prev) => {
+        const { [path]: _, ...rest } = prev
+        return rest
+      })
+    }
   }
 
   function isIgnoredPath(path: string) {
@@ -148,8 +159,11 @@ export const FileSystemProvider = ({ children }: { children: React.ReactNode }) 
       const newPath = `${destination}/${source.name}`
       activePath(newPath)
     }
-    if (source.type === 'folder' && activeFile.path.startsWith(source.path + '/')) {
-      activePath(activeFile.path.replace(source.path, `${destination}/${source.name}`))
+    if (source.type === 'folder') {
+      clearFolder(source.path)
+      if (activeFile.path.startsWith(source.path + '/')) {
+        activePath(activeFile.path.replace(source.path, `${destination}/${source.name}`))
+      }
     }
   }
 
@@ -174,7 +188,8 @@ export const FileSystemProvider = ({ children }: { children: React.ReactNode }) 
         closeFolder,
         handleFsItemDrop,
         startFsItemMove,
-        endFsItemMove
+        endFsItemMove,
+        clearFolder
       }}
     >
       {children}

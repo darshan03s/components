@@ -27,7 +27,8 @@ export const FsItem = ({ item }: { item: ReadDirEntry }) => {
     openFolder,
     startFsItemMove,
     endFsItemMove,
-    handleFsItemDrop
+    handleFsItemDrop,
+    clearFolder
   } = useFileSystem()
   const [isRenaming, setIsRenaming] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
@@ -65,7 +66,7 @@ export const FsItem = ({ item }: { item: ReadDirEntry }) => {
     setIsRenaming(true)
   }
 
-  function renameFsItem(form: HTMLFormElement) {
+  async function renameFsItem(form: HTMLFormElement) {
     const formData = new FormData(form)
     const fsItemName = formData.get('new-name')
     const newName = String(fsItemName).trim()
@@ -74,7 +75,12 @@ export const FsItem = ({ item }: { item: ReadDirEntry }) => {
       return
     }
     if (newName.length > 0) {
-      rename(itemPath, `${parentFolder}/${newName}`)
+      const prevPath = itemPath
+      await rename(itemPath, `${parentFolder}/${newName}`)
+      if (activeFile.path.startsWith(prevPath)) {
+        activePath(activeFile.path.replace(prevPath, `${parentFolder}/${newName}`))
+      }
+      clearFolder(prevPath)
       setIsRenaming(false)
     }
   }
@@ -87,6 +93,9 @@ export const FsItem = ({ item }: { item: ReadDirEntry }) => {
     await rm(itemPath, { recursive: true })
     if (activeFile.path.startsWith(itemPath)) {
       activePath('')
+    }
+    if (item.isDirectory()) {
+      clearFolder(itemPath)
     }
     setIsDeleting(false)
   }
