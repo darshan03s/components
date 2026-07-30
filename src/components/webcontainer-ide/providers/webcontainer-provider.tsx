@@ -253,13 +253,15 @@ export const WebContainerProvider = ({
 
     await wc.fs.mkdir(`/${rootDir}`)
 
+    if (loadFromTemplate) {
+      await wc.mount(loadFromTemplate, { mountPoint: rootDir })
+      setIsMounted(true)
+      return
+    }
     if (loadFromSnapshot) {
       const response = await fetch(loadFromSnapshot)
       const snapshot = await response.arrayBuffer()
       await wc.mount(snapshot, { mountPoint: rootDir })
-      setIsMounted(true)
-    } else if (loadFromTemplate) {
-      await wc.mount(loadFromTemplate, { mountPoint: rootDir })
       setIsMounted(true)
     } else {
       setIsMounted(true)
