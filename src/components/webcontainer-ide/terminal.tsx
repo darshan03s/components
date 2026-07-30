@@ -11,7 +11,7 @@ import { Button } from '../ui/button'
 import { useFileSystem, useProps, useWebContainer } from './hooks'
 
 export const Terminal = () => {
-  const { startShell, isMounted, setServerUrl, shellProcessWriter } = useWebContainer()
+  const { startShell, isMounted, setServerUrl } = useWebContainer()
   const terminalRef = useRef<XtermTerminal | null>(null)
   const terminalEleRef = useRef<HTMLDivElement | null>(null)
   const fitAddonRef = useRef<FitAddon | null>(null)
@@ -42,7 +42,7 @@ export const Terminal = () => {
           if (terminalReadOnly) return true
           event.preventDefault()
           navigator.clipboard.readText().then(async (text) => {
-            await shellProcessWriter.current?.write(text)
+            terminal.paste(text)
           })
         }
         if (
