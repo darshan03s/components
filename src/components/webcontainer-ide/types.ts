@@ -19,6 +19,10 @@ export type WebContainerIDEProps = {
    * Application theme
    */
   theme: 'light' | 'dark'
+  /**
+   * Prevents editing the file content.
+   */
+  editorReadOnly?: boolean
 }
 
 export type ReadDirEntry = {

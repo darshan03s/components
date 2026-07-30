@@ -25,7 +25,7 @@ import { getExtension } from './utils'
 
 const EditorComp = ({ className }: { className?: string }) => {
   const { activeFile, writeFile } = useWebContainer()
-  const { theme } = useProps()
+  const { theme, editorReadOnly } = useProps()
 
   const extensions = [
     javascript({ jsx: true }),
@@ -52,6 +52,7 @@ const EditorComp = ({ className }: { className?: string }) => {
         value={activeFile.content}
         extensions={extensions}
         theme={editorTheme}
+        editable={!editorReadOnly}
         className="ide-workspace-editor-codemirror [&_.cm-scroller]:no-scrollbar h-full text-sm [&_.cm-activeLine]:bg-transparent! [&_.cm-activeLineGutter]:bg-transparent! [&_.cm-editor]:h-full! [&_.cm-editor]:rounded-br-lg"
       />
     </div>
