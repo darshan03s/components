@@ -1,26 +1,33 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import { WebContainerProcess } from '@webcontainer/api'
+import { useEffect, useRef } from 'react'
 import { FitAddon } from '@xterm/addon-fit'
 import { Terminal as XtermTerminal } from '@xterm/xterm'
 import '@xterm/xterm/css/xterm.css'
 import { TerminalIcon, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '../ui/button'
-import { useFileSystem, useProps, useWebContainer } from './hooks'
+import { useFileSystem, useProps, useTerminal, useWebContainer } from './hooks'
 
 export const Terminal = () => {
   const { startShell, isMounted, setServerUrl } = useWebContainer()
-  const terminalRef = useRef<XtermTerminal | null>(null)
-  const terminalEleRef = useRef<HTMLDivElement | null>(null)
-  const fitAddonRef = useRef<FitAddon | null>(null)
-  const shellProcessRef = useRef<WebContainerProcess | null>(null)
-  const [isOpen, setIsOpen] = useState(false)
+  const {
+    terminalRef,
+    fitAddonRef,
+    shellProcessRef,
+    setTerminalRef,
+    setFitAddonRef,
+    setShellProcessRef,
+    isTerminalStarted,
+    isTerminalOpen,
+    setIsTerminalOpen
+  } = useTerminal()
   const { fileSystemOpen } = useFileSystem()
   const { terminalReadOnly } = useProps()
+  const terminalEleRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
+    if (!isMounted) return
     const fitAddon = new FitAddon()
     const terminal = new XtermTerminal({
       cursorStyle: 'bar',
@@ -29,50 +36,48 @@ export const Terminal = () => {
     })
     terminal.options.disableStdin = terminalReadOnly
     terminal.loadAddon(fitAddon)
-    terminalRef.current = terminal
-    fitAddonRef.current = fitAddon
-    if (terminalEleRef.current) {
-      terminal.open(terminalEleRef.current)
-      fitAddon.fit()
-      terminal.attachCustomKeyEventHandler((event) => {
-        if (event.ctrlKey && event.key.toLocaleLowerCase() === 'c' && event.type === 'keydown') {
-          setServerUrl('')
-        }
-        if (event.ctrlKey && event.key.toLowerCase() === 'v' && event.type === 'keydown') {
-          if (terminalReadOnly) return true
-          event.preventDefault()
-          navigator.clipboard.readText().then(async (text) => {
-            terminal.paste(text)
-          })
-        }
-        if (
-          event.ctrlKey &&
-          event.shiftKey &&
-          event.key.toLowerCase() === 'c' &&
-          event.type === 'keydown'
-        ) {
-          event.preventDefault()
-          const selection = terminal.getSelection()
-          navigator.clipboard.writeText(selection)
-        }
-        return true
-      })
-    }
-  }, [])
+    terminal.open(terminalEleRef.current!)
+    fitAddon.fit()
+    setTerminalRef(terminal)
+    setFitAddonRef(fitAddon)
+    terminal.attachCustomKeyEventHandler((event) => {
+      if (event.ctrlKey && event.key.toLocaleLowerCase() === 'c' && event.type === 'keydown') {
+        setServerUrl('')
+      }
+      if (event.ctrlKey && event.key.toLowerCase() === 'v' && event.type === 'keydown') {
+        if (terminalReadOnly) return true
+        event.preventDefault()
+        navigator.clipboard.readText().then(async (text) => {
+          terminal.paste(text)
+        })
+      }
+      if (
+        event.ctrlKey &&
+        event.shiftKey &&
+        event.key.toLowerCase() === 'c' &&
+        event.type === 'keydown'
+      ) {
+        event.preventDefault()
+        const selection = terminal.getSelection()
+        navigator.clipboard.writeText(selection)
+      }
+      return true
+    })
+  }, [isMounted])
 
   useEffect(() => {
-    if (!isMounted || !terminalRef.current) return
+    if (!isMounted) return
 
     async function init() {
       const shellProcess = await startShell(terminalRef.current!)
-      shellProcessRef.current = shellProcess
+      setShellProcessRef(shellProcess)
     }
 
     init()
   }, [isMounted])
 
   useEffect(() => {
-    if (!fitAddonRef.current || !shellProcessRef.current || !terminalRef.current) return
+    if (!isTerminalStarted) return
 
     function resize() {
       fitAddonRef.current!.fit()
@@ -87,19 +92,7 @@ export const Terminal = () => {
     return () => {
       window.removeEventListener('resize', resize)
     }
-  }, [])
-
-  useEffect(() => {
-    function toggleTerminal() {
-      setIsOpen((prev) => !prev)
-    }
-
-    window.addEventListener('ide-toggle-terminal', toggleTerminal)
-
-    return () => {
-      window.removeEventListener('ide-toggle-terminal', toggleTerminal)
-    }
-  }, [])
+  }, [isTerminalStarted])
 
   return (
     <div
@@ -107,14 +100,19 @@ export const Terminal = () => {
         'ide-terminal',
         'absolute right-0 bottom-0 w-full',
         '[--terminal-height:--spacing(46)]',
-        isOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
+        isTerminalOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
       )}
     >
       <div className="terminal-header bg-background flex h-8 items-center justify-between border px-2 select-none">
         <span className="text-foreground [&_svg]:text-foreground flex items-center gap-2 font-mono text-xs [&_svg]:size-3">
           <TerminalIcon /> Terminal
         </span>
-        <Button variant={'ghost'} size={'icon-xs'} onClick={() => setIsOpen(false)} title="Close">
+        <Button
+          variant={'ghost'}
+          size={'icon-xs'}
+          onClick={() => setIsTerminalOpen(false)}
+          title="Close"
+        >
           <X />
         </Button>
       </div>

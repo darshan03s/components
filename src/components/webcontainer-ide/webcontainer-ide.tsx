@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { ButtonGroup } from '@/components/ui/button-group'
 import { cn } from '@/lib/utils'
 import { FileSystem } from './file-system'
-import { useFileSystem, useIde, useProps, useWebContainer } from './hooks'
+import { useFileSystem, useIde, useProps, useTerminal, useWebContainer } from './hooks'
 import { PropsProvider } from './providers/props-provider'
 import { WebContainerIDEProps } from './types'
 import { Workspace } from './workspace'
@@ -23,6 +23,7 @@ export const Comp = () => {
   const { init, isMounted } = useWebContainer()
   const { view, toggleView } = useIde()
   const { toggleFileSystem, fileSystemOpen } = useFileSystem()
+  const { setIsTerminalOpen } = useTerminal()
   const { loadFromSnapshot, loadFromTemplate, className } = useProps()
 
   useEffect(() => {
@@ -31,7 +32,7 @@ export const Comp = () => {
   }, [isMounted])
 
   function handleTerminalToggle() {
-    window.dispatchEvent(new CustomEvent('ide-toggle-terminal'))
+    setIsTerminalOpen((prev) => !prev)
   }
 
   return (

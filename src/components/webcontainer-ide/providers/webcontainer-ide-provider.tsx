@@ -2,6 +2,7 @@
 
 import { Dispatch, SetStateAction, createContext, useState } from 'react'
 import { FileSystemProvider } from './filesystem-provider'
+import { TerminalProvider } from './terminal-provider'
 import { WebContainerProvider } from './webcontainer-provider'
 
 type View = 'editor' | 'preview'
@@ -36,7 +37,9 @@ export const WebContainerIDEProvider = ({
   return (
     <WebContainerIDEContext.Provider value={{ view, setView, toggleView }}>
       <WebContainerProvider rootDir={rootDir}>
-        <FileSystemProvider>{children}</FileSystemProvider>
+        <FileSystemProvider>
+          <TerminalProvider>{children}</TerminalProvider>
+        </FileSystemProvider>
       </WebContainerProvider>
     </WebContainerIDEContext.Provider>
   )
