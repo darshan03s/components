@@ -80,13 +80,21 @@ const Displayable = ({
   const [url, setUrl] = useState<string | undefined>()
 
   useEffect(() => {
-    async function getUrl() {
-      const url = await readMedia(path)
-      setUrl(url)
+    let objectUrl: string | undefined
+
+    async function load() {
+      objectUrl = await readMedia(path)
+      setUrl(objectUrl)
     }
 
-    getUrl()
-  }, [])
+    load()
+
+    return () => {
+      if (objectUrl) {
+        URL.revokeObjectURL(objectUrl)
+      }
+    }
+  }, [path])
 
   if (type === 'image') {
     return (
