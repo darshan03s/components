@@ -122,30 +122,25 @@ const Editor = () => {
   const { activeFile, activePath } = useWebContainer()
   const { view } = useIde()
   const [copied, setCopied] = useState(false)
+  const path = activeFile.path
+  const ext = getExtension(path)
 
   function showCopy() {
-    const ext = getExtension(activeFile.path)
     if (IGNORED_FS_EXTENSIONS_TO_COPY.includes(ext)) return false
     return true
   }
 
   function isImage() {
-    const path = activeFile.path
-    const ext = getExtension(path)
     if (IMAGE_EXTENSIONS.includes(ext)) return true
     return false
   }
 
   function isVideo() {
-    const path = activeFile.path
-    const ext = getExtension(path)
     if (VIDEO_EXTENSIONS.includes(ext)) return true
     return false
   }
 
   function isAudio() {
-    const path = activeFile.path
-    const ext = getExtension(path)
     if (AUDIO_EXTENSIONS.includes(ext)) return true
     return false
   }
