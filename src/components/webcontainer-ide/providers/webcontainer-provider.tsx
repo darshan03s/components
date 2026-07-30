@@ -160,21 +160,18 @@ export const WebContainerProvider = ({
     const wc = requireWc()
     const process = await wc.spawn(baseCommand, args, options)
 
-    const processExitCode = await process.exit
-
-    if (output?.write) {
-      process.output.pipeTo(
-        new WritableStream({
-          write(data) {
-            if (output.writeFn) {
-              output.writeFn(data)
-            } else {
-              console.log(data)
+    const outputPromise = output?.write
+      ? process.output.pipeTo(
+          new WritableStream({
+            write(data) {
+              output.writeFn?.(data)
             }
-          }
-        })
-      )
-    }
+          })
+        )
+      : Promise.resolve()
+
+    const processExitCode = await process.exit
+    await outputPromise
 
     return {
       process,
