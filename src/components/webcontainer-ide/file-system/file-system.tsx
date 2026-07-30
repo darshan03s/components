@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { DragEvent, useEffect } from 'react'
 import { Spinner } from '@/components/ui/spinner'
 import { useFileSystem, useProps, useWebContainer } from '../hooks'
 import { getParentFolder } from '../utils'
@@ -22,7 +22,7 @@ export const FileSystem = () => {
     handleFsItemDrop
   } = useFileSystem()
   const { isMounted, rootDir, wc } = useWebContainer()
-  const { disableCreateFolder, disableCreateFile } = useProps()
+  const { disableCreateFolder, disableCreateFile, disableMoving } = useProps()
   const rootDirPath = `/${rootDir}`
 
   useEffect(() => {
@@ -43,6 +43,26 @@ export const FileSystem = () => {
     if (!isMounted) return
     loadFolderItems(rootDirPath)
   }, [isMounted])
+
+  function onDragOver(e: DragEvent<HTMLDivElement>) {
+    e.preventDefault()
+
+    const source = draggedItem.current
+    if (!source) return
+
+    setHoveredPath(rootDirPath)
+  }
+
+  function onDrop(e: DragEvent<HTMLDivElement>) {
+    e.preventDefault()
+
+    const source = draggedItem.current
+    if (!source) return
+
+    handleFsItemDrop(source, rootDirPath)
+
+    endFsItemMove()
+  }
 
   return (
     <div
@@ -76,24 +96,8 @@ export const FileSystem = () => {
           {newFsItem?.parent === rootDirPath && <NewFsItem />}
           {fs[rootDirPath] && <FsTree fsItems={fs[rootDirPath]} />}
           <div
-            onDragOver={(e) => {
-              e.preventDefault()
-
-              const source = draggedItem.current
-              if (!source) return
-
-              setHoveredPath(rootDirPath)
-            }}
-            onDrop={(e) => {
-              e.preventDefault()
-
-              const source = draggedItem.current
-              if (!source) return
-
-              handleFsItemDrop(source, rootDirPath)
-
-              endFsItemMove()
-            }}
+            onDragOver={!disableMoving ? onDragOver : undefined}
+            onDrop={!disableMoving ? onDrop : undefined}
             className="ide-file-system-root-dropzone min-h-20 grow"
           ></div>
         </div>

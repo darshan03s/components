@@ -39,6 +39,18 @@ export type WebContainerIDEProps = {
    * Disables file creation in the UI.
    */
   disableCreateFile?: boolean
+  /**
+   * Disables file and folder renaming in the UI
+   */
+  disableRenaming?: boolean
+  /**
+   * Disables file and folder deleting in the UI
+   */
+  disableDeleting?: boolean
+  /**
+   * Disables file and folder moving in the UI
+   */
+  disableMoving?: boolean
 }
 
 export type ReadDirEntry = {

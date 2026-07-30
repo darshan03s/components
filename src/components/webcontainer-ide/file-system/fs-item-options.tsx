@@ -11,6 +11,8 @@ import { cn } from '@/lib/utils'
 export const FsItemOptions = ({
   disableCreateFolder,
   disableCreateFile,
+  disableRenaming,
+  disableDeleting,
   createFolder,
   createFile,
   renameFsItem,
@@ -20,6 +22,8 @@ export const FsItemOptions = ({
 }: {
   disableCreateFolder: boolean | undefined
   disableCreateFile: boolean | undefined
+  disableRenaming: boolean | undefined
+  disableDeleting: boolean | undefined
   createFolder: () => void
   createFile: () => void
   renameFsItem: () => void
@@ -27,6 +31,14 @@ export const FsItemOptions = ({
   onTriggerFocus: () => void
   isFolder: boolean
 }) => {
+  if (isFolder && disableCreateFile && disableCreateFolder && disableRenaming && disableDeleting) {
+    return null
+  }
+
+  if (!isFolder && disableRenaming && disableDeleting) {
+    return null
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -54,12 +66,16 @@ export const FsItemOptions = ({
             <FilePlus /> Create file
           </DropdownMenuItem>
         )}
-        <DropdownMenuItem onClick={renameFsItem}>
-          <Pencil /> Rename
-        </DropdownMenuItem>
-        <DropdownMenuItem variant="destructive" onClick={deleteFsItem}>
-          <Trash /> Delete
-        </DropdownMenuItem>
+        {!disableRenaming && (
+          <DropdownMenuItem onClick={renameFsItem}>
+            <Pencil /> Rename
+          </DropdownMenuItem>
+        )}
+        {!disableDeleting && (
+          <DropdownMenuItem variant="destructive" onClick={deleteFsItem}>
+            <Trash /> Delete
+          </DropdownMenuItem>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   )

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { DragEvent, useEffect, useRef, useState } from 'react'
 import { Check, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ButtonGroup } from '@/components/ui/button-group'
@@ -30,7 +30,13 @@ export const FsItem = ({ item }: { item: ReadDirEntry }) => {
     handleFsItemDrop,
     clearFolder
   } = useFileSystem()
-  const { disableCreateFolder, disableCreateFile } = useProps()
+  const {
+    disableCreateFolder,
+    disableCreateFile,
+    disableRenaming,
+    disableDeleting,
+    disableMoving
+  } = useProps()
   const [isRenaming, setIsRenaming] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const itemPath = item.path
@@ -110,47 +116,57 @@ export const FsItem = ({ item }: { item: ReadDirEntry }) => {
 
   const inputRef = useRef<HTMLInputElement | null>(null)
 
+  function onDragStart() {
+    startFsItemMove({
+      name: item.name,
+      path: itemPath,
+      type
+    })
+  }
+
+  function onDragOver(e: DragEvent<HTMLDivElement>) {
+    e.preventDefault()
+    e.stopPropagation()
+
+    const source = draggedItem.current
+    if (!source) return
+
+    if (dragOrDropNotAllowed(source)) return
+
+    setHoveredPath(itemPath)
+  }
+
+  function onDragLeave() {
+    setHoveredPath((path) => (path === itemPath ? null : path))
+  }
+
+  function onDragEnd() {
+    endFsItemMove()
+  }
+
+  function onDrop(e: DragEvent<HTMLDivElement>) {
+    e.preventDefault()
+    e.stopPropagation()
+
+    const source = draggedItem.current
+    if (!source) return
+
+    if (dragOrDropNotAllowed(source)) return
+
+    handleFsItemDrop(source, itemPath)
+
+    endFsItemMove()
+  }
+
   return (
     <>
       <Item
         draggable
-        onDragStart={() => {
-          startFsItemMove({
-            name: item.name,
-            path: itemPath,
-            type
-          })
-        }}
-        onDragOver={(e) => {
-          e.preventDefault()
-          e.stopPropagation()
-
-          const source = draggedItem.current
-          if (!source) return
-
-          if (dragOrDropNotAllowed(source)) return
-
-          setHoveredPath(itemPath)
-        }}
-        onDragLeave={() => {
-          setHoveredPath((path) => (path === itemPath ? null : path))
-        }}
-        onDragEnd={() => {
-          endFsItemMove()
-        }}
-        onDrop={(e) => {
-          e.preventDefault()
-          e.stopPropagation()
-
-          const source = draggedItem.current
-          if (!source) return
-
-          if (dragOrDropNotAllowed(source)) return
-
-          handleFsItemDrop(source, itemPath)
-
-          endFsItemMove()
-        }}
+        onDragStart={!disableMoving ? onDragStart : undefined}
+        onDragOver={!disableMoving ? onDragOver : undefined}
+        onDragLeave={!disableMoving ? onDragLeave : undefined}
+        onDragEnd={!disableMoving ? onDragEnd : undefined}
+        onDrop={!disableMoving ? onDrop : undefined}
         size={'xs'}
         className={cn(
           'ide-file-system-item hover:bg-muted group/fs-item m-0 h-6 min-h-6 cursor-pointer p-0 px-1 select-none',
@@ -199,6 +215,8 @@ export const FsItem = ({ item }: { item: ReadDirEntry }) => {
             <FsItemOptions
               disableCreateFolder={disableCreateFolder}
               disableCreateFile={disableCreateFile}
+              disableRenaming={disableRenaming}
+              disableDeleting={disableDeleting}
               createFolder={createFolder}
               createFile={createFile}
               renameFsItem={startRenameFolder}
