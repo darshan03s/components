@@ -13,6 +13,7 @@ import {
   FileSystemAPI,
   FileSystemTree,
   LoadFilesOptions,
+  SpawnOptions,
   WebContainer,
   WebContainerProcess
 } from '@webcontainer/api'
@@ -28,6 +29,7 @@ type Mount = (projectFiles: FileSystemTree, options?: LoadFilesOptions) => Promi
 type Spawn = (
   baseCommand: string,
   args: string[],
+  options?: SpawnOptions,
   output?: { write: boolean; writeFn?: (data: string) => void }
 ) => Promise<{
   process: WebContainerProcess
@@ -154,9 +156,9 @@ export const WebContainerProvider = ({
     setIsMounted(true)
   }
 
-  const spawn: Spawn = async (baseCommand, args, output) => {
+  const spawn: Spawn = async (baseCommand, args, options, output) => {
     const wc = requireWc()
-    const process = await wc.spawn(baseCommand, args)
+    const process = await wc.spawn(baseCommand, args, options)
 
     const processExitCode = await process.exit
 
