@@ -2,8 +2,22 @@ import { FileSystemTree } from '@webcontainer/api'
 
 export type WebContainerIDEProps = {
   className?: string
+  /**
+   * URL of an API endpoint that returns a WebContainer snapshot.
+   *
+   * You must implement this endpoint using '@webcontainer/snapshot'.
+   * Refer: https://webcontainers.io/guides/working-with-the-file-system#generating-snapshots
+   */
   loadFromSnapshot?: string
+  /**
+   * Template of shape `FileSystemTree`
+   *
+   * Refer: Refer: https://webcontainers.io/guides/working-with-the-file-system
+   */
   loadFromTemplate?: FileSystemTree
+  /**
+   * Application theme
+   */
   theme: 'light' | 'dark'
 }
 
