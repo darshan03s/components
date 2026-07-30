@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { ButtonGroup } from '@/components/ui/button-group'
 import { Item, ItemActions, ItemContent, ItemMedia } from '@/components/ui/item'
 import { cn } from '@/lib/utils'
-import { useFileSystem, useWebContainer } from '../hooks'
+import { useFileSystem, useProps, useWebContainer } from '../hooks'
 import { FsItemDrag, ReadDirEntry } from '../types'
 import { getParentFolder } from '../utils'
 import { FsItemIcon } from './fs-item-icon'
@@ -30,6 +30,7 @@ export const FsItem = ({ item }: { item: ReadDirEntry }) => {
     handleFsItemDrop,
     clearFolder
   } = useFileSystem()
+  const { disableCreateFolder, disableCreateFile } = useProps()
   const [isRenaming, setIsRenaming] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const itemPath = item.path
@@ -196,6 +197,8 @@ export const FsItem = ({ item }: { item: ReadDirEntry }) => {
             </ButtonGroup>
           ) : (
             <FsItemOptions
+              disableCreateFolder={disableCreateFolder}
+              disableCreateFile={disableCreateFile}
               createFolder={createFolder}
               createFile={createFile}
               renameFsItem={startRenameFolder}

@@ -10,6 +10,8 @@ export const Client = () => {
   return (
     <Main className="flex items-center justify-center">
       <WebContainerIDE
+        disableCreateFile
+        disableCreateFolder
         loadFromSnapshot="/api/snapshot?template=all"
         theme={resolvedTheme as 'light' | 'dark'}
       />

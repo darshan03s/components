@@ -31,6 +31,14 @@ export type WebContainerIDEProps = {
    * Hides the terminal UI without preventing the shell from starting.
    */
   hideTerminal?: boolean
+  /**
+   * Disables folder creation in the UI.
+   */
+  disableCreateFolder?: boolean
+  /**
+   * Disables file creation in the UI.
+   */
+  disableCreateFile?: boolean
 }
 
 export type ReadDirEntry = {

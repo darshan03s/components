@@ -9,6 +9,8 @@ import {
 import { cn } from '@/lib/utils'
 
 export const FsItemOptions = ({
+  disableCreateFolder,
+  disableCreateFile,
   createFolder,
   createFile,
   renameFsItem,
@@ -16,6 +18,8 @@ export const FsItemOptions = ({
   onTriggerFocus,
   isFolder
 }: {
+  disableCreateFolder: boolean | undefined
+  disableCreateFile: boolean | undefined
   createFolder: () => void
   createFile: () => void
   renameFsItem: () => void
@@ -40,12 +44,16 @@ export const FsItemOptions = ({
         side="left"
         className="ide-file-system-item-options [&_div]:cursor-pointer [&_div]:text-[10px] [&_svg]:size-3!"
       >
-        <DropdownMenuItem onClick={createFolder} hidden={!isFolder}>
-          <FolderPlus /> Create folder
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={createFile} hidden={!isFolder}>
-          <FilePlus /> Create file
-        </DropdownMenuItem>
+        {!disableCreateFolder && (
+          <DropdownMenuItem onClick={createFolder} hidden={!isFolder}>
+            <FolderPlus /> Create folder
+          </DropdownMenuItem>
+        )}
+        {!disableCreateFile && (
+          <DropdownMenuItem onClick={createFile} hidden={!isFolder}>
+            <FilePlus /> Create file
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem onClick={renameFsItem}>
           <Pencil /> Rename
         </DropdownMenuItem>

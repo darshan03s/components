@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import { Spinner } from '@/components/ui/spinner'
-import { useFileSystem, useWebContainer } from '../hooks'
+import { useFileSystem, useProps, useWebContainer } from '../hooks'
 import { getParentFolder } from '../utils'
 import { FsTree } from './fs-tree'
 import { FileSystemHeader } from './header'
@@ -22,6 +22,7 @@ export const FileSystem = () => {
     handleFsItemDrop
   } = useFileSystem()
   const { isMounted, rootDir, wc } = useWebContainer()
+  const { disableCreateFolder, disableCreateFile } = useProps()
   const rootDirPath = `/${rootDir}`
 
   useEffect(() => {
@@ -63,6 +64,8 @@ export const FileSystem = () => {
           })
         }}
         handleCollapseAll={collapseAllFolders}
+        disableCreateFolder={disableCreateFolder}
+        disableCreateFile={disableCreateFile}
       />
       {!isMounted ? (
         <div className="ide-file-system-loading flex flex-1 items-center justify-center">
