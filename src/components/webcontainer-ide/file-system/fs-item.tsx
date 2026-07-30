@@ -169,8 +169,8 @@ export const FsItem = ({ item }: { item: ReadDirEntry }) => {
         onDrop={!disableMoving ? onDrop : undefined}
         size={'xs'}
         className={cn(
-          'ide-file-system-item hover:bg-muted group/fs-item m-0 h-6 min-h-6 cursor-pointer p-0 px-1 select-none',
-          activeFile.path === itemPath && 'bg-muted',
+          'ide-file-system-item hover:bg-secondary group/fs-item m-0 h-6 min-h-6 cursor-pointer p-0 px-1 select-none',
+          activeFile.path === itemPath && 'bg-secondary',
           hoveredPath === itemPath && 'ring-1'
         )}
         onClick={() => {
