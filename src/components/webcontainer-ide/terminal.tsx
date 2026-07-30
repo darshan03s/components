@@ -5,8 +5,8 @@ import { FitAddon } from '@xterm/addon-fit'
 import { Terminal as XtermTerminal } from '@xterm/xterm'
 import '@xterm/xterm/css/xterm.css'
 import { TerminalIcon, X } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { Button } from '../ui/button'
 import { useFileSystem, useProps, useTerminal, useWebContainer } from './hooks'
 
 export const Terminal = () => {
