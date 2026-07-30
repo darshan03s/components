@@ -8,7 +8,7 @@ import '@xterm/xterm/css/xterm.css'
 import { TerminalIcon, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '../ui/button'
-import { useFileSystem, useWebContainer } from './hooks'
+import { useFileSystem, useProps, useWebContainer } from './hooks'
 
 export const Terminal = () => {
   const { startShell, isMounted, setServerUrl, shellProcessWriter } = useWebContainer()
@@ -18,6 +18,7 @@ export const Terminal = () => {
   const shellProcessRef = useRef<WebContainerProcess | null>(null)
   const [isOpen, setIsOpen] = useState(false)
   const { fileSystemOpen } = useFileSystem()
+  const { terminalReadOnly } = useProps()
 
   useEffect(() => {
     const fitAddon = new FitAddon()
@@ -26,6 +27,7 @@ export const Terminal = () => {
       cursorBlink: true,
       convertEol: true
     })
+    terminal.options.disableStdin = terminalReadOnly
     terminal.loadAddon(fitAddon)
     terminalRef.current = terminal
     fitAddonRef.current = fitAddon
@@ -37,6 +39,7 @@ export const Terminal = () => {
           setServerUrl('')
         }
         if (event.ctrlKey && event.key.toLowerCase() === 'v' && event.type === 'keydown') {
+          if (terminalReadOnly) return true
           event.preventDefault()
           navigator.clipboard.readText().then(async (text) => {
             await shellProcessWriter.current?.write(text)

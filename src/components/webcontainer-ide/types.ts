@@ -23,6 +23,10 @@ export type WebContainerIDEProps = {
    * Prevents editing the file content.
    */
   editorReadOnly?: boolean
+  /**
+   * Prevents user input in the terminal.
+   */
+  terminalReadOnly?: boolean
 }
 
 export type ReadDirEntry = {
