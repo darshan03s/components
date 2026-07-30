@@ -4,12 +4,15 @@ import { Dispatch, RefObject, SetStateAction, createContext, useRef, useState } 
 import { WebContainerProcess } from '@webcontainer/api'
 import { FitAddon } from '@xterm/addon-fit'
 import { Terminal as XtermTerminal } from '@xterm/xterm'
+import { useWebContainer } from '../hooks'
 
 type SetTerminalRef = (instance: XtermTerminal) => void
 
 type SetFitAddonRef = (instance: FitAddon) => void
 
 type SetShellProcessRef = (process: WebContainerProcess) => void
+
+type WriteToTerminal = (command: string) => void
 
 type TerminalContext = {
   terminalRef: RefObject<XtermTerminal | null>
@@ -21,6 +24,7 @@ type TerminalContext = {
   isTerminalStarted: boolean
   isTerminalOpen: boolean
   setIsTerminalOpen: Dispatch<SetStateAction<boolean>>
+  writeToTerminal: WriteToTerminal
 }
 
 export const TerminalContext = createContext<TerminalContext | null>(null)
@@ -31,6 +35,7 @@ export const TerminalProvider = ({ children }: { children: React.ReactNode }) =>
   const shellProcessRef = useRef<WebContainerProcess | null>(null)
   const [isTerminalStarted, setIsTerminalStarted] = useState(false)
   const [isTerminalOpen, setIsTerminalOpen] = useState(false)
+  const { shellProcessWriter } = useWebContainer()
 
   const setTerminalRef: SetTerminalRef = (instance) => {
     terminalRef.current = instance
@@ -45,6 +50,12 @@ export const TerminalProvider = ({ children }: { children: React.ReactNode }) =>
     setIsTerminalStarted(true)
   }
 
+  const writeToTerminal: WriteToTerminal = (command) => {
+    setTimeout(() => {
+      shellProcessWriter.current?.write(command)
+    }, 300)
+  }
+
   return (
     <TerminalContext.Provider
       value={{
@@ -56,7 +67,8 @@ export const TerminalProvider = ({ children }: { children: React.ReactNode }) =>
         setShellProcessRef,
         isTerminalStarted,
         isTerminalOpen,
-        setIsTerminalOpen
+        setIsTerminalOpen,
+        writeToTerminal
       }}
     >
       {children}
