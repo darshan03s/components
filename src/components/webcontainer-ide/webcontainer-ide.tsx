@@ -24,7 +24,7 @@ export const Comp = () => {
   const { view, toggleView } = useIde()
   const { toggleFileSystem, fileSystemOpen } = useFileSystem()
   const { setIsTerminalOpen } = useTerminal()
-  const { loadFromSnapshot, loadFromTemplate, className } = useProps()
+  const { loadFromSnapshot, loadFromTemplate, className, hideTerminal } = useProps()
 
   useEffect(() => {
     if (isMounted) return
@@ -74,16 +74,18 @@ export const Comp = () => {
             </Button>
           </ButtonGroup>
         </div>
-        <Button
-          className="ide-terminal-toggle"
-          variant={'outline'}
-          size={'icon-xs'}
-          onClick={handleTerminalToggle}
-          disabled={!isMounted}
-          title="Toggle terminal"
-        >
-          <Terminal />
-        </Button>
+        {hideTerminal ? null : (
+          <Button
+            className="ide-terminal-toggle"
+            variant={'outline'}
+            size={'icon-xs'}
+            onClick={handleTerminalToggle}
+            disabled={!isMounted}
+            title="Toggle terminal"
+          >
+            <Terminal />
+          </Button>
+        )}
       </div>
       <div className="flex min-h-0 flex-1 [--fs-width:--spacing(64)] [--inner-header-height:--spacing(8)]">
         <FileSystem />

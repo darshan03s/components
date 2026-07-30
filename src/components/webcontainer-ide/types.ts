@@ -27,6 +27,10 @@ export type WebContainerIDEProps = {
    * Prevents user input in the terminal.
    */
   terminalReadOnly?: boolean
+  /**
+   * Hides the terminal UI without preventing the shell from starting.
+   */
+  hideTerminal?: boolean
 }
 
 export type ReadDirEntry = {

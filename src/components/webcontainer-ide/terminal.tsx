@@ -23,7 +23,7 @@ export const Terminal = () => {
     setIsTerminalOpen
   } = useTerminal()
   const { fileSystemOpen } = useFileSystem()
-  const { terminalReadOnly } = useProps()
+  const { terminalReadOnly, hideTerminal } = useProps()
   const terminalEleRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
@@ -100,7 +100,7 @@ export const Terminal = () => {
         'ide-terminal',
         'absolute right-0 bottom-0 w-full',
         '[--terminal-height:--spacing(46)]',
-        isTerminalOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
+        isTerminalOpen || !hideTerminal ? 'opacity-100' : 'pointer-events-none opacity-0'
       )}
     >
       <div className="terminal-header bg-background flex h-8 items-center justify-between border px-2 select-none">
