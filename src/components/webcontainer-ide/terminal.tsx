@@ -94,13 +94,18 @@ export const Terminal = () => {
     }
   }, [isTerminalStarted])
 
+  const showTerminal = (() => {
+    if (hideTerminal) return false
+    return isTerminalOpen
+  })()
+
   return (
     <div
       className={cn(
         'ide-terminal',
         'absolute right-0 bottom-0 w-full',
         '[--terminal-height:--spacing(46)]',
-        isTerminalOpen || !hideTerminal ? 'opacity-100' : 'pointer-events-none opacity-0'
+        showTerminal ? 'opacity-100' : 'pointer-events-none opacity-0'
       )}
     >
       <div className="terminal-header bg-background flex h-8 items-center justify-between border px-2 select-none">
