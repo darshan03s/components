@@ -10,6 +10,9 @@ const Page = () => {
           <Link href="/media-player" className="underline">
             Media Player
           </Link>
+          <Link href="/webcontainer-ide" className="underline">
+            WebContainer IDE
+          </Link>
         </div>
       </div>
     </Main>
