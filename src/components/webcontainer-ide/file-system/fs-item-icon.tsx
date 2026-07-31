@@ -1,14 +1,19 @@
 import { ChevronDown, ChevronRight, EyeOff, File } from 'lucide-react'
-import { useFileSystem } from '../hooks'
-import { ReadDirEntry } from '../types'
 
-export function FsItemIcon({ item, itemPath }: { item: ReadDirEntry; itemPath: string }) {
-  const { isIgnoredPath, isFolderOpen } = useFileSystem()
-  if (isIgnoredPath(item.path)) return <EyeOff />
+export function FsItemIcon({
+  type,
+  isIgnored,
+  isFolderItemOpen
+}: {
+  type: 'folder' | 'file'
+  isIgnored: boolean
+  isFolderItemOpen: boolean
+}) {
+  if (isIgnored) return <EyeOff />
 
-  if (!item.isDirectory()) {
+  if (type === 'file') {
     return <File />
   }
 
-  return isFolderOpen(itemPath) ? <ChevronDown /> : <ChevronRight />
+  return isFolderItemOpen ? <ChevronDown /> : <ChevronRight />
 }

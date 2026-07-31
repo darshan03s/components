@@ -18,7 +18,8 @@ export const FsItemOptions = ({
   renameFsItem,
   deleteFsItem,
   onTriggerFocus,
-  isFolder
+  isFolder,
+  isIgnored
 }: {
   disableCreateFolder: boolean | undefined
   disableCreateFile: boolean | undefined
@@ -30,6 +31,7 @@ export const FsItemOptions = ({
   deleteFsItem: () => void
   onTriggerFocus: () => void
   isFolder: boolean
+  isIgnored: boolean
 }) => {
   if (isFolder && disableCreateFile && disableCreateFolder && disableRenaming && disableDeleting) {
     return null
@@ -56,17 +58,17 @@ export const FsItemOptions = ({
         side="left"
         className="ide-file-system-item-options [&_div]:cursor-pointer [&_div]:text-[10px] [&_svg]:size-3!"
       >
-        {!disableCreateFolder && (
+        {!disableCreateFolder && !isIgnored && (
           <DropdownMenuItem onClick={createFolder} hidden={!isFolder}>
             <FolderPlus /> Create folder
           </DropdownMenuItem>
         )}
-        {!disableCreateFile && (
+        {!disableCreateFile && !isIgnored && (
           <DropdownMenuItem onClick={createFile} hidden={!isFolder}>
             <FilePlus /> Create file
           </DropdownMenuItem>
         )}
-        {!disableRenaming && (
+        {!disableRenaming && !isIgnored && (
           <DropdownMenuItem onClick={renameFsItem}>
             <Pencil /> Rename
           </DropdownMenuItem>

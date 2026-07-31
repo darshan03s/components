@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { ButtonGroup } from '@/components/ui/button-group'
 import { Item, ItemActions, ItemContent, ItemMedia } from '@/components/ui/item'
 import { cn } from '@/lib/utils'
+import { IGNORED_FOLDERS } from '../constants'
 import { useFileSystem, useProps, useWebContainer } from '../hooks'
 import { FsItemDrag, ReadDirEntry } from '../types'
 import { getParentFolder } from '../utils'
@@ -28,7 +29,8 @@ export const FsItem = ({ item }: { item: ReadDirEntry }) => {
     startFsItemMove,
     endFsItemMove,
     handleFsItemDrop,
-    clearFolder
+    clearFolder,
+    isIgnoredPath
   } = useFileSystem()
   const {
     disableCreateFolder,
@@ -42,6 +44,8 @@ export const FsItem = ({ item }: { item: ReadDirEntry }) => {
   const itemPath = item.path
   const type = item.isDirectory() ? 'folder' : 'file'
   const parentFolder = getParentFolder(itemPath)
+  const isIgnored = isIgnoredPath(itemPath)
+  const isFolderItemOpen = isFolderOpen(itemPath)
 
   useEffect(() => {
     if (hoveredPath !== itemPath) return
@@ -82,6 +86,7 @@ export const FsItem = ({ item }: { item: ReadDirEntry }) => {
       return
     }
     if (newName.length > 0) {
+      if (IGNORED_FOLDERS.some((f) => f === newName)) return
       const prevPath = itemPath
       await rename(itemPath, `${parentFolder}/${newName}`)
       if (activeFile.path.startsWith(prevPath)) {
@@ -101,14 +106,14 @@ export const FsItem = ({ item }: { item: ReadDirEntry }) => {
     if (activeFile.path.startsWith(itemPath)) {
       activePath('')
     }
-    if (item.isDirectory()) {
+    if (type === 'folder') {
       clearFolder(itemPath)
     }
     setIsDeleting(false)
   }
 
   function dragOrDropNotAllowed(source: FsItemDrag) {
-    if (item.isFile()) return true
+    if (type === 'file') return true
     if (source.path === item.path) return true
 
     return false
@@ -179,7 +184,7 @@ export const FsItem = ({ item }: { item: ReadDirEntry }) => {
         }}
       >
         <ItemMedia className="[&_svg]:size-3!">
-          <FsItemIcon item={item} itemPath={itemPath} />
+          <FsItemIcon type={type} isIgnored={isIgnored} isFolderItemOpen={isFolderItemOpen} />
         </ItemMedia>
         <ItemContent className="line-clamp-1 flex truncate text-xs">
           {isRenaming ? (
@@ -189,7 +194,7 @@ export const FsItem = ({ item }: { item: ReadDirEntry }) => {
               onSubmit={renameFsItem}
               onBlur={() => setIsRenaming(false)}
               name="new-name"
-              placeholder={item.isDirectory() ? 'Enter folder name' : 'Enter file name'}
+              placeholder={type === 'folder' ? 'Enter folder name' : 'Enter file name'}
             />
           ) : (
             item.name
@@ -224,7 +229,8 @@ export const FsItem = ({ item }: { item: ReadDirEntry }) => {
               onTriggerFocus={() => {
                 inputRef.current?.focus()
               }}
-              isFolder={item.isDirectory()}
+              isFolder={type === 'folder'}
+              isIgnored={isIgnored}
             />
           )}
         </ItemActions>
