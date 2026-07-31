@@ -13,7 +13,8 @@ const eslintConfig = defineConfig([
     rules: {
       'unused-imports/no-unused-imports': 'error',
       'react-hooks/set-state-in-effect': 'off',
-      '@next/next/no-img-element': 'off'
+      '@next/next/no-img-element': 'off',
+      'no-console': 'error'
     }
   },
   globalIgnores(['.next/**', 'out/**', 'build/**', 'next-env.d.ts'])
