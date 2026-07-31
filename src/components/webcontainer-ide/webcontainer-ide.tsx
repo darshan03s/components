@@ -20,16 +20,21 @@ export const WebContainerIDE = ({ ...props }: WebContainerIDEProps) => {
 }
 
 export const Comp = () => {
-  const { init, isMounted } = useWebContainer()
+  const { init, isMounted, wc } = useWebContainer()
   const { view, toggleView } = useIde()
   const { toggleFileSystem, fileSystemOpen } = useFileSystem()
   const { setIsTerminalOpen } = useTerminal()
   const { loadFromSnapshot, loadFromTemplate, className, hideTerminal } = useProps()
 
   useEffect(() => {
-    if (isMounted) return
-    init(loadFromSnapshot, loadFromTemplate)
-  }, [isMounted])
+    void init(loadFromSnapshot, loadFromTemplate)
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      wc?.teardown()
+    }
+  }, [wc])
 
   function handleTerminalToggle() {
     setIsTerminalOpen((prev) => !prev)
