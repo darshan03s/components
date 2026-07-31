@@ -17,7 +17,14 @@ const eslintConfig = defineConfig([
       'no-console': 'error'
     }
   },
-  globalIgnores(['.next/**', 'out/**', 'build/**', 'next-env.d.ts'])
+  globalIgnores([
+    '.next/**',
+    'out/**',
+    'build/**',
+    'next-env.d.ts',
+    'templates/**',
+    'build-registry.ts'
+  ])
 ])
 
 export default eslintConfig

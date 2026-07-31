@@ -42,6 +42,7 @@ type FileSystemContextType = {
   setFileSystemOpen: Dispatch<SetStateAction<boolean>>
   toggleFileSystem: ToggleFileSystem
   fs: Fs
+  setFs: Dispatch<SetStateAction<Fs>>
   loadFolderItems: LoadFolderItems
   handleFsItemClick: HandleFsItemClick
   isFolderOpen: IsFolderOpen
@@ -199,6 +200,7 @@ export const FileSystemProvider = ({ children }: { children: React.ReactNode }) 
         setFileSystemOpen,
         toggleFileSystem,
         fs,
+        setFs,
         loadFolderItems,
         handleFsItemClick,
         isFolderOpen,

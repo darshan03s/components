@@ -60,11 +60,6 @@ type Mv = (source: string, destination: string) => Promise<void>
 
 type LoadSnapshot = (snapshotUrl: string) => Promise<void>
 
-type Init = (
-  loadFromSnapshot?: string,
-  loadFromTemplate?: FileSystemTree | undefined
-) => Promise<void>
-
 type ActiveFile = {
   path: string
   content: string
@@ -90,7 +85,7 @@ type WebContainerContext = {
   mv: Mv
   loadSnapshot: LoadSnapshot
   isMounted: boolean
-  init: Init
+  setIsMounted: Dispatch<SetStateAction<boolean>>
   rootDir: string
   activePath: ActivePath
   activeFile: ActiveFile
@@ -148,6 +143,11 @@ export const WebContainerProvider = ({
     setWc(webContainerInstance)
     return webContainerInstance
   }
+
+  useEffect(() => {
+    boot()
+    return () => wc?.teardown()
+  }, [])
 
   const mount: Mount = async (projectFiles, options) => {
     const wc = requireWc()
@@ -248,26 +248,6 @@ export const WebContainerProvider = ({
     setIsMounted(true)
   }
 
-  const init: Init = async (loadFromSnapshot, loadFromTemplate) => {
-    const wc = await boot()
-
-    await wc.fs.mkdir(`/${rootDir}`)
-
-    if (loadFromTemplate) {
-      await wc.mount(loadFromTemplate, { mountPoint: rootDir })
-      setIsMounted(true)
-      return
-    }
-    if (loadFromSnapshot) {
-      const response = await fetch(loadFromSnapshot)
-      const snapshot = await response.arrayBuffer()
-      await wc.mount(snapshot, { mountPoint: rootDir })
-      setIsMounted(true)
-    } else {
-      setIsMounted(true)
-    }
-  }
-
   const activePath = async (path: string) => {
     if (path === '') {
       setActiveFile({
@@ -347,7 +327,7 @@ export const WebContainerProvider = ({
         mv,
         loadSnapshot,
         isMounted,
-        init,
+        setIsMounted,
         rootDir,
         activePath,
         activeFile,

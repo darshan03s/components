@@ -20,21 +20,51 @@ export const WebContainerIDE = ({ ...props }: WebContainerIDEProps) => {
 }
 
 export const Comp = () => {
-  const { init, isMounted, wc } = useWebContainer()
+  const { isMounted, wc, rootDir, setIsMounted } = useWebContainer()
   const { view, toggleView } = useIde()
-  const { toggleFileSystem, fileSystemOpen } = useFileSystem()
+  const { toggleFileSystem, fileSystemOpen, setFs } = useFileSystem()
   const { setIsTerminalOpen } = useTerminal()
   const { loadFromSnapshot, loadFromTemplate, className, hideTerminal } = useProps()
+  const rootDirPath = `/${rootDir}`
 
   useEffect(() => {
-    void init(loadFromSnapshot, loadFromTemplate)
-  }, [])
-
-  useEffect(() => {
-    return () => {
-      wc?.teardown()
+    async function init() {
+      if (!wc) return
+      await wc.fs.mkdir(rootDirPath, { recursive: true })
+      if (loadFromTemplate) {
+        await wc.mount(loadFromTemplate, { mountPoint: rootDir })
+        setIsMounted(true)
+        return
+      }
+      if (loadFromSnapshot) {
+        const response = await fetch(loadFromSnapshot)
+        const snapshot = await response.arrayBuffer()
+        await wc.mount(snapshot, { mountPoint: rootDir })
+        setIsMounted(true)
+      } else {
+        setIsMounted(true)
+      }
     }
-  }, [wc])
+
+    init()
+
+    async function cleanup() {
+      if (!wc) return
+      const entries = await wc.fs.readdir(rootDirPath)
+      for (const entry of entries) {
+        await wc.fs.rm(`${rootDirPath}/${entry}`, {
+          recursive: true,
+          force: true
+        })
+      }
+
+      setFs({})
+    }
+
+    return () => {
+      cleanup()
+    }
+  }, [wc, loadFromSnapshot, loadFromTemplate])
 
   function handleTerminalToggle() {
     setIsTerminalOpen((prev) => !prev)
