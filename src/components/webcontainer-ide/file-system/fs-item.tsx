@@ -218,14 +218,10 @@ export const FsItem = ({ item }: { item: ReadDirEntry }) => {
             </ButtonGroup>
           ) : (
             <FsItemOptions
-              disableCreateFolder={disableCreateFolder}
-              disableCreateFile={disableCreateFile}
-              disableRenaming={disableRenaming}
-              disableDeleting={disableDeleting}
-              createFolder={createFolder}
-              createFile={createFile}
-              renameFsItem={startRenameFolder}
-              deleteFsItem={startDeletingFolder}
+              createFolder={disableCreateFolder || isIgnored ? undefined : createFolder}
+              createFile={disableCreateFile || isIgnored ? undefined : createFile}
+              renameFsItem={disableRenaming || isIgnored ? undefined : startRenameFolder}
+              deleteFsItem={disableDeleting ? undefined : startDeletingFolder}
               onTriggerFocus={() => {
                 inputRef.current?.focus()
               }}

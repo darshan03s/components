@@ -9,35 +9,26 @@ import {
 import { cn } from '@/lib/utils'
 
 export const FsItemOptions = ({
-  disableCreateFolder,
-  disableCreateFile,
-  disableRenaming,
-  disableDeleting,
   createFolder,
   createFile,
   renameFsItem,
   deleteFsItem,
   onTriggerFocus,
-  isFolder,
-  isIgnored
+  isFolder
 }: {
-  disableCreateFolder: boolean | undefined
-  disableCreateFile: boolean | undefined
-  disableRenaming: boolean | undefined
-  disableDeleting: boolean | undefined
-  createFolder: () => void
-  createFile: () => void
-  renameFsItem: () => void
-  deleteFsItem: () => void
+  createFolder?: () => void
+  createFile?: () => void
+  renameFsItem?: () => void
+  deleteFsItem?: () => void
   onTriggerFocus: () => void
   isFolder: boolean
   isIgnored: boolean
 }) => {
-  if (isFolder && disableCreateFile && disableCreateFolder && disableRenaming && disableDeleting) {
+  if (isFolder && !createFolder && !createFile && !renameFsItem && !deleteFsItem) {
     return null
   }
 
-  if (!isFolder && disableRenaming && disableDeleting) {
+  if (!isFolder && !renameFsItem && !deleteFsItem) {
     return null
   }
 
@@ -58,22 +49,22 @@ export const FsItemOptions = ({
         side="left"
         className="ide-file-system-item-options [&_div]:cursor-pointer [&_div]:text-[10px] [&_svg]:size-3!"
       >
-        {!disableCreateFolder && !isIgnored && (
+        {createFolder && (
           <DropdownMenuItem onClick={createFolder} hidden={!isFolder}>
             <FolderPlus /> Create folder
           </DropdownMenuItem>
         )}
-        {!disableCreateFile && !isIgnored && (
+        {createFile && (
           <DropdownMenuItem onClick={createFile} hidden={!isFolder}>
             <FilePlus /> Create file
           </DropdownMenuItem>
         )}
-        {!disableRenaming && !isIgnored && (
+        {renameFsItem && (
           <DropdownMenuItem onClick={renameFsItem}>
             <Pencil /> Rename
           </DropdownMenuItem>
         )}
-        {!disableDeleting && (
+        {deleteFsItem && (
           <DropdownMenuItem variant="destructive" onClick={deleteFsItem}>
             <Trash /> Delete
           </DropdownMenuItem>
