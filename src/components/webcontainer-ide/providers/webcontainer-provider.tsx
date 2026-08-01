@@ -145,7 +145,7 @@ export const WebContainerProvider = ({
   useEffect(() => {
     boot()
     return () => wc?.teardown()
-  }, [])
+  }, [wc])
 
   const mount: Mount = async (projectFiles, options) => {
     const wc = requireWc()
