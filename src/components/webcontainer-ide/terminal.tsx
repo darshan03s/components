@@ -22,7 +22,7 @@ export const Terminal = () => {
     setIsTerminalOpen
   } = useTerminal()
   const { fileSystemOpen } = useFileSystem()
-  const { terminalReadOnly, hideTerminal } = useProps()
+  const { terminalReadOnly, hideTerminal, openTerminal } = useProps()
   const terminalEleRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
@@ -96,6 +96,10 @@ export const Terminal = () => {
     }
 
     init()
+
+    if (openTerminal) {
+      setIsTerminalOpen(true)
+    }
 
     return () => {
       disposed = true

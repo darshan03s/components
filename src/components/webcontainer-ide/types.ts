@@ -51,6 +51,10 @@ export type WebContainerIDEProps = {
    * Disables file and folder moving in the UI
    */
   disableMoving?: boolean
+  /**
+   * Opens terminal on load
+   */
+  openTerminal?: boolean
 }
 
 export type ReadDirEntry = {
