@@ -7,6 +7,11 @@ const Page = () => {
       <div className="flex flex-col gap-4">
         <h1 className="text-2xl font-bold">Components</h1>
         <div className="flex flex-col items-center gap-2">
+          {process.env.NODE_ENV === 'development' && (
+            <Link href="/dev/webcontainer-ide/all" className="underline">
+              WebContainer IDE (Dev)
+            </Link>
+          )}
           <Link href="/media-player" className="underline">
             Media Player
           </Link>
