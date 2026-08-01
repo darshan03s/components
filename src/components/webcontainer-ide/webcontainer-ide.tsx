@@ -20,7 +20,7 @@ export const WebContainerIDE = ({ ...props }: WebContainerIDEProps) => {
 }
 
 export const Comp = () => {
-  const { isMounted, wc, rootDir, setIsMounted } = useWebContainer()
+  const { isMounted, wc, rootDir, setIsMounted, setServerUrl } = useWebContainer()
   const { view, toggleView } = useIde()
   const { toggleFileSystem, fileSystemOpen, setFs } = useFileSystem()
   const { setIsTerminalOpen } = useTerminal()
@@ -69,8 +69,9 @@ export const Comp = () => {
             })
           )
         )
-
         setFs({})
+        setIsMounted(false)
+        setServerUrl('')
       })()
     }
   }, [wc, loadFromSnapshot, loadFromTemplate])

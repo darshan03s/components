@@ -10,7 +10,7 @@ type SetTerminalRef = (instance: XtermTerminal) => void
 
 type SetFitAddonRef = (instance: FitAddon) => void
 
-type SetShellProcessRef = (process: WebContainerProcess) => void
+type SetShellProcessRef = (process: WebContainerProcess | null) => void
 
 type WriteToTerminal = (command: string) => void
 

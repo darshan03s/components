@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import { WebContainerProcess } from '@webcontainer/api'
 import { FitAddon } from '@xterm/addon-fit'
 import { Terminal as XtermTerminal } from '@xterm/xterm'
 import '@xterm/xterm/css/xterm.css'
@@ -23,7 +24,7 @@ export const Terminal = () => {
     setIsTerminalOpen
   } = useTerminal()
   const { fileSystemOpen } = useFileSystem()
-  const { terminalReadOnly, hideTerminal } = useProps()
+  const { terminalReadOnly, hideTerminal, loadFromSnapshot } = useProps()
   const terminalEleRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
@@ -68,12 +69,19 @@ export const Terminal = () => {
   useEffect(() => {
     if (!isMounted) return
 
+    let shellProcess: WebContainerProcess | null = null
+
     async function init() {
-      const shellProcess = await startShell(terminalRef.current!)
+      shellProcess = await startShell(terminalRef.current!)
       setShellProcessRef(shellProcess)
     }
 
     init()
+
+    return () => {
+      shellProcess?.kill()
+      setShellProcessRef(null)
+    }
   }, [isMounted])
 
   useEffect(() => {
@@ -124,7 +132,7 @@ export const Terminal = () => {
       <div
         ref={terminalEleRef}
         className={cn(
-          '[&_.terminal]:h-full [&_.terminal]:max-h-(--terminal-height) [&_.terminal]:p-2 [&_.terminal:nth-of-type(2)]:hidden!',
+          '[&_.terminal]:h-full [&_.terminal]:max-h-(--terminal-height) [&_.terminal]:p-2 [&_.terminal:first-of-type~.terminal]:hidden!',
           '[&_.xterm-screen]:h-(--terminal-height)!',
           '[&_.xterm-scrollable-element]:bg-transparent!',
           '[&_.xterm-viewport]:no-scrollbar! [&_.xterm-viewport]:rounded-br-lg',
