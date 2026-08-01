@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react'
 import { WebContainerProcess } from '@webcontainer/api'
 import { FitAddon } from '@xterm/addon-fit'
-import { Terminal as XtermTerminal } from '@xterm/xterm'
+import { IDisposable, Terminal as XtermTerminal } from '@xterm/xterm'
 import '@xterm/xterm/css/xterm.css'
 import { TerminalIcon, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils'
 import { useFileSystem, useProps, useTerminal, useWebContainer } from './hooks'
 
 export const Terminal = () => {
-  const { startShell, isMounted, setServerUrl } = useWebContainer()
+  const { startShell, isMounted, setServerUrl, setShellProcessWriter } = useWebContainer()
   const {
     terminalRef,
     fitAddonRef,
@@ -62,24 +62,50 @@ export const Terminal = () => {
       }
       return true
     })
+
+    return () => {
+      terminal.dispose()
+    }
   }, [isMounted])
 
   useEffect(() => {
     if (!isMounted) return
 
-    let shellProcess: WebContainerProcess | null = null
+    let disposed = false
+    let jsh: WebContainerProcess | null = null
+    let writer: WritableStreamDefaultWriter<string> | null = null
+    let disposable: IDisposable | null = null
 
     async function init() {
-      shellProcess = await startShell(terminalRef.current!)
-      shellProcessRef.current = shellProcess
+      const { shellProcess, inputWriter, iDisposable } = await startShell(terminalRef.current!)
+
+      if (disposed) {
+        shellProcess.kill()
+        inputWriter.releaseLock()
+        iDisposable.dispose()
+        return
+      }
+
+      jsh = shellProcess
+      writer = inputWriter
+      disposable = iDisposable
+
+      shellProcessRef.current = jsh
+      setShellProcessWriter(inputWriter)
       setIsTerminalStarted(true)
     }
 
     init()
 
     return () => {
-      shellProcess?.kill()
+      disposed = true
+      jsh?.kill()
+      writer?.releaseLock()
+      disposable?.dispose()
       shellProcessRef.current = null
+      setShellProcessWriter(null)
+      setIsTerminalStarted(false)
+      setIsTerminalOpen(false)
     }
   }, [isMounted])
 

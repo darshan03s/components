@@ -1,14 +1,6 @@
 'use client'
 
-import {
-  Dispatch,
-  RefObject,
-  SetStateAction,
-  createContext,
-  useEffect,
-  useRef,
-  useState
-} from 'react'
+import { Dispatch, SetStateAction, createContext, useEffect, useState } from 'react'
 import {
   FileSystemAPI,
   FileSystemTree,
@@ -17,7 +9,7 @@ import {
   WebContainer,
   WebContainerProcess
 } from '@webcontainer/api'
-import { Terminal } from '@xterm/xterm'
+import { IDisposable, Terminal } from '@xterm/xterm'
 import { DEFAULT_ROOT_DIR, IGNORED_FS_EXTENSIONS_TO_DISPLAY } from '../constants'
 import { ReadDirEntry } from '../types'
 import { getExtension } from '../utils'
@@ -67,7 +59,11 @@ type ActiveFile = {
 
 type ActivePath = (path: string) => void
 
-type StartShell = (terminal: Terminal) => Promise<WebContainerProcess>
+type StartShell = (terminal: Terminal) => Promise<{
+  shellProcess: WebContainerProcess
+  inputWriter: WritableStreamDefaultWriter<string>
+  iDisposable: IDisposable
+}>
 
 type ReadMedia = (path: string) => Promise<string>
 
@@ -92,7 +88,8 @@ type WebContainerContext = {
   startShell: StartShell
   serverUrl: string
   setServerUrl: Dispatch<SetStateAction<string>>
-  shellProcessWriter: RefObject<WritableStreamDefaultWriter<string> | null>
+  shellProcessWriter: WritableStreamDefaultWriter<string> | null
+  setShellProcessWriter: Dispatch<SetStateAction<WritableStreamDefaultWriter<string> | null>>
   readMedia: ReadMedia
 }
 
@@ -113,7 +110,8 @@ export const WebContainerProvider = ({
   })
 
   const [serverUrl, setServerUrl] = useState<string>('')
-  const shellProcessWriter = useRef<WritableStreamDefaultWriter<string>>(null)
+  const [shellProcessWriter, setShellProcessWriter] =
+    useState<WritableStreamDefaultWriter<string> | null>(null)
 
   useEffect(() => {
     if (!wc) return
@@ -291,13 +289,12 @@ export const WebContainerProvider = ({
       })
     )
 
-    const input = shellProcess.input.getWriter()
-    terminal.onData((data) => {
-      input.write(data)
+    const inputWriter = shellProcess.input.getWriter()
+    const iDisposable = terminal.onData((data) => {
+      inputWriter.write(data)
     })
-    shellProcessWriter.current = input
 
-    return shellProcess
+    return { shellProcess, inputWriter, iDisposable }
   }
 
   const readMedia: ReadMedia = async (path) => {
@@ -335,6 +332,7 @@ export const WebContainerProvider = ({
         serverUrl,
         setServerUrl,
         shellProcessWriter,
+        setShellProcessWriter,
         readMedia
       }}
     >
