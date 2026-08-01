@@ -31,7 +31,7 @@ export const TerminalProvider = ({ children }: { children: React.ReactNode }) =>
 
   const writeToTerminal: WriteToTerminal = (command) => {
     setTimeout(() => {
-      shellProcessWriter.current?.write(command)
+      shellProcessWriter?.write(command)
     }, 300)
   }
 
