@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { Code, Eye, PanelLeft, PanelRight, Terminal } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ButtonGroup } from '@/components/ui/button-group'
@@ -25,44 +25,53 @@ export const Comp = () => {
   const { toggleFileSystem, fileSystemOpen, setFs } = useFileSystem()
   const { setIsTerminalOpen } = useTerminal()
   const { loadFromSnapshot, loadFromTemplate, className, hideTerminal } = useProps()
+  const cleanupRef = useRef<Promise<void>>(Promise.resolve())
   const rootDirPath = `/${rootDir}`
 
   useEffect(() => {
+    let cancelled = false
+
     async function init() {
-      if (!wc) return
+      await cleanupRef.current
+
+      if (cancelled || !wc) return
+
       await wc.fs.mkdir(rootDirPath, { recursive: true })
+
       if (loadFromTemplate) {
         await wc.mount(loadFromTemplate, { mountPoint: rootDir })
-        setIsMounted(true)
-        return
-      }
-      if (loadFromSnapshot) {
+      } else if (loadFromSnapshot) {
         const response = await fetch(loadFromSnapshot)
         const snapshot = await response.arrayBuffer()
         await wc.mount(snapshot, { mountPoint: rootDir })
-        setIsMounted(true)
-      } else {
+      }
+
+      if (!cancelled) {
         setIsMounted(true)
       }
     }
 
     init()
 
-    async function cleanup() {
-      if (!wc) return
-      const entries = await wc.fs.readdir(rootDirPath)
-      for (const entry of entries) {
-        await wc.fs.rm(`${rootDirPath}/${entry}`, {
-          recursive: true,
-          force: true
-        })
-      }
-
-      setFs({})
-    }
-
     return () => {
-      cleanup()
+      cancelled = true
+
+      cleanupRef.current = (async () => {
+        if (!wc) return
+
+        const entries = await wc.fs.readdir(rootDirPath)
+
+        await Promise.all(
+          entries.map((entry) =>
+            wc.fs.rm(`${rootDirPath}/${entry}`, {
+              recursive: true,
+              force: true
+            })
+          )
+        )
+
+        setFs({})
+      })()
     }
   }, [wc, loadFromSnapshot, loadFromTemplate])
 

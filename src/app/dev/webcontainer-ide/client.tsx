@@ -21,6 +21,7 @@ export const Client = () => {
           <Link href={'/dev/webcontainer-ide?template=vite-tsx'}>vite-tsx</Link>
         </div>
         <WebContainerIDE
+          key={template}
           loadFromSnapshot={`/api/snapshot?template=${template}`}
           theme={resolvedTheme as 'light' | 'dark'}
         />
