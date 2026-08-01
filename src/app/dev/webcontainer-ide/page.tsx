@@ -1,12 +1,15 @@
 'use client'
 
+import { Suspense } from 'react'
 import { WebContainerIDEProvider } from '@/components/webcontainer-ide'
 import { Client } from './client'
 
 const Page = () => {
   return (
     <WebContainerIDEProvider>
-      <Client />
+      <Suspense fallback={null}>
+        <Client />
+      </Suspense>
     </WebContainerIDEProvider>
   )
 }
