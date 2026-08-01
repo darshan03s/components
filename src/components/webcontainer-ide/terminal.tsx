@@ -16,15 +16,13 @@ export const Terminal = () => {
     terminalRef,
     fitAddonRef,
     shellProcessRef,
-    setTerminalRef,
-    setFitAddonRef,
-    setShellProcessRef,
     isTerminalStarted,
+    setIsTerminalStarted,
     isTerminalOpen,
     setIsTerminalOpen
   } = useTerminal()
   const { fileSystemOpen } = useFileSystem()
-  const { terminalReadOnly, hideTerminal, loadFromSnapshot } = useProps()
+  const { terminalReadOnly, hideTerminal } = useProps()
   const terminalEleRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
@@ -39,8 +37,8 @@ export const Terminal = () => {
     terminal.loadAddon(fitAddon)
     terminal.open(terminalEleRef.current!)
     fitAddon.fit()
-    setTerminalRef(terminal)
-    setFitAddonRef(fitAddon)
+    terminalRef.current = terminal
+    fitAddonRef.current = fitAddon
     terminal.attachCustomKeyEventHandler((event) => {
       if (event.ctrlKey && event.key.toLocaleLowerCase() === 'c' && event.type === 'keydown') {
         setServerUrl('')
@@ -73,14 +71,15 @@ export const Terminal = () => {
 
     async function init() {
       shellProcess = await startShell(terminalRef.current!)
-      setShellProcessRef(shellProcess)
+      shellProcessRef.current = shellProcess
+      setIsTerminalStarted(true)
     }
 
     init()
 
     return () => {
       shellProcess?.kill()
-      setShellProcessRef(null)
+      shellProcessRef.current = null
     }
   }, [isMounted])
 
