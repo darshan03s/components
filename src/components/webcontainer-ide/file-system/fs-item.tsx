@@ -88,9 +88,10 @@ export const FsItem = ({ item }: { item: ReadDirEntry }) => {
     if (newName.length > 0) {
       if (IGNORED_FOLDERS.some((f) => f === newName)) return
       const prevPath = itemPath
-      await rename(itemPath, `${parentFolder}/${newName}`)
+      const newPath = parentFolder === '/' ? newName : `${parentFolder}/${newName}`
+      await rename(itemPath, newPath)
       if (activeFile.path.startsWith(prevPath)) {
-        activePath(activeFile.path.replace(prevPath, `${parentFolder}/${newName}`))
+        activePath(activeFile.path.replace(prevPath, newPath))
       }
       clearFolder(prevPath)
       setIsRenaming(false)
@@ -176,7 +177,7 @@ export const FsItem = ({ item }: { item: ReadDirEntry }) => {
         className={cn(
           'ide-file-system-item hover:bg-secondary group/fs-item m-0 h-6 min-h-6 cursor-pointer p-0 px-1 select-none',
           activeFile.path === itemPath && 'bg-secondary',
-          hoveredPath === itemPath && 'ring-1'
+          hoveredPath === itemPath && 'ring-1 ring-ring'
         )}
         onClick={() => {
           if (isRenaming) return

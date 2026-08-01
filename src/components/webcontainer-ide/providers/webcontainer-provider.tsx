@@ -137,7 +137,7 @@ export const WebContainerProvider = ({
 
   const boot: Boot = async () => {
     if (wc) return wc
-    const webContainerInstance = await WebContainer.boot()
+    const webContainerInstance = await WebContainer.boot({ workdirName: rootDir })
     setWc(webContainerInstance)
     return webContainerInstance
   }
@@ -149,7 +149,6 @@ export const WebContainerProvider = ({
 
   const mount: Mount = async (projectFiles, options) => {
     const wc = requireWc()
-    await wc.fs.mkdir(rootDir)
     await wc.mount(projectFiles, options)
     setIsMounted(true)
   }
@@ -205,7 +204,7 @@ export const WebContainerProvider = ({
     const wc = requireWc()
     const items = await wc.fs.readdir(path, options)
     const itemsWithPath = items.map((item) => ({
-      path: `${path}/${item.name}`,
+      path: path === '/' ? `${item.name}` : `${path}/${item.name}`,
       name: item.name,
       isFile: () => item.isFile(),
       isDirectory: () => item.isDirectory()
@@ -229,10 +228,8 @@ export const WebContainerProvider = ({
   }
 
   const mv: Mv = async (source, destination) => {
-    const wc = requireWc()
-    const sourceNew = `${wc.workdir}${source}`
-    const destinationNew = `${wc.workdir}${destination}`
-    await spawn('mv', [sourceNew, destinationNew])
+    const dest = destination === '/' ? '' : destination
+    await spawn('mv', [source, dest])
   }
 
   const loadSnapshot: LoadSnapshot = async (snapshotUrl: string) => {
@@ -241,7 +238,6 @@ export const WebContainerProvider = ({
     const snapshotResponse = await fetch(snapshotUrl)
     const snapshot = await snapshotResponse.arrayBuffer()
 
-    await wc.fs.mkdir(rootDir)
     await wc.mount(snapshot)
     setIsMounted(true)
   }
@@ -275,7 +271,6 @@ export const WebContainerProvider = ({
   const startShell: StartShell = async (terminal) => {
     const wc = requireWc()
     const shellProcess = await wc.spawn(`jsh`, {
-      cwd: rootDir,
       terminal: {
         cols: terminal.cols,
         rows: terminal.rows

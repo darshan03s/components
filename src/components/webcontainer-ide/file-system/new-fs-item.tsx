@@ -16,11 +16,13 @@ export const NewFsItem = ({ inputRef }: { inputRef?: RefObject<HTMLInputElement 
     const fileName = formData.get('file-name')
 
     if (folderName && String(folderName).trim().length > 0) {
-      const path = `${newFsItem?.parent}/${String(folderName)}`
+      const folderString = String(folderName)
+      const path = newFsItem?.parent === '/' ? folderString : `${newFsItem?.parent}/${folderString}`
       await mkDir(path, { recursive: true })
       setNewFsItem(null)
     } else if (fileName) {
-      const path = `${newFsItem?.parent}/${String(fileName)}`
+      const fileString = String(fileName)
+      const path = newFsItem?.parent === '/' ? fileString : `${newFsItem?.parent}/${fileString}`
       const parent = getParentFolder(path)
       await mkDir(parent, { recursive: true })
       await writeFile(path, '')

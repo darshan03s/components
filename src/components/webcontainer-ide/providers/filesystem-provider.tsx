@@ -181,14 +181,14 @@ export const FileSystemProvider = ({ children }: { children: React.ReactNode }) 
     const parent = getParentFolder(source.path)
     if (parent === destination) return
     await mv(source.path, destination)
+    const newPath = destination === '/' ? source.name : `${destination}/${source.name}`
     if (source.type === 'file' && activeFile.path === source.path) {
-      const newPath = `${destination}/${source.name}`
       activePath(newPath)
     }
     if (source.type === 'folder') {
       clearFolder(source.path)
       if (activeFile.path.startsWith(source.path + '/')) {
-        activePath(activeFile.path.replace(source.path, `${destination}/${source.name}`))
+        activePath(activeFile.path.replace(source.path, newPath))
       }
     }
   }

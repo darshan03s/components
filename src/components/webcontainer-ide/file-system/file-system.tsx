@@ -2,6 +2,7 @@
 
 import { DragEvent, useEffect } from 'react'
 import { Spinner } from '@/components/ui/spinner'
+import { cn } from '@/lib/utils'
 import { useFileSystem, useProps, useWebContainer } from '../hooks'
 import { getParentFolder } from '../utils'
 import { FsTree } from './fs-tree'
@@ -17,31 +18,30 @@ export const FileSystem = () => {
     setNewFsItem,
     collapseAllFolders,
     draggedItem,
+    hoveredPath,
     setHoveredPath,
     endFsItemMove,
     handleFsItemDrop
   } = useFileSystem()
   const { isMounted, rootDir, wc } = useWebContainer()
   const { disableCreateFolder, disableCreateFile, disableMoving } = useProps()
-  const rootDirPath = `/${rootDir}`
 
   useEffect(() => {
     if (!wc || !isMounted) return
 
-    const watcher = wc.fs.watch(rootDirPath, { recursive: true }, (event, fsItem) => {
+    const watcher = wc.fs.watch('/', { recursive: true }, (event, fsItem) => {
       if (event === 'rename') {
-        const path = `${rootDirPath}/${String(fsItem)}`
-        const parentFolder = getParentFolder(path)
+        const parentFolder = getParentFolder(String(fsItem))
         loadFolderItems(parentFolder)
       }
     })
 
     return () => watcher.close()
-  }, [wc, isMounted, rootDirPath])
+  }, [wc, isMounted])
 
   useEffect(() => {
     if (!isMounted) return
-    loadFolderItems(rootDirPath)
+    loadFolderItems('/')
   }, [isMounted])
 
   function onDragOver(e: DragEvent<HTMLDivElement>) {
@@ -50,7 +50,7 @@ export const FileSystem = () => {
     const source = draggedItem.current
     if (!source) return
 
-    setHoveredPath(rootDirPath)
+    setHoveredPath('/')
   }
 
   function onDrop(e: DragEvent<HTMLDivElement>) {
@@ -59,14 +59,17 @@ export const FileSystem = () => {
     const source = draggedItem.current
     if (!source) return
 
-    handleFsItemDrop(source, rootDirPath)
+    handleFsItemDrop(source, '/')
 
     endFsItemMove()
   }
 
   return (
     <div
-      className="ide-file-system-container relative flex w-(--fs-width) min-w-(--fs-width) flex-col border-r text-xs"
+      className={cn(
+        'ide-file-system-container relative flex w-(--fs-width) min-w-(--fs-width) flex-col border-r text-xs',
+        hoveredPath === '/' && 'ring-1 ring-ring'
+      )}
       hidden={!fileSystemOpen}
     >
       <FileSystemHeader
@@ -74,13 +77,13 @@ export const FileSystem = () => {
         handleNewFolder={() => {
           setNewFsItem({
             type: 'folder',
-            parent: rootDirPath
+            parent: '/'
           })
         }}
         handleNewFile={() => {
           setNewFsItem({
             type: 'file',
-            parent: rootDirPath
+            parent: '/'
           })
         }}
         handleCollapseAll={collapseAllFolders}
@@ -93,8 +96,8 @@ export const FileSystem = () => {
         </div>
       ) : (
         <div className="ide-file-system-tree no-scrollbar flex flex-1 flex-col gap-1 overflow-scroll p-1">
-          {newFsItem?.parent === rootDirPath && <NewFsItem />}
-          {fs[rootDirPath] && <FsTree fsItems={fs[rootDirPath]} />}
+          {newFsItem?.parent === '/' && <NewFsItem />}
+          {fs['/'] && <FsTree fsItems={fs['/']} />}
           <div
             onDragOver={!disableMoving ? onDragOver : undefined}
             onDrop={!disableMoving ? onDrop : undefined}

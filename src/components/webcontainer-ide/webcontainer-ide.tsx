@@ -20,13 +20,12 @@ export const WebContainerIDE = ({ ...props }: WebContainerIDEProps) => {
 }
 
 export const Comp = () => {
-  const { isMounted, wc, rootDir, setIsMounted, setServerUrl, activePath } = useWebContainer()
+  const { isMounted, wc, setIsMounted, setServerUrl, activePath } = useWebContainer()
   const { view, toggleView } = useIde()
   const { toggleFileSystem, fileSystemOpen, setFs } = useFileSystem()
   const { setIsTerminalOpen } = useTerminal()
   const { loadFromSnapshot, loadFromTemplate, className, hideTerminal } = useProps()
   const cleanupRef = useRef<Promise<void>>(Promise.resolve())
-  const rootDirPath = `/${rootDir}`
 
   useEffect(() => {
     let cancelled = false
@@ -36,14 +35,12 @@ export const Comp = () => {
 
       if (cancelled || !wc) return
 
-      await wc.fs.mkdir(rootDirPath, { recursive: true })
-
       if (loadFromTemplate) {
-        await wc.mount(loadFromTemplate, { mountPoint: rootDir })
+        await wc.mount(loadFromTemplate)
       } else if (loadFromSnapshot) {
         const response = await fetch(loadFromSnapshot)
         const snapshot = await response.arrayBuffer()
-        await wc.mount(snapshot, { mountPoint: rootDir })
+        await wc.mount(snapshot)
       }
 
       if (!cancelled) {
@@ -59,11 +56,11 @@ export const Comp = () => {
       cleanupRef.current = (async () => {
         if (!wc) return
 
-        const entries = await wc.fs.readdir(rootDirPath)
+        const entries = await wc.fs.readdir('/')
 
         await Promise.all(
           entries.map((entry) =>
-            wc.fs.rm(`${rootDirPath}/${entry}`, {
+            wc.fs.rm(entry, {
               recursive: true,
               force: true
             })
