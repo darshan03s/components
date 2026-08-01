@@ -105,7 +105,6 @@ export const Terminal = () => {
       shellProcessRef.current = null
       setShellProcessWriter(null)
       setIsTerminalStarted(false)
-      setIsTerminalOpen(false)
     }
   }, [isMounted])
 
@@ -141,7 +140,10 @@ export const Terminal = () => {
         showTerminal ? 'opacity-100' : 'pointer-events-none opacity-0'
       )}
     >
-      <div className="terminal-header bg-background flex h-8 items-center justify-between border px-2 select-none">
+      <div
+        hidden={!isTerminalStarted}
+        className="terminal-header bg-background flex h-8 items-center justify-between border px-2 select-none"
+      >
         <span className="text-foreground [&_svg]:text-foreground flex items-center gap-2 font-mono text-xs [&_svg]:size-3">
           <TerminalIcon /> Terminal
         </span>
