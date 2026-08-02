@@ -59,6 +59,8 @@ type ActiveFile = {
 
 type ActivePath = (path: string) => void
 
+type SyncActiveFile = () => Promise<void>
+
 type StartShell = (terminal: Terminal) => Promise<{
   shellProcess: WebContainerProcess
   inputWriter: WritableStreamDefaultWriter<string>
@@ -91,6 +93,7 @@ type WebContainerContext = {
   shellProcessWriter: WritableStreamDefaultWriter<string> | null
   setShellProcessWriter: Dispatch<SetStateAction<WritableStreamDefaultWriter<string> | null>>
   readMedia: ReadMedia
+  syncActiveFile: SyncActiveFile
 }
 
 export const WebContainerContext = createContext<WebContainerContext | undefined>(undefined)
@@ -268,6 +271,14 @@ export const WebContainerProvider = ({
     })
   }
 
+  const syncActiveFile = async () => {
+    const content = await readFile(activeFile.path, 'utf-8')
+    setActiveFile((prev) => ({
+      ...prev,
+      content
+    }))
+  }
+
   const startShell: StartShell = async (terminal) => {
     const wc = requireWc()
     const shellProcess = await wc.spawn(`jsh`, {
@@ -322,6 +333,7 @@ export const WebContainerProvider = ({
         setIsMounted,
         rootDir,
         activePath,
+        syncActiveFile,
         activeFile,
         startShell,
         serverUrl,
