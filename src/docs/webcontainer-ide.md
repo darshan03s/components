@@ -5,16 +5,13 @@ The `WebContainerIDE` component was added to your project.
 ```tsx title='page.tsx'
 'use client'
 
-import { useTheme } from 'next-themes'
 import { WebContainerIDE, WebContainerIDEProvider } from '@/components/webcontainer-ide'
 
 const Page = () => {
-  const { resolvedTheme } = useTheme()
-
   return (
     <div className="flex items-center justify-center">
       <WebContainerIDEProvider rootDir="projects">
-        <WebContainerIDE theme={resolvedTheme as 'light' | 'dark'} />
+        <WebContainerIDE />
       </WebContainerIDEProvider>
     </div>
   )
