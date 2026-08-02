@@ -19,7 +19,7 @@ export type WebContainerIDEProps = {
   /**
    * Application theme
    */
-  theme: 'light' | 'dark'
+  editorTheme?: 'light' | 'dark'
   /**
    * Prevents editing the file content.
    */

@@ -43,7 +43,6 @@ const registryItems: RegistryItem[] = [
     dependencies: [
       '@webcontainer/api',
       '@uiw/react-codemirror',
-      '@uiw/codemirror-theme-vscode',
       '@codemirror/lang-javascript',
       '@codemirror/lang-json',
       '@codemirror/lang-html',

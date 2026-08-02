@@ -6,7 +6,6 @@ import { html } from '@codemirror/lang-html'
 import { javascript } from '@codemirror/lang-javascript'
 import { json } from '@codemirror/lang-json'
 import { sass } from '@codemirror/lang-sass'
-import { vscodeDark, vscodeLight } from '@uiw/codemirror-theme-vscode'
 import CodeMirror from '@uiw/react-codemirror'
 import { Check, Copy, File, Globe, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -26,7 +25,7 @@ import { getExtension } from './utils'
 
 const EditorComp = ({ className }: { className?: string }) => {
   const { activeFile, writeFile } = useWebContainer()
-  const { theme, editorReadOnly } = useProps()
+  const { editorTheme, editorReadOnly } = useProps()
 
   const extensions = [
     javascript({ jsx: true }),
@@ -39,8 +38,6 @@ const EditorComp = ({ className }: { className?: string }) => {
     sass(),
     css()
   ]
-
-  const editorTheme = theme === 'dark' ? vscodeDark : vscodeLight
 
   const onChange = (val: string) => {
     writeFile(activeFile.path, val)

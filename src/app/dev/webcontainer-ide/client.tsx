@@ -10,7 +10,7 @@ export const Client = ({ template }: { template: string }) => {
     <WebContainerIDE
       key={template}
       loadFromSnapshot={`/api/snapshot?template=${template}`}
-      theme={resolvedTheme as 'light' | 'dark'}
+      editorTheme={resolvedTheme as 'light' | 'dark'}
     />
   )
 }
