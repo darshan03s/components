@@ -11,7 +11,7 @@ export const Client = () => {
     <Main className="flex items-center justify-center">
       <WebContainerIDE
         loadFromSnapshot="/api/snapshot?template=vite-tsx"
-        theme={resolvedTheme as 'light' | 'dark'}
+        editorTheme={resolvedTheme as 'light' | 'dark'}
       />
     </Main>
   )
