@@ -22,7 +22,8 @@ export const FileSystem = () => {
     hoveredPath,
     setHoveredPath,
     endFsItemMove,
-    handleFsItemDrop
+    handleFsItemDrop,
+    isIgnoredPath
   } = useFileSystem()
   const { isMounted, rootDir, wc } = useWebContainer()
   const { disableCreateFolder, disableCreateFile, disableMoving } = useProps()
@@ -32,6 +33,7 @@ export const FileSystem = () => {
 
     const watcher = wc.fs.watch('/', { recursive: true }, (event, fsItem) => {
       if (event === 'rename') {
+        if (isIgnoredPath(String(fsItem))) return
         const parentFolder = getParentFolder(String(fsItem))
         loadFolderItems(parentFolder)
       }
