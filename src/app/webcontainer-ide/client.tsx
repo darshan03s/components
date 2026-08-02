@@ -9,10 +9,7 @@ export const Client = () => {
 
   return (
     <Main className="flex items-center justify-center">
-      <WebContainerIDE
-        loadFromSnapshot="/api/snapshot?template=vite-tsx"
-        editorTheme={resolvedTheme as 'light' | 'dark'}
-      />
+      <WebContainerIDE editorTheme={resolvedTheme as 'light' | 'dark'} />
     </Main>
   )
 }
