@@ -1,4 +1,5 @@
 import { FileSystemTree } from '@webcontainer/api'
+import { ITheme } from '@xterm/xterm'
 
 export type WebContainerIDEProps = {
   className?: string
@@ -64,6 +65,10 @@ export type WebContainerIDEProps = {
    * Called after a change event from the WebContainer file system.
    */
   onChangeEvent?: (fsItem: string) => void
+  /**
+   * Sets terminal theme
+   */
+  terminalTheme?: ITheme
 }
 
 export type ReadDirEntry = {

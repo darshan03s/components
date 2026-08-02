@@ -8,7 +8,7 @@ import '@xterm/xterm/css/xterm.css'
 import { TerminalIcon, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { useFileSystem, useProps, useTerminal, useWebContainer } from './hooks'
+import { useProps, useTerminal, useWebContainer } from './hooks'
 
 export const Terminal = () => {
   const { startShell, isMounted, setServerUrl, setShellProcessWriter } = useWebContainer()
@@ -21,8 +21,7 @@ export const Terminal = () => {
     isTerminalOpen,
     setIsTerminalOpen
   } = useTerminal()
-  const { fileSystemOpen } = useFileSystem()
-  const { terminalReadOnly, hideTerminal, openTerminal } = useProps()
+  const { terminalReadOnly, hideTerminal, openTerminal, terminalTheme } = useProps()
   const terminalEleRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
@@ -34,6 +33,7 @@ export const Terminal = () => {
       convertEol: true
     })
     terminal.options.disableStdin = terminalReadOnly
+    terminal.options.theme = terminalTheme
     terminal.loadAddon(fitAddon)
     terminal.open(terminalEleRef.current!)
     fitAddon.fit()
@@ -130,6 +130,12 @@ export const Terminal = () => {
     }
   }, [isTerminalStarted])
 
+  useEffect(() => {
+    if (!terminalRef.current) return
+
+    terminalRef.current.options.theme = terminalTheme
+  }, [terminalTheme])
+
   const showTerminal = (() => {
     if (hideTerminal) return false
     return isTerminalOpen
@@ -164,9 +170,9 @@ export const Terminal = () => {
       <div
         ref={terminalEleRef}
         className={cn(
-          '[&_.terminal]:h-full [&_.terminal]:max-h-(--terminal-height) [&_.terminal]:p-2 [&_.terminal:first-of-type~.terminal]:hidden!',
+          '[&_.terminal]:h-full [&_.terminal]:max-h-(--terminal-height) [&_.terminal:first-of-type~.terminal]:hidden!',
           '[&_.xterm-screen]:h-(--terminal-height)!',
-          '[&_.xterm-scrollable-element]:bg-transparent!',
+          '[&_.xterm-scrollable-element]:p-2',
           '[&_.xterm-viewport]:no-scrollbar!',
           '[&_.xterm-rows]:h-full! [&_.xterm-rows]:font-mono! [&_.xterm-rows]:text-xs! [&_.xterm-rows>div:first-child:empty]:hidden'
         )}
