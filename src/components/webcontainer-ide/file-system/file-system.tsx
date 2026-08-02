@@ -26,16 +26,25 @@ export const FileSystem = () => {
     isIgnoredPath
   } = useFileSystem()
   const { isMounted, rootDir, wc } = useWebContainer()
-  const { disableCreateFolder, disableCreateFile, disableMoving } = useProps()
+  const { disableCreateFolder, disableCreateFile, disableMoving, onRenameEvent, onChangeEvent } =
+    useProps()
 
   useEffect(() => {
     if (!wc || !isMounted) return
 
-    const watcher = wc.fs.watch('/', { recursive: true }, (event, fsItem) => {
+    const watcher = wc.fs.watch('/', { recursive: true }, async (event, fsItem) => {
+      if (isIgnoredPath(String(fsItem))) return
+      if (event === 'change') {
+        if (onChangeEvent) {
+          onChangeEvent(String(fsItem))
+        }
+      }
       if (event === 'rename') {
-        if (isIgnoredPath(String(fsItem))) return
         const parentFolder = getParentFolder(String(fsItem))
-        loadFolderItems(parentFolder)
+        await loadFolderItems(parentFolder)
+        if (onRenameEvent) {
+          onRenameEvent(String(fsItem))
+        }
       }
     })
 

@@ -55,6 +55,15 @@ export type WebContainerIDEProps = {
    * Opens terminal on load
    */
   openTerminal?: boolean
+  /**
+   * Called after a rename event from the WebContainer file system.
+   */
+  onRenameEvent?: (fsItem: string) => void
+
+  /**
+   * Called after a change event from the WebContainer file system.
+   */
+  onChangeEvent?: (fsItem: string) => void
 }
 
 export type ReadDirEntry = {
