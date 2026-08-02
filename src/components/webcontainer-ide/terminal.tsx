@@ -137,6 +137,7 @@ export const Terminal = () => {
 
   return (
     <div
+      onScroll={(e) => e.stopPropagation()}
       className={cn(
         'ide-terminal',
         'absolute right-0 bottom-0 w-full',
@@ -166,8 +167,7 @@ export const Terminal = () => {
           '[&_.terminal]:h-full [&_.terminal]:max-h-(--terminal-height) [&_.terminal]:p-2 [&_.terminal:first-of-type~.terminal]:hidden!',
           '[&_.xterm-screen]:h-(--terminal-height)!',
           '[&_.xterm-scrollable-element]:bg-transparent!',
-          '[&_.xterm-viewport]:no-scrollbar! [&_.xterm-viewport]:rounded-br-lg',
-          !fileSystemOpen ? '[&_.xterm-viewport]:rounded-bl-lg' : '',
+          '[&_.xterm-viewport]:no-scrollbar!',
           '[&_.xterm-rows]:h-full! [&_.xterm-rows]:font-mono! [&_.xterm-rows]:text-xs! [&_.xterm-rows>div:first-child:empty]:hidden'
         )}
       />

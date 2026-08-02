@@ -37,7 +37,8 @@ const registryItems: RegistryItem[] = [
       'spinner',
       'dropdown-menu',
       'slider',
-      'input'
+      'input',
+      'resizable'
     ],
     dependencies: [
       '@webcontainer/api',

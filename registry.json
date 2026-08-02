@@ -56,7 +56,8 @@
         "spinner",
         "dropdown-menu",
         "slider",
-        "input"
+        "input",
+        "resizable"
       ],
       "dependencies": [
         "@webcontainer/api",

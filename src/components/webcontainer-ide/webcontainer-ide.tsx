@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react'
 import { Code, Eye, PanelLeft, PanelRight, Terminal } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ButtonGroup } from '@/components/ui/button-group'
+import { ResizableHandle, ResizablePanelGroup } from '@/components/ui/resizable'
 import { cn } from '@/lib/utils'
 import { FileSystem } from './file-system'
 import { useFileSystem, useIde, useProps, useTerminal, useWebContainer } from './hooks'
@@ -81,11 +82,11 @@ export const Comp = () => {
   return (
     <div
       className={cn(
-        'ide-container relative flex h-(--ide-height) w-(--ide-width) flex-col rounded-lg border [--ide-height:--spacing(140)] [--ide-width:--spacing(240)]',
+        'ide-container relative flex h-(--ide-height) w-(--ide-width) flex-col rounded-lg overflow-clip border [--ide-height:--spacing(140)] [--ide-width:--spacing(240)]',
         className
       )}
     >
-      <div className="ide-header bg-background flex h-10 min-h-10 items-center justify-between rounded-tl-lg rounded-tr-lg border-b px-2">
+      <div className="ide-header bg-background flex h-10 min-h-10 items-center justify-between border-b px-2">
         <div className="flex items-center gap-4">
           <Button
             className="ide-file-system-toggle"
@@ -130,10 +131,14 @@ export const Comp = () => {
           </Button>
         )}
       </div>
-      <div className="flex min-h-0 flex-1 [--fs-width:--spacing(64)] [--inner-header-height:--spacing(8)]">
+      <ResizablePanelGroup
+        orientation="horizontal"
+        className="flex min-h-0 flex-1 [--fs-width:--spacing(64)] [--inner-header-height:--spacing(8)]"
+      >
         <FileSystem />
+        <ResizableHandle />
         <Workspace />
-      </div>
+      </ResizablePanelGroup>
     </div>
   )
 }

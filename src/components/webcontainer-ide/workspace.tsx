@@ -11,6 +11,7 @@ import CodeMirror from '@uiw/react-codemirror'
 import { Check, Copy, File, Globe, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ButtonGroup } from '@/components/ui/button-group'
+import { ResizablePanel } from '@/components/ui/resizable'
 import { Spinner } from '@/components/ui/spinner'
 import { cn } from '@/lib/utils'
 import {
@@ -53,7 +54,7 @@ const EditorComp = ({ className }: { className?: string }) => {
         extensions={extensions}
         theme={editorTheme}
         editable={!editorReadOnly}
-        className="ide-workspace-editor-codemirror [&_.cm-scroller]:no-scrollbar h-full text-sm [&_.cm-activeLine]:bg-transparent! [&_.cm-activeLineGutter]:bg-transparent! [&_.cm-editor]:h-full! [&_.cm-editor]:rounded-br-lg"
+        className="ide-workspace-editor-codemirror [&_.cm-scroller]:no-scrollbar h-full text-sm [&_.cm-activeLine]:bg-transparent! [&_.cm-activeLineGutter]:bg-transparent! [&_.cm-editor]:h-full!"
       />
     </div>
   )
@@ -232,7 +233,7 @@ const Preview = () => {
   const { view } = useIde()
 
   return (
-    <div hidden={view === 'editor'} className="flex h-full flex-col rounded-br-lg">
+    <div hidden={view === 'editor'} className="flex h-full flex-col">
       <div className="flex-1">
         {serverUrl.length > 0 ? (
           <iframe src={serverUrl} className="h-full w-full" />
@@ -250,7 +251,10 @@ export const Workspace = () => {
   const { isMounted } = useWebContainer()
 
   return (
-    <div className="ide-workspace relative flex min-h-0 min-w-0 flex-1 flex-col">
+    <ResizablePanel
+      style={{ overflow: 'unset' }}
+      className="ide-workspace relative flex min-h-0 min-w-0 flex-1 flex-col"
+    >
       {isMounted ? (
         <>
           <Editor />
@@ -260,6 +264,6 @@ export const Workspace = () => {
         <Loading />
       )}
       <Terminal />
-    </div>
+    </ResizablePanel>
   )
 }
