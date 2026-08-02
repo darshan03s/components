@@ -1,6 +1,6 @@
 export const DEFAULT_ROOT_DIR = 'workspace' as const
 
-export const IGNORED_FOLDERS = [
+export const IGNORED_FOLDERS = new Set([
   'node_modules',
   '.venv',
   'out',
@@ -9,7 +9,7 @@ export const IGNORED_FOLDERS = [
   '.git',
   '__pycache__',
   '.next'
-]
+])
 
 export const IMAGE_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'ico']
 

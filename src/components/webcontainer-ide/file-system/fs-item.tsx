@@ -86,7 +86,7 @@ export const FsItem = ({ item }: { item: ReadDirEntry }) => {
       return
     }
     if (newName.length > 0) {
-      if (IGNORED_FOLDERS.some((f) => f === newName)) return
+      if (IGNORED_FOLDERS.has(newName)) return
       const prevPath = itemPath
       const newPath = parentFolder === '/' ? newName : `${parentFolder}/${newName}`
       await rename(itemPath, newPath)

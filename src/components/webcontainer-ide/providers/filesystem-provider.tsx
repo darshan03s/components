@@ -96,7 +96,7 @@ export const FileSystemProvider = ({ children }: { children: React.ReactNode }) 
   }
 
   const loadFolderItems: LoadFolderItems = async (path) => {
-    if (IGNORED_FOLDERS.some((dir) => path.includes(dir))) return
+    if (isIgnoredPath(path)) return
     try {
       const items = await readDir(
         path,
@@ -165,7 +165,7 @@ export const FileSystemProvider = ({ children }: { children: React.ReactNode }) 
   }
 
   const isIgnoredPath: IsIgnoredPath = (path) => {
-    return path.split('/').some((segment) => IGNORED_FOLDERS.includes(segment))
+    return path.split('/').some((segment) => IGNORED_FOLDERS.has(segment))
   }
 
   const startFsItemMove: StartFsItemMove = (item) => {
