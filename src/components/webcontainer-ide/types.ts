@@ -1,21 +1,17 @@
-import { FileSystemTree } from '@webcontainer/api'
+import { WebContainer } from '@webcontainer/api'
 import { ITheme } from '@xterm/xterm'
 
 export type WebContainerIDEProps = {
   className?: string
   /**
-   * URL of an API endpoint that returns a WebContainer snapshot.
+   * Initial filesystem to mount into the WebContainer.
    *
-   * You must implement this endpoint using '@webcontainer/snapshot'.
-   * Refer: https://webcontainers.io/guides/working-with-the-file-system#generating-snapshots
+   * Accepts one of:
+   * - A URL pointing to a WebContainer snapshot.
+   * - A `FileSystemTree`.
+   * - A WebContainer snapshot as an `ArrayBuffer` or `Uint8Array`.
    */
-  loadFromSnapshot?: string
-  /**
-   * Template of shape `FileSystemTree`
-   *
-   * Refer: Refer: https://webcontainers.io/guides/working-with-the-file-system
-   */
-  loadFromTemplate?: FileSystemTree
+  loadFromSnapshot?: Parameters<WebContainer['mount']>['0'] | string
   /**
    * Application theme
    */

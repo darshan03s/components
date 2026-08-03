@@ -25,7 +25,7 @@ export const Comp = () => {
   const { view, toggleView } = useIde()
   const { toggleFileSystem, fileSystemOpen, setFs } = useFileSystem()
   const { setIsTerminalOpen } = useTerminal()
-  const { loadFromSnapshot, loadFromTemplate, className, hideTerminal } = useProps()
+  const { loadFromSnapshot, className, hideTerminal } = useProps()
   const cleanupRef = useRef<Promise<void>>(Promise.resolve())
 
   useEffect(() => {
@@ -36,12 +36,14 @@ export const Comp = () => {
 
       if (cancelled || !wc) return
 
-      if (loadFromTemplate) {
-        await wc.mount(loadFromTemplate)
-      } else if (loadFromSnapshot) {
-        const response = await fetch(loadFromSnapshot)
-        const snapshot = await response.arrayBuffer()
-        await wc.mount(snapshot)
+      if (loadFromSnapshot) {
+        if (typeof loadFromSnapshot === 'string') {
+          const response = await fetch(loadFromSnapshot)
+          const snapshot = await response.arrayBuffer()
+          await wc.mount(snapshot)
+        } else {
+          await wc.mount(loadFromSnapshot)
+        }
       }
 
       if (!cancelled) {
@@ -73,7 +75,7 @@ export const Comp = () => {
         activePath('')
       })()
     }
-  }, [wc, loadFromSnapshot, loadFromTemplate])
+  }, [wc, loadFromSnapshot])
 
   function handleTerminalToggle() {
     setIsTerminalOpen((prev) => !prev)
