@@ -12,6 +12,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           <Link href={'/dev/webcontainer-ide/all'}>All</Link>
           <Link href={'/dev/webcontainer-ide/vite-jsx'}>Vite JSX</Link>
           <Link href={'/dev/webcontainer-ide/vite-tsx'}>Vite TSX</Link>
+          <Link href={'/dev/webcontainer-ide/next-tsx'}>Next TSX</Link>
         </div>
         <div className="flex-1 flex items-center justify-center">{children}</div>
       </Main>
