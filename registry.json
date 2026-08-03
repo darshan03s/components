@@ -48,7 +48,7 @@
       "type": "registry:block",
       "title": "WebContainer IDE",
       "description": "WebContainer based IDE",
-      "docs": "The `WebContainerIDE` component was added to your project.\n\n### Wrap your component with `WebContainerIDEProvider`\n\n```tsx title='page.tsx'\n'use client'\n\nimport { useTheme } from 'next-themes'\nimport { WebContainerIDE, WebContainerIDEProvider } from '@/components/webcontainer-ide'\n\nconst Page = () => {\n  const { resolvedTheme } = useTheme()\n\n  return (\n    <div className=\"flex items-center justify-center\">\n      <WebContainerIDEProvider rootDir=\"projects\">\n        <WebContainerIDE theme={resolvedTheme as 'light' | 'dark'} />\n      </WebContainerIDEProvider>\n    </div>\n  )\n}\n\nexport default Page\n```\n\n### Configure headers(Refer: https://webcontainers.io/guides/configuring-headers)\n\n```\nCross-Origin-Embedder-Policy: require-corp\nCross-Origin-Opener-Policy: same-origin\n```\n",
+      "docs": "The `WebContainerIDE` component was added to your project.\n\n### Wrap your component with `WebContainerIDEProvider`\n\n```tsx title='page.tsx'\n'use client'\n\nimport { WebContainerIDE, WebContainerIDEProvider } from '@/components/webcontainer-ide'\n\nconst Page = () => {\n  return (\n    <div className=\"flex items-center justify-center\">\n      <WebContainerIDEProvider rootDir=\"projects\">\n        <WebContainerIDE />\n      </WebContainerIDEProvider>\n    </div>\n  )\n}\n\nexport default Page\n```\n\n### Configure headers(Refer: https://webcontainers.io/guides/configuring-headers)\n\n```\nCross-Origin-Embedder-Policy: require-corp\nCross-Origin-Opener-Policy: same-origin\n```\n",
       "registryDependencies": [
         "button",
         "button-group",
